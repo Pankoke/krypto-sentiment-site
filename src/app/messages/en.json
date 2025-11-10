@@ -1,0 +1,33 @@
+{
+  "title.sentiment": "Crypto Sentiment",
+  "label.score": "Score",
+  "label.confidence": "Confidence",
+  "label.updated": "Last updated",
+  "label.nextUpdate": "Next update in ~{mins} min.",
+  "badge.bullish": "Bullish",
+  "badge.neutral": "Neutral",
+  "badge.bearish": "Bearish",
+  "group.news": "News",
+  "group.onchain": "On-Chain",
+  "group.social": "Social",
+  "empty.noResults": "No results for the current selection."
+  ,
+  "select.trend": "Trend",
+  "select.trend.all": "All trends",
+  "select.sort": "Sort",
+  "select.sort.score": "Score (desc)",
+  "select.sort.confidence": "Confidence",
+  "select.sort.symbol": "Symbol (A-Z)",
+  "action.details": "Details"
+  ,
+  "home.noReport": "No report found. You can generate one now.",
+  "home.detailsFor": "Details for {date}",
+  "nav.archive": "Archive",
+  "nav.today": "Today",
+  "nav.backHome": "Back to home",
+  "archive.search": "Search (date, summary)",
+  "archive.allAssets": "All assets",
+  "archive.details": "View details",
+  "detail.notFoundTitle": "Report not found",
+  "detail.notFoundText": "No report exists for {date}."
+}

@@ -1,0 +1,75 @@
+{
+  "date": "2025-11-06",
+  "universe": [
+    "BTC",
+    "ETH",
+    "SOL"
+  ],
+  "assets": [
+    {
+      "symbol": "BTC",
+      "sentiment": "bullish",
+      "score": 0.85,
+      "confidence": 0.9,
+      "rationale": "BTC ETF-Zuflüsse stark, Netto-Abflüsse deuten auf Halten hin, positive institutionelle Käufe und steigende Miner-Erlöse.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "BTC ETF-Zuflüsse steigen über 250 Mio. USD; Kurs hält 70k."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Exchange netflow ↓ (netto Abflüsse); Reserve sinkt."
+        },
+        {
+          "source": "social",
+          "evidence": "ETF narrative not over yet, institutions still buying"
+        }
+      ]
+    },
+    {
+      "symbol": "ETH",
+      "sentiment": "bullish",
+      "score": 0.8,
+      "confidence": 0.85,
+      "rationale": "ETH niedrige Gasgebühren, aktiveres Staking und L2-Aktivität; Dencun-Upgrade fördert Nutzung.",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "ETH gas fees super low rn, L2s buzzing"
+        },
+        {
+          "source": "onchain",
+          "evidence": "Active addresses ↑; Staking-Quote stabil; L2-Transaktionen ↑."
+        },
+        {
+          "source": "news",
+          "evidence": "Ethereum Dencun-Upgrade senkt L2-Gebühren weiter laut mehreren Rollups."
+        }
+      ]
+    },
+    {
+      "symbol": "SOL",
+      "sentiment": "bullish",
+      "score": 0.75,
+      "confidence": 0.8,
+      "rationale": "Solana-DeFi-TVL erreicht neue Höhen, steigende Aktivität und DEX-Volumenwachstum.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Solana DeFi-TVL erreicht neues Jahreshoch; Aktivität im Ökosystem nimmt zu."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Neue Adressen ↑; TPS stabil hoch; DEX-Volumen +7% d/ d."
+        },
+        {
+          "source": "social",
+          "evidence": "SOL memecoins pumping again, volume picking up"
+        }
+      ]
+    }
+  ],
+  "macro_summary": "Starke bullische Signale bei BTC dank ETF-Zuflüsse und hohen Miner-Erlösen. ETH zeigt durch niedrige Gebühren und Upgrade bedingte Vorteile. Solana profitiert von steigender TVL und Kettenaktivität.",
+  "method_note": "Analyse basiert auf aggregierten Signalen von Social Media, Nachrichten und On-Chain-Daten."
+}

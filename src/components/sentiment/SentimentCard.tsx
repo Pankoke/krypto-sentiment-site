@@ -1,0 +1,83 @@
+import React, { useMemo } from 'react';
+import { useTranslations } from 'next-intl';
+import type { SentimentItem } from '@/core/sentiment/types';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ScorePill } from './ScorePill';
+import { ConfidencePill } from './ConfidencePill';
+import { TrendBadge } from './TrendBadge';
+import { Sparkline } from './Sparkline';
+import { InfoTooltip } from './InfoTooltip';
+
+interface SentimentCardProps {
+  item: SentimentItem;
+  onOpenDetails?: (item: SentimentItem) => void;
+}
+export function SentimentCard({ item, onOpenDetails }: SentimentCardProps) {
+  const t = useTranslations();
+  const grouped = useMemo(() => {
+    const g: Record<'news' | 'onchain' | 'social', string[]> = { news: [], onchain: [], social: [] };
+    for (const b of item.bullets) g[b.group].push(b.text);
+    return g;
+  }, [item.bullets]);
+
+  return (
+    <Card className="relative">
+      <CardHeader className="pb-2">
+        <div className="flex items-start justify-between gap-2">
+          <CardTitle className="text-lg">{item.symbol}</CardTitle>
+          <div className="flex items-center gap-2">
+            <TrendBadge trend={item.trend} />
+            <Sparkline data={item.sparkline} />
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <div className="flex items-center gap-4">
+          <ScorePill score={item.score} />
+          <ConfidencePill
+            confidence={item.confidence}
+            tooltip={
+              <InfoTooltip
+                content={
+                  <div>
+                    <div>
+                      <b>Definition</b>: Zuverlässigkeit anhand historischer Treffer ähnlicher Muster.
+                    </div>
+                    <div>Kalibrierung der letzten 30 Tage verfügbar in den Details.</div>
+                  </div>
+                }
+              />
+            }
+          />
+        </div>
+
+        <p className="text-sm text-muted-foreground">{t('label.updated')}: {new Date(item.generatedAt).toLocaleString()}</p>
+
+        <ul className="text-sm space-y-2">
+          {grouped.news.length > 0 && (
+            <li>
+              <b>📰 News:</b> {grouped.news.slice(0, 2).join(' • ')}
+            </li>
+          )}
+          {grouped.onchain.length > 0 && (
+            <li>
+              <b>⛓️ On-Chain:</b> {grouped.onchain.slice(0, 2).join(' • ')}
+            </li>
+          )}
+          {grouped.social.length > 0 && (
+            <li>
+              <b>💬 Social:</b> {grouped.social.slice(0, 2).join(' • ')}
+            </li>
+          )}
+        </ul>
+
+        <div className="flex items-center justify-between">
+          <button className="text-sm underline" onClick={() => onOpenDetails?.(item)}>
+            {t('action.details')}
+          </button>
+          <span className="text-xs text-muted-foreground">KI-generiert · Keine Anlageberatung</span>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
