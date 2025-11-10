@@ -1,12 +1,12 @@
 import { readFile } from 'fs/promises';
 import { join } from 'path';
 import Link from 'next/link';
-import type { DailyCryptoSentiment } from '../../../../../lib/types';
-import { isDailyCryptoSentiment } from '../../../../../lib/types';
-import Card from '../../../../../components/ui/Card';
-import Badge from '../../../../../components/ui/Badge';
-import Meter from '../../../../../components/ui/Meter';
-import { meterColor, toneLabel } from '../../../../../lib/ui/sentiment';
+import type { DailyCryptoSentiment } from 'lib/types';
+import { isDailyCryptoSentiment } from 'lib/types';
+import Card from 'components/ui/Card';
+import Badge from 'components/ui/Badge';
+import Meter from 'components/ui/Meter';
+import { meterColor, toneLabel } from 'lib/ui/sentiment';
 import { getTranslations } from 'next-intl/server';
 
 async function loadReportByDate(date: string): Promise<DailyCryptoSentiment | null> {

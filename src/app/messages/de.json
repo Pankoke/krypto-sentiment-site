@@ -1,33 +1,57 @@
 {
-  "title.sentiment": "Krypto-Sentiment",
-  "label.score": "Score",
-  "label.confidence": "Vertrauen",
-  "label.updated": "Zuletzt aktualisiert",
-  "label.nextUpdate": "Nächste Aktualisierung in ~{mins} Min.",
-  "badge.bullish": "Bullish",
-  "badge.neutral": "Neutral",
-  "badge.bearish": "Bearish",
-  "group.news": "News",
-  "group.onchain": "On-Chain",
-  "group.social": "Social",
-  "empty.noResults": "Keine Treffer für die aktuelle Auswahl."
-  ,
-  "select.trend": "Trend",
-  "select.trend.all": "Alle Trends",
-  "select.sort": "Sortierung",
-  "select.sort.score": "Score (absteigend)",
-  "select.sort.confidence": "Vertrauen",
-  "select.sort.symbol": "Symbol (A-Z)",
-  "action.details": "Details"
-  ,
-  "home.noReport": "Kein Bericht gefunden. Du kannst jetzt einen Tagesbericht erzeugen.",
-  "home.detailsFor": "Details für {date}",
-  "nav.archive": "Archiv",
-  "nav.today": "Heute",
-  "nav.backHome": "Zur Startseite",
-  "archive.search": "Suche (Datum, Summary)",
-  "archive.allAssets": "Alle Assets",
-  "archive.details": "Details ansehen",
-  "detail.notFoundTitle": "Bericht nicht gefunden",
-  "detail.notFoundText": "Für das Datum {date} existiert kein Bericht."
+  "title": {
+    "sentiment": "Krypto-Sentiment"
+  },
+  "label": {
+    "score": "Score",
+    "confidence": "Vertrauen",
+    "updated": "Zuletzt aktualisiert",
+    "nextUpdate": "Nächste Aktualisierung in ~{mins} Min."
+  },
+  "badge": {
+    "bullish": "Bullish",
+    "neutral": "Neutral",
+    "bearish": "Bearish"
+  },
+  "group": {
+    "news": "News",
+    "onchain": "On-Chain",
+    "social": "Social"
+  },
+  "empty": {
+    "noResults": "Keine Treffer für die aktuelle Auswahl."
+  },
+  "select": {
+    "trend": {
+      "label": "Trend",
+      "all": "Alle Trends"
+    },
+    "sort": {
+      "label": "Sortierung",
+      "score": "Score (absteigend)",
+      "confidence": "Vertrauen",
+      "symbol": "Symbol (A-Z)"
+    }
+  },
+  "action": {
+    "details": "Details"
+  },
+  "home": {
+    "noReport": "Kein Bericht gefunden. Du kannst jetzt einen Tagesbericht erzeugen.",
+    "detailsFor": "Details für {date}"
+  },
+  "nav": {
+    "archive": "Archiv",
+    "today": "Heute",
+    "backHome": "Zur Startseite"
+  },
+  "archive": {
+    "search": "Suche (Datum, Summary)",
+    "allAssets": "Alle Assets",
+    "details": "Details ansehen"
+  },
+  "detail": {
+    "notFoundTitle": "Bericht nicht gefunden",
+    "notFoundText": "Für das Datum {date} existiert kein Bericht."
+  }
 }

@@ -21,7 +21,7 @@ async function loadLatestReport(): Promise<DailyCryptoSentiment | null> {
   const jsonFiles = files.filter((f) => f.endsWith('.json'));
   if (jsonFiles.length === 0) return null;
   jsonFiles.sort();
-  const latest = jsonFiles[jsonFiles.length - 1];
+  const latest = jsonFiles[jsonFiles.length - 1]!;
   const raw = await readFile(join(dir, latest), 'utf8');
   const parsed = JSON.parse(raw) as unknown;
   if (!isDailyCryptoSentiment(parsed)) return null;

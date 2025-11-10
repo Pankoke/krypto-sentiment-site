@@ -55,7 +55,7 @@ export function SelectTrigger({ className = '', children }: React.HTMLAttributes
   const ctx = React.useContext(SelectCtx);
   React.useEffect(() => {
     ctx?.setTriggerClass(className);
-  }, [className]);
+  }, [className, ctx]);
   return <div className="hidden" aria-hidden>{children}</div>;
 }
 
@@ -75,7 +75,7 @@ export function SelectContent({ children }: { children: React.ReactNode }) {
       }
     });
     ctx?.registerOptions(opts);
-  }, [children]);
+  }, [children, ctx]);
   return <div className="hidden" aria-hidden>{children}</div>;
 }
 

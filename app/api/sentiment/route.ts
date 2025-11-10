@@ -10,7 +10,7 @@ async function loadLatestFile(): Promise<string | null> {
     const jsonFiles = files.filter((f) => f.endsWith('.json'));
     if (jsonFiles.length === 0) return null;
     jsonFiles.sort();
-    return join(dir, jsonFiles[jsonFiles.length - 1]);
+    return join(dir, jsonFiles[jsonFiles.length - 1]!);
   } catch {
     return null;
   }

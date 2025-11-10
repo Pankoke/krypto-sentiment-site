@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import Card from '../ui/Card';
-import type { ArchiveItem } from '../../app/reports/page';
+import type { ArchiveItem } from '../../lib/types';
 import { useTranslations } from 'next-intl';
 
 type Props = {

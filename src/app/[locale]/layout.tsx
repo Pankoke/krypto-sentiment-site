@@ -8,10 +8,14 @@ export function generateStaticParams() {
 export default async function LocaleLayout({ children, params: { locale } }: { children: React.ReactNode; params: { locale: 'de' | 'en' } }) {
   let messages: Record<string, string>;
   try {
-    messages = (await import(`../../messages/${locale}.json`)).default as Record<string, string>;
+    messages = (await import(`../messages/${locale}.json`)).default as Record<string, string>;
   } catch {
     notFound();
   }
-  return <NextIntlClientProvider locale={locale}>{children}</NextIntlClientProvider>;
+  return (
+    <NextIntlClientProvider locale={locale} messages={messages}>
+      {children}
+    </NextIntlClientProvider>
+  );
 }
 

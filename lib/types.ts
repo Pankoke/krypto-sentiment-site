@@ -22,6 +22,13 @@ export interface DailyCryptoSentiment {
   method_note: string;
 }
 
+export type ArchiveItem = {
+  date: string;
+  assetsCount: number;
+  macroSummary: string;
+  symbols: string[];
+};
+
 export interface UnifiedPost {
   source: SourceType;
   asset: string;

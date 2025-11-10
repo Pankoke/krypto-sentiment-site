@@ -13,6 +13,9 @@ export default async function LocaleLayout({ children, params: { locale } }: { c
   } catch {
     notFound();
   }
-  return <NextIntlClientProvider locale={locale}>{children}</NextIntlClientProvider>;
+  return (
+    <NextIntlClientProvider locale={locale} messages={messages}>
+      {children}
+    </NextIntlClientProvider>
+  );
 }
-

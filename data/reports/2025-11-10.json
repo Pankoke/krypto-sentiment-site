@@ -1,0 +1,63 @@
+{
+  "date": "2025-11-10",
+  "universe": [
+    "BTC",
+    "ETH",
+    "SOL"
+  ],
+  "assets": [
+    {
+      "symbol": "BTC",
+      "sentiment": "bullish",
+      "score": 0.85,
+      "confidence": 0.95,
+      "rationale": "Positive Nachrichten über ETF-Zuflüsse und Hashrate, kombiniert mit On-Chain-Abflüssen von Börsen und anhaltendem Kaufinteresse institutioneller Anleger.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "BTC ETF-Zuflüsse steigen über 250 Mio. USD; Kurs hält 70k."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Exchange netflow ↓ (netto Abflüsse); Reserve sinkt."
+        }
+      ]
+    },
+    {
+      "symbol": "ETH",
+      "sentiment": "bullish",
+      "score": 0.8,
+      "confidence": 0.9,
+      "rationale": "Niedrige Gasgebühren und positive Entwicklung auf Layer 2 durch das Dencun-Upgrade; steigende Zahl aktiver Adressen.",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "ETH gas fees super low rn, L2s buzzing"
+        },
+        {
+          "source": "news",
+          "evidence": "Ethereum Dencun-Upgrade senkt L2-Gebühren weiter laut mehreren Rollups."
+        }
+      ]
+    },
+    {
+      "symbol": "SOL",
+      "sentiment": "bullish",
+      "score": 0.75,
+      "confidence": 0.85,
+      "rationale": "Anstieg im DeFi-TVL und hoher DEX-Volumen; positive Stimmung in sozialen Medien über Memecoins.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Solana DeFi-TVL erreicht neues Jahreshoch; Aktivität im Ökosystem nimmt zu."
+        },
+        {
+          "source": "social",
+          "evidence": "SOL memecoins pumping again, volume picking up"
+        }
+      ]
+    }
+  ],
+  "macro_summary": "Der Kryptomarkt zeigt insgesamt eine starke bullische Tendenz, angetrieben durch institutionelle Zuflüsse und positive On-Chain-Daten, insbesondere bei BTC und ETH. Solana profitiert von einem starken DeFi-Wachstum.",
+  "method_note": "Der Bericht entstand durch Aggregation und Analyse von sozialen Medien, Nachrichtenartikeln und On-Chain-Daten zur Sentimentermittlung."
+}

@@ -1,15 +1,8 @@
 import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
-import type { DailyCryptoSentiment } from '../../../../lib/types';
+import type { ArchiveItem, DailyCryptoSentiment } from '../../../../lib/types';
 import { isDailyCryptoSentiment } from '../../../../lib/types';
 import ArchiveList from '../../../../components/archive/ArchiveList';
-
-export type ArchiveItem = {
-  date: string;
-  assetsCount: number;
-  macroSummary: string;
-  symbols: string[];
-};
 
 async function loadArchive(): Promise<ArchiveItem[]> {
   const dir = join(process.cwd(), 'data', 'reports');
@@ -49,4 +42,3 @@ export default async function Page() {
   const items = await loadArchive();
   return <ArchiveList items={items} />;
 }
-

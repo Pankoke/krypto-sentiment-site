@@ -4,8 +4,6 @@ import { isDailyCryptoSentiment } from './types';
 // Import des JSON-Schemas mit Import-Attribut (ESM)
 // TS benötigt resolveJsonModule und unterstützt Import-Attribute in Bundlern
 // (Next.js / TS5 + bundler Auflösung)
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error Import-Attribute werden zur Laufzeit vom Bundler gehandhabt
 import schema from '../schema/sentiment.schema.json' assert { type: 'json' };
 
 type JsonRecord = Record<string, unknown>;

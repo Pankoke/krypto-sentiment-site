@@ -24,8 +24,8 @@ export function SentimentHeader({ dateISO, lastUpdatedISO, nextRefreshETASeconds
       </div>
       <div className="flex items-center gap-3">
         <Select value={filter.trend ?? 'all'} onValueChange={(v) => onChangeFilter({ ...filter, trend: v as typeof filter.trend })}>
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder={t('select.trend')} />
+        <SelectTrigger className="w-40">
+          <SelectValue placeholder={t('select.trend.label')} />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">{t('select.trend.all')}</SelectItem>
@@ -35,8 +35,8 @@ export function SentimentHeader({ dateISO, lastUpdatedISO, nextRefreshETASeconds
           </SelectContent>
         </Select>
         <Select value={filter.sort} onValueChange={(v) => onChangeFilter({ ...filter, sort: v as typeof filter.sort })}>
-          <SelectTrigger className="w-44">
-            <SelectValue placeholder={t('select.sort')} />
+        <SelectTrigger className="w-44">
+          <SelectValue placeholder={t('select.sort.label')} />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="score">{t('select.sort.score')}</SelectItem>

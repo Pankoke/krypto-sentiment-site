@@ -1,9 +1,5 @@
 import type { UnifiedPost } from '../types';
 
-function tsMinus(minutes: number): string {
-  return new Date(Date.now() - minutes * 60_000).toISOString();
-}
-
 export async function fetchNews(): Promise<UnifiedPost[]> {
   const now = Date.now();
   const base = (m: number) => new Date(now - m * 60_000).toISOString();
@@ -35,4 +31,3 @@ export async function fetchNews(): Promise<UnifiedPost[]> {
   ];
   return posts;
 }
-

@@ -1,10 +1,8 @@
 import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
-import type { DailyCryptoSentiment } from '../../../../lib/types';
-import { isDailyCryptoSentiment } from '../../../../lib/types';
-import ArchiveList from '../../../../components/archive/ArchiveList';
-import { getTranslations } from 'next-intl/server';
-
+import type { DailyCryptoSentiment } from 'lib/types';
+import { isDailyCryptoSentiment } from 'lib/types';
+import ArchiveList from 'components/archive/ArchiveList';
 export type ArchiveItem = {
   date: string;
   assetsCount: number;
@@ -47,7 +45,6 @@ export const metadata = {
 };
 
 export default async function Page() {
-  const t = await getTranslations();
   const items = await loadArchive();
   // ArchiveList ist clientseitig, nutzt eigene Labels; TODO: i18n-Props durchreichen
   return <ArchiveList items={items} />;
