@@ -20,8 +20,15 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   try {
     messages = (await import(`../src/app/messages/${cookieLocale}.json`)).default as Record<string, string>;
   } catch (e) {
-    // ignore — provider can still render with empty messages
+    // ignore – provider can still render with empty messages
   }
+
+  type FooterMessages = { footer?: { disclaimer?: string } };
+  const footerMessages = messages as FooterMessages;
+  const footerDisclaimer =
+    typeof footerMessages.footer?.disclaimer === 'string'
+      ? footerMessages.footer!.disclaimer
+      : 'KI-generierter Inhalt; keine Finanzberatung.';
 
   return (
     <html lang={cookieLocale}>
@@ -39,7 +46,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           <main className="max-w-5xl mx-auto p-6">{children}</main>
           <footer className="border-t bg-white/70 backdrop-blur">
             <div className="max-w-5xl mx-auto px-6 py-4 text-xs text-gray-500">
-              {(messages as any)?.footer?.disclaimer ?? 'KI‑generierter Inhalt; keine Finanzberatung.'}
+              {footerDisclaimer}
             </div>
           </footer>
         </NextIntlClientProvider>

@@ -120,7 +120,18 @@ function buildUserPrompt(symbol: string, signals: Signal[]): string {
   return `Erzeuge pro Asset ein kurzes summary basierend auf den folgenden Top-Signalen: [${evidenceList}]. Gib rein JSON zurück ohne zusätzliche Erklärungen.`;
 }
 
-async function summarizeRationale(symbol: string, signals: Signal[]): Promise<{ rationale: string; usedFallback: boolean; parsed?: any }> {
+type ParsedRationale = {
+  sentiment?: AssetReport['sentiment'];
+  score?: number;
+  confidence?: number;
+  rationale?: string;
+};
+
+type OpenAICompletionResponse = {
+  choices?: Array<{ message?: { content?: string } }>;
+};
+
+async function summarizeRationale(symbol: string, signals: Signal[]): Promise<{ rationale: string; usedFallback: boolean; parsed?: ParsedRationale }> {
   const fallback = fallbackRationale(symbol, signals);
   if (!signals.length) {
     return { rationale: fallback, usedFallback: true };
@@ -142,12 +153,12 @@ async function summarizeRationale(symbol: string, signals: Signal[]): Promise<{ 
       max_tokens: 220,
     });
 
-    const response = await Promise.race([
+    const response = (await Promise.race([
       aiPromise,
       new Promise((_, rej) => setTimeout(() => rej(new Error('openai-timeout')), OPENAI_TIMEOUT_MS)),
-    ]);
+    ])) as OpenAICompletionResponse;
 
-    let content = (response as any)?.choices?.[0]?.message?.content;
+    let content = response.choices?.[0]?.message?.content;
     if (!content) {
       throw new Error('OpenAI lieferte keine Antwort');
     }
@@ -161,7 +172,7 @@ async function summarizeRationale(symbol: string, signals: Signal[]): Promise<{ 
     }
 
     // try to extract a JSON substring and parse it
-    let parsed: any = undefined;
+    let parsed: ParsedRationale | undefined = undefined;
     if (typeof content === 'string') {
       try {
         // find first { and last }
@@ -169,13 +180,14 @@ async function summarizeRationale(symbol: string, signals: Signal[]): Promise<{ 
         const last = content.lastIndexOf('}');
         if (first !== -1 && last !== -1 && last > first) {
           const maybeJson = content.slice(first, last + 1);
-          parsed = JSON.parse(maybeJson);
+          const parsedJson = JSON.parse(maybeJson);
+          parsed = typeof parsedJson === 'object' && parsedJson !== null ? (parsedJson as ParsedRationale) : undefined;
         } else {
-          // attempt direct parse
-          parsed = JSON.parse(content);
+          const parsedJson = JSON.parse(content);
+          parsed = typeof parsedJson === 'object' && parsedJson !== null ? (parsedJson as ParsedRationale) : undefined;
         }
       } catch (e) {
-        // not valid JSON — ignore parsed
+        // not valid JSON – ignore parsed
         parsed = undefined;
       }
     }

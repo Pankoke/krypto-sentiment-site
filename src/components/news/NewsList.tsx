@@ -43,8 +43,11 @@ export default function NewsList({ className = "" }: { className?: string }) {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
         if (!aborted) setReport(json as AggregatedReport);
-      } catch (e: any) {
-        if (!aborted) setError(e?.message ?? String(e));
+      } catch (error) {
+        if (!aborted) {
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          setError(errorMessage);
+        }
       } finally {
         if (!aborted) setLoading(false);
       }

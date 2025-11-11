@@ -8,19 +8,40 @@
   ],
   "assets": [
     {
+      "symbol": "ETH",
+      "sentiment": "bullish",
+      "score": 0.8,
+      "confidence": 0.85,
+      "rationale": "Die Layer-2-Communities zeigen eine positive Stimmung über die verbesserten Rollups, was auf eine steigende Akzeptanz hinweist. Zudem steigen die aktiven Adressen und die Staking-Quote bleibt stabil, was das Vertrauen in das Netzwerk stärkt. Das Dencun-Upgrade senkt die L2-Gebühren weiter, was die Nutzung von Ethereum attraktiver macht.",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "Layer-2 communities celebrating smoother rollups."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Active addresses steigen; Staking-Quote bleibt stabil."
+        },
+        {
+          "source": "news",
+          "evidence": "Ethereum Dencun-Upgrade senkt L2-GebǬhren weiter laut mehreren Rollups."
+        }
+      ]
+    },
+    {
       "symbol": "AVAX",
       "sentiment": "bullish",
       "score": 0.8,
       "confidence": 0.75,
-      "rationale": "Die hohen Transaktionsgeschwindigkeiten (TPS) und der stabile Belohnungsfluss der Miner deuten auf eine gesunde Netzwerkaktivität hin. Zudem zeigt die aktive Diskussion in der Community über Multi-Chain-Strategien und neue Brücken, dass es Bestrebungen gibt, die Nutzung und Interoperabilität von AVAX zu erhöhen.",
+      "rationale": "Die Avalanche-Brücken zeigen einen Anstieg der Mittelzuflüsse in Smart-Contracts, was auf ein wachsendes Interesse an der Plattform hindeutet. Zudem berichten Avalanche-DApps von einem Anstieg des Total Value Locked (TVL) nach einem erfolgreichen Update, was das Vertrauen in die Technologie stärkt.",
       "top_signals": [
         {
           "source": "onchain",
-          "evidence": "AVAX-Miner sichern weiterhin hohe TPS mit stabilem Belohnungsfluss."
+          "evidence": "Avalanche-Brücken melden mehr Mittelzufluss in Smart-Contracts."
         },
         {
           "source": "news",
-          "evidence": "AVAX-Community diskutiert Multi-Chain-Strategien und neue Brücken."
+          "evidence": "Avalanche-DApps melden wachsende TVL nach erfolgreichem Update."
         }
       ]
     },
@@ -28,20 +49,16 @@
       "symbol": "SOL",
       "sentiment": "bullish",
       "score": 0.66,
-      "confidence": 1,
-      "rationale": "{\n  \"symbol\": \"SOL\",\n  \"sentiment\": \"bullish\",\n  \"score\": 0.8,\n  \"confidence\": 0.85,\n  \"rationale\": \"Die aktuellen Signale deuten auf eine positive Entwicklung im Solana-Ökosystem hin, insbesondere durch steigende On-Chain-Aktivitäten und ein neues Jahreshoch im DeFi-TVL. Zudem gibt es frische Finanzierungsrunden für Infrastrukturprojekte, was das Wachstum weiter unterstützen könnte.\",\n  \"top_signals\": [\n    { \"source\": \"social\", \"evidence\": \"Minutes from the last council highlight scheduling for scaling updates.\" },\n    { \"source\": \"social\", \"evidence\": \"SOL memecoins pumping again, volume picking up.\" },\n    { \"source\": \"social\", \"evidence\": \"Community notes fresh funding rounds for infrastructure builders.\" },\n    { \"source\": \"onchain\", \"evidence\": \"Solana Validators sehen steigende Votes und On-Chain-Aktivität.\" },\n    { \"source\":",
+      "confidence": 0.9383,
+      "rationale": "{\n  \"symbol\": \"SOL\",\n  \"sentiment\": \"bullish\",\n  \"score\": 0.8,\n  \"confidence\": 0.75,\n  \"rationale\": \"Die Aktivität im Solana-Ökosystem nimmt zu, was durch steigende Votes der Validatoren und ein neues Jahreshoch im DeFi-TVL belegt wird. Zudem zeigen die sozialen Medien ein positives Sentiment mit steigenden Volumina und Interesse an Memecoins.\",\n  \"top_signals\": [\n    { \"source\": \"social\", \"evidence\": \"SOL memecoins pumping again, volume picking up.\" },\n    { \"source\": \"social\", \"evidence\": \"Traders watch stablecoin balances alongside BTC inflows.\" },\n    { \"source\": \"onchain\", \"evidence\": \"Solana Validators sehen steigende Votes und On-Chain-Aktivität.\" },\n    { \"source\": \"news\", \"evidence\": \"Solana DeFi-TVL erreicht neues Jahreshoch; Aktivität im Ökosystem nimmt zu",
       "top_signals": [
-        {
-          "source": "social",
-          "evidence": "Minutes from the last council highlight scheduling for scaling updates."
-        },
         {
           "source": "social",
           "evidence": "SOL memecoins pumping again, volume picking up."
         },
         {
           "source": "social",
-          "evidence": "Community notes fresh funding rounds for infrastructure builders."
+          "evidence": "Traders watch stablecoin balances alongside BTC inflows."
         },
         {
           "source": "onchain",
@@ -56,13 +73,21 @@
     {
       "symbol": "BTC",
       "sentiment": "neutral",
-      "score": 0.5,
-      "confidence": 0.9379333333333334,
-      "rationale": "{\n  \"symbol\": \"BTC\",\n  \"sentiment\": \"bullish\",\n  \"score\": 0.8,\n  \"confidence\": 0.85,\n  \"rationale\": \"Die ETF-Narrative bleibt stark, da institutionelle Käufe weiterhin zunehmen. Zudem zeigen Onchain-Daten, dass große Bitcoin-UTXOs aktiv sind, was auf ein erhöhtes Interesse hinweist. Die Zuflüsse in Bitcoin-ETFs über 250 Millionen USD und die Wahrnehmung von Bitcoin als sicheren Hafen während schwächelnder Märkte stärken das positive Sentiment.\",\n  \"top_signals\": [\n    { \"source\": \"social\", \"evidence\": \"ETF narrative not over yet, institutions still buying.\" },\n    { \"source\": \"onchain\", \"evidence\": \"Bitcoin UTXOs mit >1k BTC bewegen sich vermehrt.\" },\n    { \"source\": \"news\", \"evidence\": \"BTC ETF-ZuflǬsse steigen Ǭber 250 Mio. USD; Kurs h��",
+      "score": 0.58,
+      "confidence": 1,
+      "rationale": "{\n  \"symbol\": \"BTC\",\n  \"sentiment\": \"bullish\",\n  \"score\": 0.8,\n  \"confidence\": 0.85,\n  \"rationale\": \"Die aktuellen On-Chain-Daten deuten auf eine erneute Akkumulation von Bitcoin hin, was auf ein wachsendes Interesse der Investoren hindeutet. Zudem zeigen die steigenden Erlöse der Miner bei stabiler Hashrate, dass die Mining-Aktivitäten profitabel bleiben, was das Vertrauen in die Netzwerksicherheit stärkt.\",\n  \"top_signals\": [\n    { \"source\": \"social\", \"evidence\": \"Bitcoin on-chain data hints at renewed accumulation.\" },\n    { \"source\": \"social\", \"evidence\": \"Minutes from the last council highlight scheduling for scaling updates.\" },\n    { \"source\": \"social\", \"evidence\": \"Community notes fresh funding rounds for infrastructure builders.\" },\n    { \"source\": \"onchain\", \"evidence\": \"Bitcoin UTXOs mit >1k BTC bewegen sich vermehrt",
       "top_signals": [
         {
           "source": "social",
-          "evidence": "ETF narrative not over yet, institutions still buying."
+          "evidence": "Bitcoin on-chain data hints at renewed accumulation."
+        },
+        {
+          "source": "social",
+          "evidence": "Minutes from the last council highlight scheduling for scaling updates."
+        },
+        {
+          "source": "social",
+          "evidence": "Community notes fresh funding rounds for infrastructure builders."
         },
         {
           "source": "onchain",
@@ -70,36 +95,7 @@
         },
         {
           "source": "news",
-          "evidence": "BTC ETF-ZuflǬsse steigen Ǭber 250 Mio. USD; Kurs h��lt 70k."
-        },
-        {
-          "source": "news",
-          "evidence": "Makro-Analysten sehen Bitcoin als sicheren Hafen wǬhrend traditioneller Märkte schwächeln."
-        }
-      ]
-    },
-    {
-      "symbol": "ETH",
-      "sentiment": "neutral",
-      "score": 0.5,
-      "confidence": 1,
-      "rationale": "{\n  \"asset\": [\n    {\n      \"symbol\": \"ETH\",\n      \"sentiment\": \"bullish\",\n      \"score\": 0.8,\n      \"confidence\": 0.85,\n      \"rationale\": \"Die niedrigen Gasgebühren und das Wachstum im Layer-2-Ökosystem deuten auf eine steigende Nutzung und Akzeptanz von Ethereum hin. Zudem zeigen die wachsenden Durchsätze seit dem Dencun-Upgrade, dass die Infrastruktur robust ist und sich weiterentwickelt.\",\n      \"top_signals\": [\n        { \"source\": \"social\", \"evidence\": \"ETH gas fees super low rn, L2s buzzing.\" },\n        { \"source\": \"news\", \"evidence\": \"Layer-2-Ökosystem verzeichnet neue Kapitalkraft für Asset-Interoperabilität.\" },\n        { \"source\": \"onchain\", \"evidence\": \"L2-Transaktionen zeigen wachsende Durchsätze seit dem Dencun-Upgrade.\" }\n      ]\n    },",
-      "top_signals": [
-        {
-          "source": "social",
-          "evidence": "ETH gas fees super low rn, L2s buzzing."
-        },
-        {
-          "source": "social",
-          "evidence": "Traders watch stablecoin balances alongside BTC inflows."
-        },
-        {
-          "source": "news",
-          "evidence": "Layer-2-Ökosystem verzeichnet neue Kapitalkraft fǬr Asset-InteroperabilitǬt."
-        },
-        {
-          "source": "onchain",
-          "evidence": "L2-Transaktionen zeigen wachsende Durchsätze seit dem Dencun-Upgrade."
+          "evidence": "Bitcoin-Miner sehen steigende Erl��se bei stabiler Hashrate."
         }
       ]
     }
