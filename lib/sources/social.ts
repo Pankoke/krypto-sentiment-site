@@ -46,10 +46,10 @@ export async function fetchSocial(): Promise<UnifiedPost[]> {
     );
   });
 
-  const bonus: UnifiedPost[] = Array.from({ length: extraSocial.length }).map((_, idx) => ({
+  const bonus: UnifiedPost[] = extraSocial.map((text, idx) => ({
     source: 'social',
     asset: pick(['BTC', 'ETH', 'SOL', 'AVAX']),
-    text: extraSocial[idx],
+    text,
     ts: timestampMinutesAgo(2 + idx * 3, 6 + idx * 3),
     engagement: randomInt(250, 700),
   }));

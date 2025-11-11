@@ -3,7 +3,7 @@ import type { UnifiedPost } from '../types';
 export const randomInt = (min: number, max: number) => min + Math.floor(Math.random() * (max - min + 1));
 
 export function pick<T>(items: readonly T[]): T {
-  return items[Math.floor(Math.random() * items.length)];
+  return items[Math.floor(Math.random() * items.length)]!;
 }
 
 export function timestampMinutesAgo(min: number, max: number): string {

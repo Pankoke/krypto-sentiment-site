@@ -1,0 +1,81 @@
+{
+  "date": "2025-11-11",
+  "universe": [
+    "BTC",
+    "ETH",
+    "SOL",
+    "AVAX"
+  ],
+  "assets": [
+    {
+      "symbol": "BTC",
+      "sentiment": "bullish",
+      "score": 0.85,
+      "confidence": 0.9,
+      "rationale": "Positive sentiment across multiple sources: continued institutional interest, net exchange outflows, and view as a safe haven during market uncertainty.",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "ETF narrative not over yet, institutions still buying."
+        },
+        {
+          "source": "news",
+          "evidence": "Makro-Analysten sehen Bitcoin als sicheren Hafen w\"hrend traditioneller Märkte schwächeln."
+        }
+      ]
+    },
+    {
+      "symbol": "ETH",
+      "sentiment": "bullish",
+      "score": 0.8,
+      "confidence": 0.85,
+      "rationale": "Increased active addresses and positive community response to upgrades and scaling solutions improving network utility.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Ethereum Dencun-Upgrade senkt L2-Gebühren weiter laut mehreren Rollups."
+        },
+        {
+          "source": "social",
+          "evidence": "Layer-2 communities celebrating smoother rollups."
+        }
+      ]
+    },
+    {
+      "symbol": "SOL",
+      "sentiment": "bullish",
+      "score": 0.88,
+      "confidence": 0.87,
+      "rationale": "Strong infrastructure development with rising engagement and new governance initiatives pushing the ecosystem forward.",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "SOL devs hyped about upcoming governance push."
+        },
+        {
+          "source": "news",
+          "evidence": "Solana-Infrastrukturfirmen berichten von erhöhter Validator-Engagement."
+        }
+      ]
+    },
+    {
+      "symbol": "AVAX",
+      "sentiment": "neutral",
+      "score": 0.65,
+      "confidence": 0.75,
+      "rationale": "Positive onchain activity with increased TVL, but lacks same level of engagement as other assets reported.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Avalanche-DApps melden wachsende TVL nach erfolgreichem Update."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Avalanche-Brücken melden mehr Mittelzufluss in Smart-Contracts."
+        }
+      ]
+    }
+  ],
+  "macro_summary": "Market shows bullish sentiment led by Bitcoin's status as a safe haven and increasing activity in Ethereum and Solana networks. Broader crypto-asset development continues promising trajectory despite some volatility.",
+  "method_note": "Sentiment derived using integrated analysis of social media engagement, news impact, and onchain data, focusing on inter-source consistency and relevance of each asset."
+}
