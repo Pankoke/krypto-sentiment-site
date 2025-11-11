@@ -21,6 +21,9 @@
   "empty": {
     "noResults": "Keine Treffer für die aktuelle Auswahl."
   },
+  "error": {
+    "fetchSentiment": "Fehler beim Laden der Sentiment-Daten. Bitte erneut versuchen."
+  },
   "select": {
     "trend": {
       "label": "Trend",
@@ -34,7 +37,9 @@
     }
   },
   "action": {
-    "details": "Details"
+    "details": "Details",
+    "retry": "Erneut laden",
+    "close": "Schließen"
   },
   "home": {
     "noReport": "Kein Bericht gefunden. Du kannst jetzt einen Tagesbericht erzeugen.",
@@ -52,6 +57,7 @@
   },
   "detail": {
     "notFoundTitle": "Bericht nicht gefunden",
-    "notFoundText": "Für das Datum {date} existiert kein Bericht."
+    "notFoundText": "Für das Datum {date} existiert kein Bericht.",
+    "noSignals": "Keine Signale in dieser Kategorie."
   }
 }

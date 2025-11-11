@@ -7,12 +7,13 @@ import { SentimentHeader } from '@/components/sentiment/SentimentHeader';
 import { SentimentCard } from '@/components/sentiment/SentimentCard';
 import { SentimentDetailDialog } from '@/components/sentiment/SentimentDetailDialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
 
 const fetcher = (u: string) => fetch(u).then((r) => r.json() as Promise<SentimentResponse>);
 
 export default function SentimentPageClient() {
   const t = useTranslations();
-  const { data, isLoading } = useSWR<SentimentResponse>('/api/sentiment?window=24h', fetcher, {
+  const { data, error, isLoading, mutate } = useSWR<SentimentResponse>('/api/sentiment?window=24h', fetcher, {
     revalidateOnFocus: false,
   });
   const [filter, setFilter] = useState<{ trend?: 'bullish' | 'neutral' | 'bearish' | 'all'; sort: 'score' | 'confidence' | 'symbol' }>({ sort: 'score', trend: 'all' });
@@ -38,6 +39,13 @@ export default function SentimentPageClient() {
         onChangeFilter={setFilter}
       />
 
+      {error && (
+        <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-900 space-y-2">
+          <p>{t('error.fetchSentiment')}</p>
+          <Button onClick={() => mutate?.()}>{t('action.retry')}</Button>
+        </div>
+      )}
+
       {isLoading && (
         <div className="grid md:grid-cols-3 gap-6">
           {Array.from({ length: 3 }).map((_, i) => (
@@ -46,7 +54,7 @@ export default function SentimentPageClient() {
         </div>
       )}
 
-      {!isLoading && items.length === 0 && (
+      {!isLoading && !error && items.length === 0 && (
         <div className="rounded-xl border p-6 text-sm">{t('empty.noResults')}</div>
       )}
 

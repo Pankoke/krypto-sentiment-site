@@ -34,7 +34,9 @@
     }
   },
   "action": {
-    "details": "Details"
+    "details": "Details",
+    "retry": "Retry",
+    "close": "Close"
   },
   "home": {
     "noReport": "No report found. You can generate one now.",
@@ -52,6 +54,10 @@
   },
   "detail": {
     "notFoundTitle": "Report not found",
-    "notFoundText": "No report exists for {date}."
+    "notFoundText": "No report exists for {date}.",
+    "noSignals": "No signals available in this category."
+  },
+  "error": {
+    "fetchSentiment": "Failed to load sentiment data, please try again."
   }
 }
