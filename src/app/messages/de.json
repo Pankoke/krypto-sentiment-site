@@ -1,63 +1,39 @@
 {
-  "title": {
-    "sentiment": "Krypto-Sentiment"
-  },
+  "title": { "sentiment": "Krypto-Sentiment" },
   "label": {
     "score": "Score",
     "confidence": "Vertrauen",
     "updated": "Zuletzt aktualisiert",
     "nextUpdate": "Nächste Aktualisierung in ~{mins} Min."
   },
-  "badge": {
-    "bullish": "Bullish",
-    "neutral": "Neutral",
-    "bearish": "Bearish"
-  },
-  "group": {
-    "news": "News",
-    "onchain": "On-Chain",
-    "social": "Social"
-  },
-  "empty": {
-    "noResults": "Keine Treffer für die aktuelle Auswahl."
-  },
-  "error": {
-    "fetchSentiment": "Fehler beim Laden der Sentiment-Daten. Bitte erneut versuchen."
-  },
+  "badge": { "bullish": "Bullish", "neutral": "Neutral", "bearish": "Bearish" },
+  "group": { "news": "News", "onchain": "On-Chain", "social": "Social" },
+  "empty": { "noResults": "Keine Treffer für die aktuelle Auswahl." },
+  "error": { "fetchSentiment": "Fehler beim Laden der Sentiment-Daten. Bitte erneut versuchen." },
   "select": {
-    "trend": {
-      "label": "Trend",
-      "all": "Alle Trends"
-    },
-    "sort": {
-      "label": "Sortierung",
-      "score": "Score (absteigend)",
-      "confidence": "Vertrauen",
-      "symbol": "Symbol (A-Z)"
-    }
+    "trend": { "label": "Trend", "all": "Alle Trends" },
+    "sort": { "label": "Sortierung", "score": "Score (absteigend)", "confidence": "Vertrauen", "symbol": "Symbol (A-Z)" }
   },
-  "action": {
-    "details": "Details",
-    "retry": "Erneut laden",
-    "close": "Schließen"
+  "action": { "details": "Details", "retry": "Erneut laden", "close": "Schließen", "info": "Info" },
+  "home": { "noReport": "Kein Bericht gefunden. Du kannst jetzt einen Tagesbericht erzeugen.", "detailsFor": "Details für {date}" },
+  "nav": { "archive": "Archiv", "today": "Heute", "backHome": "Zur Startseite", "news": "Nachrichten" },
+  "news": {
+    "title": "Nachrichten & Signale",
+    "description": "Aggregierte Signale und kurze Begründungen pro Asset.",
+    "loading": "Lade Nachrichten…",
+    "errorLoading": "Fehler beim Laden: {error}",
+    "noData": "Keine Daten verfügbar.",
+    "reportLabel": "Bericht:",
+    "showRationale": "Rationale anzeigen",
+    "noRationale": "Keine Rationale verfügbar.",
+    "topSignals": "Top-Signale",
+    "hint": "Hinweis: {note}"
   },
-  "home": {
-    "noReport": "Kein Bericht gefunden. Du kannst jetzt einen Tagesbericht erzeugen.",
-    "detailsFor": "Details für {date}"
+  "tooltip": {
+    "definitionTitle": "Definition",
+    "calibration": "Zuverlässigkeit anhand historischer Treffer ähnlicher Muster. Kalibrierung der letzten 30 Tage verfügbar in den Details."
   },
-  "nav": {
-    "archive": "Archiv",
-    "today": "Heute",
-    "backHome": "Zur Startseite"
-  },
-  "archive": {
-    "search": "Suche (Datum, Summary)",
-    "allAssets": "Alle Assets",
-    "details": "Details ansehen"
-  },
-  "detail": {
-    "notFoundTitle": "Bericht nicht gefunden",
-    "notFoundText": "Für das Datum {date} existiert kein Bericht.",
-    "noSignals": "Keine Signale in dieser Kategorie."
-  }
+  "footer": { "disclaimer": "KI‑generierter Inhalt; keine Finanzberatung.", "disclaimerShort": "KI‑generiert · Keine Anlageberatung" },
+  "archive": { "search": "Suche (Datum, Summary)", "allAssets": "Alle Assets", "details": "Details ansehen" },
+  "detail": { "notFoundTitle": "Bericht nicht gefunden", "notFoundText": "Für das Datum {date} existiert kein Bericht.", "noSignals": "Keine Signale in dieser Kategorie." }
 }

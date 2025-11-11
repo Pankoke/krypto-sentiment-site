@@ -41,9 +41,8 @@ export function SentimentCard({ item, onOpenDetails }: SentimentCardProps) {
                 content={
                   <div>
                     <div>
-                      <b>Definition</b>: Zuverlässigkeit anhand historischer Treffer ähnlicher Muster.
+                      <b>{t('tooltip.definitionTitle')}</b>: {t('tooltip.calibration')}
                     </div>
-                    <div>Kalibrierung der letzten 30 Tage verfügbar in den Details.</div>
                   </div>
                 }
               />
@@ -56,17 +55,17 @@ export function SentimentCard({ item, onOpenDetails }: SentimentCardProps) {
         <ul className="text-sm space-y-2">
           {grouped.news.length > 0 && (
             <li>
-              <b>📰 News:</b> {grouped.news.slice(0, 2).join(' • ')}
+              <b>📰 {t('group.news')}:</b> {grouped.news.slice(0, 2).join(' • ')}
             </li>
           )}
           {grouped.onchain.length > 0 && (
             <li>
-              <b>⛓️ On-Chain:</b> {grouped.onchain.slice(0, 2).join(' • ')}
+              <b>⛓️ {t('group.onchain')}:</b> {grouped.onchain.slice(0, 2).join(' • ')}
             </li>
           )}
           {grouped.social.length > 0 && (
             <li>
-              <b>💬 Social:</b> {grouped.social.slice(0, 2).join(' • ')}
+              <b>💬 {t('group.social')}:</b> {grouped.social.slice(0, 2).join(' • ')}
             </li>
           )}
         </ul>
@@ -75,7 +74,7 @@ export function SentimentCard({ item, onOpenDetails }: SentimentCardProps) {
           <button className="text-sm underline" onClick={() => onOpenDetails?.(item)}>
             {t('action.details')}
           </button>
-          <span className="text-xs text-muted-foreground">KI-generiert · Keine Anlageberatung</span>
+          <span className="text-xs text-muted-foreground">{t('footer.disclaimerShort')}</span>
         </div>
       </CardContent>
     </Card>

@@ -1,4 +1,3 @@
-import { NextIntlClientProvider } from 'next-intl';
 import { notFound } from 'next/navigation';
 
 export function generateStaticParams() {
@@ -6,16 +5,12 @@ export function generateStaticParams() {
 }
 
 export default async function LocaleLayout({ children, params: { locale } }: { children: React.ReactNode; params: { locale: 'de' | 'en' } }) {
-  let messages: Record<string, string>;
+  // Keep generateStaticParams for localized routing. Messages are now provided by the root layout.
+  // Validate messages exist for this locale to surface 404 early if missing.
   try {
-    // Load messages from src folder to avoid duplication
-    messages = (await import(`../../src/app/messages/${locale}.json`)).default as Record<string, string>;
+    await import(`../../src/app/messages/${locale}.json`);
   } catch {
     notFound();
   }
-  return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
-      {children}
-    </NextIntlClientProvider>
-  );
+  return <>{children}</>;
 }

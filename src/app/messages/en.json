@@ -36,7 +36,8 @@
   "action": {
     "details": "Details",
     "retry": "Retry",
-    "close": "Close"
+    "close": "Close",
+    "info": "Info"
   },
   "home": {
     "noReport": "No report found. You can generate one now.",
@@ -45,8 +46,31 @@
   "nav": {
     "archive": "Archive",
     "today": "Today",
-    "backHome": "Back to home"
+    "backHome": "Back to home",
+    "news": "News"
   },
+  "news": {
+    "title": "News & Signals",
+    "description": "Aggregated signals and short rationale per asset."
+  ,
+    "loading": "Loading news…",
+    "errorLoading": "Error loading: {error}",
+    "noData": "No data available.",
+    "reportLabel": "Report:",
+    "showRationale": "Show rationale",
+    "noRationale": "No rationale available.",
+    "topSignals": "Top signals",
+    "hint": "Note: {note}"
+  },
+  "tooltip": {
+    "definitionTitle": "Definition",
+    "calibration": "Reliability estimated from historical hits of similar patterns. Calibration for the last 30 days is available in details."
+  },
+  "footer": {
+    "disclaimer": "AI-generated content; not financial advice.",
+    "disclaimerShort": "AI-generated · Not financial advice"
+  },
+  
   "archive": {
     "search": "Search (date, summary)",
     "allAssets": "All assets",
