@@ -5,7 +5,7 @@ const onchainSignals = [
   {
     asset: 'BTC',
     snippets: [
-      'Exchange netflow (netto Abfl¸sse); Reserve sinkt.',
+      'Exchange netflow (netto Abfl√ºsse); Reserve sinkt.',
       'Bitcoin UTXOs mit >1k BTC bewegen sich vermehrt.',
     ],
   },
@@ -13,20 +13,20 @@ const onchainSignals = [
     asset: 'ETH',
     snippets: [
       'Active addresses steigen; Staking-Quote bleibt stabil.',
-      'L2-Transaktionen zeigen wachsende Durchs‰tze seit dem Dencun-Upgrade.',
+      'L2-Transaktionen zeigen wachsende Durchs√§tze seit dem Dencun-Upgrade.',
     ],
   },
   {
     asset: 'SOL',
     snippets: [
       'Neue Adressen; TPS stabil hoch; DEX-Volumen +7% d/d.',
-      'Solana Validators sehen steigende Votes und On-Chain-Aktivit‰t.',
+      'Solana Validators sehen steigende Votes und On-Chain-Aktivit√§t.',
     ],
   },
   {
     asset: 'AVAX',
     snippets: [
-      'Avalanche-Br¸cken melden mehr Mittelzufluss in Smart-Contracts.',
+      'Avalanche-Br√ºcken melden mehr Mittelzufluss in Smart-Contracts.',
       'AVAX-Miner sichern weiterhin hohe TPS mit stabilem Belohnungsfluss.',
     ],
   },

@@ -5,29 +5,29 @@ const newsBlueprints = [
   {
     asset: 'BTC',
     snippets: [
-      'BTC ETF-Zuflüsse steigen über 250 Mio. USD; Kurs hält 70k.',
-      'Bitcoin-Miner sehen steigende Erlöse bei stabiler Hashrate.',
+      'BTC ETF-ZuflÃ¼sse steigen Ã¼ber 250 Mio. USD; Kurs hÃ¤lt 70k.',
+      'Bitcoin-Miner sehen steigende ErlÃ¶se bei stabiler Hashrate.',
     ],
   },
   {
     asset: 'ETH',
     snippets: [
-      'Ethereum Dencun-Upgrade senkt L2-Gebühren weiter laut mehreren Rollups.',
-      'Layer-2-Ökosystem verzeichnet neue Kapitalkraft für Asset-Interoperabilität.',
+      'Ethereum Dencun-Upgrade senkt L2-GebÃ¼hren weiter laut mehreren Rollups.',
+      'Layer-2-Ã–kosystem verzeichnet neue Kapitalkraft fÃ¼r Asset-InteroperabilitÃ¤t.',
     ],
   },
   {
     asset: 'SOL',
     snippets: [
-      'Solana DeFi-TVL erreicht neues Jahreshoch; Aktivität im Ökosystem nimmt zu.',
-      'Solana-Infrastrukturfirmen berichten von erhöhtem Validator-Engagement.',
+      'Solana DeFi-TVL erreicht neues Jahreshoch; AktivitÃ¤t im Ã–kosystem nimmt zu.',
+      'Solana-Infrastrukturfirmen berichten von erhÃ¶htem Validator-Engagement.',
     ],
   },
   {
     asset: 'AVAX',
     snippets: [
       'Avalanche-DApps melden wachsende TVL nach erfolgreichem Update.',
-      'AVAX-Community diskutiert Multi-Chain-Strategien und neue Brücken.',
+      'AVAX-Community diskutiert Multi-Chain-Strategien und neue BrÃ¼cken.',
     ],
   },
 ];
@@ -47,7 +47,7 @@ export async function fetchNews(): Promise<UnifiedPost[]> {
         {
           source: 'news',
           asset: 'BTC',
-          text: 'Makro-Analysten sehen Bitcoin als sicheren Hafen während traditioneller Märkte schwächeln.',
+          text: 'Makro-Analysten sehen Bitcoin als sicheren Hafen wÃ¤hrend traditioneller MÃ¤rkte schwÃ¤cheln.',
           ts: timestampMinutesAgo(10 + index * 2, 14 + index * 2),
         },
       ];

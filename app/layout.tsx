@@ -10,7 +10,7 @@ import { LocaleNav } from '../src/components/LocaleNav';
 
 export const metadata: Metadata = {
   title: 'Krypto Sentiment',
-  description: 'Tägliche Krypto-Sentiment-Berichte'
+  description: 'TÃ¤gliche Krypto-Sentiment-Berichte'
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
