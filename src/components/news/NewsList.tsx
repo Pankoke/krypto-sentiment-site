@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import { useTranslations } from 'next-intl';
+import { filterAssetsByWhitelist, sortAssetsByWhitelistOrder } from '../../lib/assets';
 
 type Signal = {
   id?: string;
@@ -74,11 +75,17 @@ export default function NewsList({ className = "" }: { className?: string }) {
     return <div className={className}>{t('noData')}</div>;
   }
 
+  const displayedAssets = sortAssetsByWhitelistOrder(filterAssetsByWhitelist(report.assets));
+
+  if (displayedAssets.length === 0) {
+    return <div className={className}>{t('noData')}</div>;
+  }
+
   return (
     <div className={className}>
   <p className="text-sm text-gray-500 mb-4">{t('reportLabel')} {report.date}</p>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {report.assets.map((a) => (
+        {displayedAssets.map((a) => (
           <Card key={a.symbol} className="p-0">
             <CardHeader>
               <div className="flex items-center justify-between">

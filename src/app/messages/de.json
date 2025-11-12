@@ -20,7 +20,7 @@
   "news": {
     "title": "Nachrichten & Signale",
     "description": "Aggregierte Signale und kurze Begründungen pro Asset.",
-    "loading": "Lade Nachrichten…",
+    "loading": "Lade Nachrichten …",
     "errorLoading": "Fehler beim Laden: {error}",
     "noData": "Keine Daten verfügbar.",
     "reportLabel": "Bericht:",
@@ -33,7 +33,7 @@
     "definitionTitle": "Definition",
     "calibration": "Zuverlässigkeit anhand historischer Treffer ähnlicher Muster. Kalibrierung der letzten 30 Tage verfügbar in den Details."
   },
-  "footer": { "disclaimer": "KI‑generierter Inhalt; keine Finanzberatung.", "disclaimerShort": "KI‑generiert · Keine Anlageberatung" },
+  "footer": { "disclaimer": "KI-generierter Inhalt; keine Finanzberatung.", "disclaimerShort": "KI-generiert – keine Anlageberatung" },
   "archive": { "search": "Suche (Datum, Summary)", "allAssets": "Alle Assets", "details": "Details ansehen" },
   "detail": { "notFoundTitle": "Bericht nicht gefunden", "notFoundText": "Für das Datum {date} existiert kein Bericht.", "noSignals": "Keine Signale in dieser Kategorie." }
 }

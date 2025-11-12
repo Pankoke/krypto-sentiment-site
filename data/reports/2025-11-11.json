@@ -11,71 +11,47 @@
       "symbol": "BTC",
       "sentiment": "bullish",
       "score": 0.8,
-      "confidence": 0.9,
-      "rationale": "Bitcoin shows multiple bullish signals: increased miner revenues, net outflows indicating less selling pressure on exchanges, and its status as a safe haven during market instability.",
+      "confidence": 0.93,
+      "rationale": "Bitcoin-Miner erzielen höhere Erlöse, während Nettoabflüsse von Exchanges auf weniger Verkaufsdruck hindeuten.",
       "top_signals": [
-        {
-          "source": "news",
-          "evidence": "Bitcoin-Miner sehen steigende Erl��se bei stabiler Hashrate."
-        },
-        {
-          "source": "onchain",
-          "evidence": "Exchange netflow shows net outflows; reserve is decreasing."
-        }
+        { "source": "news", "evidence": "Bitcoin-Miner sehen steigende Erlöse bei stabiler Hashrate." },
+        { "source": "onchain", "evidence": "Exchange netflow (netto Abflüsse); Reserve sinkt." }
       ]
     },
     {
       "symbol": "ETH",
       "sentiment": "bullish",
       "score": 0.85,
-      "confidence": 0.95,
-      "rationale": "Ethereum benefits from infrastructure investment, scaling upgrades like Dencun improving L2 fees, and increased activity on chains.",
+      "confidence": 0.92,
+      "rationale": "Ethereum profitiert von niedrigeren Layer-2-Gebühren und steigenden Aktivitätszahlen nach dem Dencun-Upgrade.",
       "top_signals": [
-        {
-          "source": "news",
-          "evidence": "Ethereum Dencun-Upgrade senkt L2-Gebެhren weiter laut mehreren Rollups."
-        },
-        {
-          "source": "onchain",
-          "evidence": "Active addresses increasing; staking ratio stable."
-        }
+        { "source": "news", "evidence": "Ethereum Dencun-Upgrade senkt L2-Gebühren weiter laut mehreren Rollups." },
+        { "source": "onchain", "evidence": "Active addresses increasing; staking ratio stable." }
       ]
     },
     {
       "symbol": "SOL",
       "sentiment": "bullish",
-      "score": 0.7,
-      "confidence": 0.85,
-      "rationale": "Solana's ecosystem activity is surging with high TPS and DEX volume increase, alongside social excitement around memecoin trends.",
+      "score": 0.77,
+      "confidence": 0.88,
+      "rationale": "Solana verzeichnet steigende DEX-Volumina, während Governance-Diskussionen die Community motivieren.",
       "top_signals": [
-        {
-          "source": "social",
-          "evidence": "SOL memecoins pumping again, volume picking up."
-        },
-        {
-          "source": "onchain",
-          "evidence": "New addresses; TPS remains high; DEX volume +7% d/d."
-        }
+        { "source": "news", "evidence": "Solana DeFi-TVL erreicht neues Jahreshoch." },
+        { "source": "onchain", "evidence": "Neue Adressen; TPS stabil hoch; DEX-Volumen +7% d/d." }
       ]
     },
     {
       "symbol": "AVAX",
       "sentiment": "neutral",
-      "score": 0.5,
-      "confidence": 0.7,
-      "rationale": "Avalanche is seeing interest in multi-chain strategies and fund inflows into smart contracts, but lacks broader market excitement seen in other assets today.",
+      "score": 0.6,
+      "confidence": 0.75,
+      "rationale": "Avalanche-Infrastrukturprojekte berichten von Mittelzuflüssen, während kurzfristige Diskussionen Multi-Chain-Fokus signalisieren.",
       "top_signals": [
-        {
-          "source": "news",
-          "evidence": "AVAX-Community diskutiert Multi-Chain-Strategien und neue Brücken."
-        },
-        {
-          "source": "onchain",
-          "evidence": "Avalanche bridges report increased fund influx into smart contracts."
-        }
+        { "source": "news", "evidence": "AVAX-Community diskutiert Multi-Chain-Strategien und neue Brücken." },
+        { "source": "onchain", "evidence": "Avalanche-Brücken melden mehr Mittelzufluss in Smart-Contracts." }
       ]
     }
   ],
-  "macro_summary": "Market sentiment is generally bullish today, with varied confidence across assets reflecting updates and advancements in technology and ecosystem activity, alongside external economic factors.",
-  "method_note": "Analysis based on cross-referenced data from social platforms, financial news outlets, and on-chain activity metrics."
+  "macro_summary": "Market sentiment is generally bullish today, balancing technological progress with macroeconomic caution.",
+  "method_note": "Analysis based on aggregated signals from social, news, and on-chain data."
 }

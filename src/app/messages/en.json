@@ -1,58 +1,24 @@
 {
-  "title": {
-    "sentiment": "Crypto Sentiment"
-  },
+  "title": { "sentiment": "Crypto Sentiment" },
   "label": {
     "score": "Score",
     "confidence": "Confidence",
     "updated": "Last updated",
     "nextUpdate": "Next update in ~{mins} min."
   },
-  "badge": {
-    "bullish": "Bullish",
-    "neutral": "Neutral",
-    "bearish": "Bearish"
-  },
-  "group": {
-    "news": "News",
-    "onchain": "On-Chain",
-    "social": "Social"
-  },
-  "empty": {
-    "noResults": "No results for the current selection."
-  },
+  "badge": { "bullish": "Bullish", "neutral": "Neutral", "bearish": "Bearish" },
+  "group": { "news": "News", "onchain": "On-Chain", "social": "Social" },
+  "empty": { "noResults": "No results for the current selection." },
   "select": {
-    "trend": {
-      "label": "Trend",
-      "all": "All trends"
-    },
-    "sort": {
-      "label": "Sort",
-      "score": "Score (desc)",
-      "confidence": "Confidence",
-      "symbol": "Symbol (A-Z)"
-    }
+    "trend": { "label": "Trend", "all": "All trends" },
+    "sort": { "label": "Sort", "score": "Score (desc)", "confidence": "Confidence", "symbol": "Symbol (A-Z)" }
   },
-  "action": {
-    "details": "Details",
-    "retry": "Retry",
-    "close": "Close",
-    "info": "Info"
-  },
-  "home": {
-    "noReport": "No report found. You can generate one now.",
-    "detailsFor": "Details for {date}"
-  },
-  "nav": {
-    "archive": "Archive",
-    "today": "Today",
-    "backHome": "Back to home",
-    "news": "News"
-  },
+  "action": { "details": "Details", "retry": "Retry", "close": "Close", "info": "Info" },
+  "home": { "noReport": "No report found. You can generate one now.", "detailsFor": "Details for {date}" },
+  "nav": { "archive": "Archive", "today": "Today", "backHome": "Back to home", "news": "News" },
   "news": {
     "title": "News & Signals",
-    "description": "Aggregated signals and short rationale per asset."
-  ,
+    "description": "Aggregated signals and short rationale per asset.",
     "loading": "Loading news…",
     "errorLoading": "Error loading: {error}",
     "noData": "No data available.",
@@ -66,22 +32,8 @@
     "definitionTitle": "Definition",
     "calibration": "Reliability estimated from historical hits of similar patterns. Calibration for the last 30 days is available in details."
   },
-  "footer": {
-    "disclaimer": "AI-generated content; not financial advice.",
-    "disclaimerShort": "AI-generated · Not financial advice"
-  },
-  
-  "archive": {
-    "search": "Search (date, summary)",
-    "allAssets": "All assets",
-    "details": "View details"
-  },
-  "detail": {
-    "notFoundTitle": "Report not found",
-    "notFoundText": "No report exists for {date}.",
-    "noSignals": "No signals available in this category."
-  },
-  "error": {
-    "fetchSentiment": "Failed to load sentiment data, please try again."
-  }
+  "footer": { "disclaimer": "AI-generated content; not financial advice.", "disclaimerShort": "AI-generated – Not financial advice" },
+  "archive": { "search": "Search (date, summary)", "allAssets": "All assets", "details": "View details" },
+  "detail": { "notFoundTitle": "Report not found", "notFoundText": "No report exists for {date}.", "noSignals": "No signals available in this category." },
+  "error": { "fetchSentiment": "Failed to load sentiment data, please try again." }
 }

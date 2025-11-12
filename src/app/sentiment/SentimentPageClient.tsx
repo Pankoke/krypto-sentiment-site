@@ -8,6 +8,7 @@ import { SentimentCard } from '@/components/sentiment/SentimentCard';
 import { SentimentDetailDialog } from '@/components/sentiment/SentimentDetailDialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
+import { filterAssetsByWhitelist, sortAssetsByWhitelistOrder } from '../../../lib/assets';
 
 const fetcher = (u: string) => fetch(u).then((r) => r.json() as Promise<SentimentResponse>);
 
@@ -21,7 +22,7 @@ export default function SentimentPageClient() {
 
   const items = useMemo(() => {
     if (!data) return [] as SentimentItem[];
-    let arr = [...data.items];
+    let arr = sortAssetsByWhitelistOrder(filterAssetsByWhitelist(data.items));
     if (filter.trend && filter.trend !== 'all') arr = arr.filter((i) => i.trend === filter.trend);
     if (filter.sort === 'score') arr.sort((a, b) => b.score - a.score);
     if (filter.sort === 'confidence') arr.sort((a, b) => b.confidence - a.confidence);

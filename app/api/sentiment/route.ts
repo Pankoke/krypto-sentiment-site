@@ -2,6 +2,9 @@ import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
 import type { SentimentResponse, SentimentItem, SentimentTrend, SentimentBullet } from '../../../src/core/sentiment/types';
 import { isDailyCryptoSentiment, type AssetSentiment, type TopSignal } from '../../../lib/types';
+import { filterAssetsByWhitelist, sortAssetsByWhitelistOrder } from '../../../lib/assets';
+
+const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' } as const;
 
 async function loadLatestFile(): Promise<string | null> {
   const dir = join(process.cwd(), 'data', 'reports');
@@ -56,19 +59,19 @@ export async function GET(req: Request): Promise<Response> {
       items: [],
       dataWindowHours,
     };
-    return Response.json(empty);
+    return Response.json(empty, { headers: JSON_HEADERS });
   }
 
   const raw = await readFile(latestPath, 'utf8');
   const json = JSON.parse(raw) as unknown;
   if (!isDailyCryptoSentiment(json)) {
-    return Response.json({ error: 'invalid stored report' }, { status: 500 });
+    return Response.json({ error: 'invalid stored report' }, { status: 500, headers: JSON_HEADERS });
   }
 
   const dateISO = json.date as string;
   const lastUpdatedISO = new Date().toISOString();
 
-  const items: SentimentItem[] = (json.assets as ReadonlyArray<AssetSentiment>).map((a, idx) => {
+  const rawItems: SentimentItem[] = (json.assets as ReadonlyArray<AssetSentiment>).map((a, idx) => {
     const trend = toTrend(a.sentiment);
     const score01 = normalizeScore(a.score);
     const rawSignals: ReadonlyArray<TopSignal> = Array.isArray(a.top_signals) ? a.top_signals : [];
@@ -89,6 +92,7 @@ export async function GET(req: Request): Promise<Response> {
     };
   });
 
+  const items = sortAssetsByWhitelistOrder(filterAssetsByWhitelist(rawItems));
   const sourcesCount = items.reduce((acc, it) => acc + it.bullets.length, 0);
 
   const resp: SentimentResponse = {
@@ -100,5 +104,5 @@ export async function GET(req: Request): Promise<Response> {
     sourcesCount,
   };
 
-  return Response.json(resp);
+  return Response.json(resp, { headers: JSON_HEADERS });
 }

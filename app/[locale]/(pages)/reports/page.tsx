@@ -4,6 +4,12 @@ import type { ArchiveItem, DailyCryptoSentiment } from '../../../../lib/types';
 import { isDailyCryptoSentiment } from '../../../../lib/types';
 import ArchiveList from '../../../../components/archive/ArchiveList';
 
+import {
+  buildLocalePath,
+  filterAssetsByWhitelist,
+  sortAssetsByWhitelistOrder,
+} from '../../../../lib/assets';
+
 async function loadArchive(): Promise<ArchiveItem[]> {
   const dir = join(process.cwd(), 'data', 'reports');
   let files: string[] = [];
@@ -20,11 +26,13 @@ async function loadArchive(): Promise<ArchiveItem[]> {
       const parsed = JSON.parse(raw) as unknown;
       if (!isDailyCryptoSentiment(parsed)) continue;
       const rep = parsed as DailyCryptoSentiment;
+      const allowedAssets = sortAssetsByWhitelistOrder(filterAssetsByWhitelist(rep.assets));
+      if (!allowedAssets.length) continue;
       items.push({
         date: rep.date,
-        assetsCount: rep.assets.length,
+        assetsCount: allowedAssets.length,
         macroSummary: rep.macro_summary,
-        symbols: Array.from(new Set(rep.assets.map((a) => a.symbol))).sort(),
+        symbols: allowedAssets.map((a) => a.symbol),
       });
     } catch {
       // ignore
@@ -38,7 +46,8 @@ export const metadata = {
   robots: { index: false, follow: true },
 };
 
-export default async function Page() {
+export default async function Page({ params }: { params: { locale: string } }) {
   const items = await loadArchive();
-  return <ArchiveList items={items} />;
+  const localeRoot = buildLocalePath(params.locale);
+  return <ArchiveList items={items} localeRoot={localeRoot} />;
 }

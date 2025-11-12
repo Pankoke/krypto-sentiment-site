@@ -5,9 +5,11 @@ import Link from 'next/link';
 import Card from '../ui/Card';
 import type { ArchiveItem } from '../../lib/types';
 import { useTranslations } from 'next-intl';
+import { getAllowedTickerOrder } from '../../lib/assets';
 
 type Props = {
   items: ArchiveItem[];
+  localeRoot?: string;
 };
 
 export default function ArchiveList({ items }: Props) {
@@ -20,8 +22,11 @@ export default function ArchiveList({ items }: Props) {
     for (const it of items) {
       for (const s of it.symbols) all.add(s);
     }
-    return Array.from(all).sort();
+    const order = getAllowedTickerOrder();
+    return order.filter((ticker) => all.has(ticker));
   }, [items]);
+
+  const reportsBase = localeRoot ?? '/reports';
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -75,7 +80,7 @@ export default function ArchiveList({ items }: Props) {
               )}
               <div className="mt-3">
                 <Link
-                  href={`/reports/${it.date}`}
+                  href={`${reportsBase}/${it.date}`}
                   className="text-sm text-gray-700 hover:text-black underline underline-offset-4"
                 >
                   {t('archive.details', { default: 'Details ansehen' })}

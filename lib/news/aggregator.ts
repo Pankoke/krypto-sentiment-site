@@ -1,12 +1,13 @@
 import type { UnifiedPost } from '../types';
 import { fetchAllSources } from '../sources';
+import { getAllowedTickerOrder, isTickerAllowed } from '../assets';
 
-const DEFAULT_UNIVERSE = ['BTC', 'ETH', 'SOL', 'AVAX'] as const;
+const DEFAULT_UNIVERSE = getAllowedTickerOrder();
 const TOP_SIGNALS_COUNT = 5;
 const OPENAI_MODEL = 'gpt-4o-mini';
 const OPENAI_TIMEOUT_MS = 8_000;
 const SYSTEM_PROMPT =
-  'Du bist ein präziser Nachrichtenaggregator für Kryptowährungen. Analysiere die gegebenen Beispiele und liefere für jedes Asset ein JSON-Objekt mit keys: symbol, sentiment (bullish|bearish|neutral), score (0-1), confidence (0-1), rationale (2–4 Sätze), top_signals (Array von { source, evidence }).';
+  'Du bist ein präziser Nachrichtenaggregator für Kryptowährungen. Analysiere die gegebenen Beispiele und liefere für jedes Asset ein JSON-Objekt mit keys: symbol, sentiment (bullish|bearish|neutral), score (0-1), confidence (0-1), rationale (2-4 Sätze), top_signals (Array von { source, evidence }).';
 
 type OpenAIClient = {
   chat: {
@@ -109,15 +110,15 @@ function fallbackRationale(symbol: string, signals: Signal[]): string {
   const samples = signals
     .slice(0, 3)
     .map((signal) => `${signal.source}: ${signal.evidence}`)
-    .join(' · ');
+    .join(' | ');
   return `Heuristische Zusammenfassung für ${symbol}: ${samples}`;
 }
 
-function buildUserPrompt(symbol: string, signals: Signal[]): string {
+fufunction buildUserPrompt(symbol: string, signals: Signal[]): string {
   const evidenceList = signals
     .map((signal) => `${signal.source}: ${signal.evidence.replace(/\s+/g, ' ').trim()}`)
     .join(', ');
-  return `Erzeuge pro Asset ein kurzes summary basierend auf den folgenden Top-Signalen: [${evidenceList}]. Gib rein JSON zurück ohne zusätzliche Erklärungen.`;
+  return `Erzeuge pro Asset ein kurzes Summary basierend auf den folgenden Top-Signalen: [${evidenceList}]. Gib rein JSON zurück ohne zusätzliche Erklärungen.`;
 }
 
 type ParsedRationale = {
@@ -187,7 +188,7 @@ async function summarizeRationale(symbol: string, signals: Signal[]): Promise<{ 
           parsed = typeof parsedJson === 'object' && parsedJson !== null ? (parsedJson as ParsedRationale) : undefined;
         }
       } catch (e) {
-        // not valid JSON – ignore parsed
+        // not valid JSON â€“ ignore parsed
         parsed = undefined;
       }
     }
@@ -204,7 +205,8 @@ async function summarizeRationale(symbol: string, signals: Signal[]): Promise<{ 
 function normalizeUniverse(options?: { universe?: string[] }): string[] {
   const provided = options?.universe
     ?.map((asset) => asset.trim().toUpperCase())
-    .filter(Boolean);
+    .filter((asset) => asset)
+    .filter((asset) => isTickerAllowed(asset));
   const preferred =
     provided && provided.length
       ? Array.from(new Set(provided))
@@ -229,8 +231,10 @@ export async function aggregateNews(options?: {
   const sinceTimestamp = parseSinceTimestamp(options?.since);
   const reportDate = new Date().toISOString().slice(0, 10);
   const allPosts = await fetchAllSources();
-  const filtered = allPosts.filter((post) => {
-    if (!universe.includes(post.asset.toUpperCase())) {
+  const allowedPosts = allPosts.filter((post) => isTickerAllowed(post.asset));
+  const filtered = allowedPosts.filter((post) => {
+    const symbol = post.asset.toUpperCase();
+    if (!universe.includes(symbol)) {
       return false;
     }
     if (sinceTimestamp) {
@@ -306,7 +310,8 @@ export async function aggregateNews(options?: {
     });
   }
 
-  if (!reports.length) {
+  const allowedReports = reports.filter((report) => isTickerAllowed(report.symbol));
+  if (!allowedReports.length) {
     return {
       date: reportDate,
       universe,
@@ -315,17 +320,17 @@ export async function aggregateNews(options?: {
     };
   }
 
-  const methodNoteParts = ['Aggregierte Signals aus Social, News und Onchain.'];
-  if (fallbackAssets.length) {
-    methodNoteParts.push(
-      `OpenAI-Fallback für ${fallbackAssets.join(', ')}; heuristische Rationale verwendet.`
-    );
-  }
+  const methodNoteParts = ['Aggregierte Signale aus Social, News und Onchain.'];
+if (fallbackAssets.length) {
+  methodNoteParts.push(
+    `OpenAI-Fallback für ${fallbackAssets.join(', ')}; heuristische Rationale verwendet.`
+  );
+}
 
   return {
     date: reportDate,
     universe,
-    assets: reports.sort((a, b) => b.score - a.score),
+    assets: allowedReports.sort((a, b) => b.score - a.score),
     method_note: methodNoteParts.join(' '),
   };
 }

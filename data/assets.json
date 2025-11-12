@@ -1,0 +1,7 @@
+﻿[
+  { "ticker": "BTC", "name": "Bitcoin", "enabled": true },
+  { "ticker": "ETH", "name": "Ethereum", "enabled": true },
+  { "ticker": "SOL", "name": "Solana", "enabled": true },
+  { "ticker": "XRP", "name": "Ripple", "enabled": true },
+  { "ticker": "AVAX", "name": "Avalanche", "enabled": false }
+]

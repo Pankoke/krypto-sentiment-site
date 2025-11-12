@@ -10,7 +10,7 @@ import { LocaleNav } from '../src/components/LocaleNav';
 
 export const metadata: Metadata = {
   title: 'Krypto Sentiment',
-  description: 'Tägliche Krypto-Sentiment Berichte'
+  description: 'T�gliche Krypto-Sentiment-Berichte'
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
@@ -20,7 +20,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   try {
     messages = (await import(`../src/app/messages/${cookieLocale}.json`)).default as Record<string, string>;
   } catch (e) {
-    // ignore – provider can still render with empty messages
+    // ignore errors; provider can still render with empty messages
   }
 
   type FooterMessages = { footer?: { disclaimer?: string } };
@@ -32,11 +32,16 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
 
   return (
     <html lang={cookieLocale}>
+      <head>
+        <meta charSet="utf-8" />
+      </head>
       <body className="min-h-screen bg-gray-50 text-gray-900">
         <NextIntlClientProvider locale={cookieLocale} messages={messages}>
           <header className="border-b bg-white/70 backdrop-blur">
             <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-              <Link href="/" className="text-lg font-semibold">Krypto Sentiment</Link>
+              <Link href="/" className="text-lg font-semibold">
+                Krypto Sentiment
+              </Link>
               <div className="text-sm flex items-center gap-4">
                 <LocaleNav />
                 <LanguageSwitcher />

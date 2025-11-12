@@ -1,6 +1,7 @@
 import { openai } from './openai';
 import type { DailyCryptoSentiment, UnifiedPost } from './types';
 import { isDailyCryptoSentiment } from './types';
+import { isTickerAllowed } from './assets';
 // Import des JSON-Schemas mit Import-Attribut (ESM)
 // TS benötigt resolveJsonModule und unterstützt Import-Attribute in Bundlern
 // (Next.js / TS5 + bundler Auflösung)
@@ -57,7 +58,8 @@ export async function runDailySentiment(
     'Du bist eine Krypto-Analyse-KI. Aggregiere Signale aus Social, News und On-Chain, ' +
     'und erstelle einen täglichen Bericht auf Asset-Ebene. Antworte ausschließlich im JSON gemäß Schema.';
 
-  const inputPosts = unified.slice(0, 500);
+  const allowedPosts = unified.filter((post) => isTickerAllowed(post.asset));
+  const inputPosts = allowedPosts.slice(0, 500);
 
   const model = process.env.OPENAI_MODEL || 'gpt-4o-2024-08-06';
   const response = await openai.responses.create({

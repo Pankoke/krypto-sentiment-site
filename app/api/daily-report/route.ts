@@ -5,6 +5,7 @@ import { runDailySentiment } from '../../../lib/sentiment';
 import type { DailyCryptoSentiment } from '../../../lib/types';
 
 export const runtime = 'nodejs';
+const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' } as const;
 
 export async function GET(req: Request): Promise<Response> {
   try {
@@ -13,7 +14,10 @@ export async function GET(req: Request): Promise<Response> {
       const url = new URL(req.url);
       const key = url.searchParams.get('key');
       if (key !== secret) {
-        return Response.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
+        return Response.json(
+          { ok: false, error: 'Unauthorized' },
+          { status: 401, headers: JSON_HEADERS }
+        );
       }
     }
     const posts = await fetchAllSources();
@@ -27,12 +31,12 @@ export async function GET(req: Request): Promise<Response> {
     await writeFile(fullPath, JSON.stringify(report, null, 2) + '\n', 'utf8');
 
     const saved = `/data/reports/${filename}`;
-    return Response.json({ ok: true, saved });
+    return Response.json({ ok: true, saved }, { headers: JSON_HEADERS });
   } catch (err: unknown) {
     // Loggen für Diagnose
     // eslint-disable-next-line no-console
     console.error('daily-report error', err);
     const message = err instanceof Error ? err.message : String(err);
-    return Response.json({ ok: false, error: message }, { status: 500 });
+    return Response.json({ ok: false, error: message }, { status: 500, headers: JSON_HEADERS });
   }
 }

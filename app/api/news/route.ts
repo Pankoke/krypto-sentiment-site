@@ -4,6 +4,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { aggregateNews, type AggregatedReport } from '../../../lib/news/aggregator';
 
 const REPORTS_DIR = path.join(process.cwd(), 'data', 'reports');
+const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' } as const;
 
 function parseUniverseParam(param: string | null): string[] | undefined {
   if (!param) {
@@ -52,11 +53,11 @@ async function handleReportRequest(options?: {
           method_note: `${report.method_note} | Hinweis: ${fsWarning}`,
         }
       : report;
-    return NextResponse.json(payload);
+    return NextResponse.json(payload, { headers: JSON_HEADERS });
   } catch (error) {
     console.error('Aggregationsfehler:', error);
     const message = error instanceof Error ? error.message : 'Aggregator-Fehler';
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({ error: message }, { status: 500, headers: JSON_HEADERS });
   }
 }
 
