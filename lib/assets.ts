@@ -1,4 +1,4 @@
-﻿import assetData from '../data/assets.json';
+import assetData from '../data/assets.json';
 import { defaultLocale, locales, type Locale } from '../i18n';
 
 export type AssetDefinition = {

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import { useTranslations } from 'next-intl';
-import { filterAssetsByWhitelist, sortAssetsByWhitelistOrder } from '../../lib/assets';
+import { filterAssetsByWhitelist, sortAssetsByWhitelistOrder } from 'lib/assets';
 
 type Signal = {
   id?: string;

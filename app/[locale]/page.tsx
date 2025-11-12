@@ -14,7 +14,7 @@ import Meter from '../../components/ui/Meter';
 import GenerateButton from '../../components/GenerateButton';
 import { meterColor, toneLabel } from '../../lib/ui/sentiment';
 import { getTranslations } from 'next-intl/server';
-import EncodingTest from '../../components/EncodingTest';
+import EncodingTest from 'components/EncodingTest';
 
 async function loadLatestReport(): Promise<DailyCryptoSentiment | null> {
   const dir = join(process.cwd(), 'data', 'reports');

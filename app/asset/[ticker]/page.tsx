@@ -1,5 +1,5 @@
 ﻿import { redirect } from 'next/navigation';
-import { buildLocalePath, isTickerAllowed } from '../../../../lib/assets';
+import { buildLocalePath, isTickerAllowed } from 'lib/assets';
 
 export default function Page({ params }: { params: { ticker: string } }) {
   const localeRoot = buildLocalePath();
