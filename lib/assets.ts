@@ -5,6 +5,9 @@ export type AssetDefinition = {
   ticker: string;
   name: string;
   enabled: boolean;
+  category?: string;
+  displayOrder?: number;
+  slug?: string;
 };
 
 const normalizedAssets: AssetDefinition[] = assetData.map((asset) => ({

@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 
 export const encodingTestString = 'Änderungen, Gebühren, Überblick, größer, Schlagzeilen, Zusammenfassung';
 
@@ -9,3 +9,5 @@ export default function EncodingTest() {
     </p>
   );
 }
+
+

@@ -1,4 +1,4 @@
-﻿import { redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { buildLocalePath, isTickerAllowed } from 'lib/assets';
 
 export default function Page({ params }: { params: { ticker: string } }) {
@@ -8,3 +8,4 @@ export default function Page({ params }: { params: { ticker: string } }) {
   }
   redirect(localeRoot);
 }
+

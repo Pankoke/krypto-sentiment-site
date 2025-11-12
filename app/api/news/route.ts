@@ -34,10 +34,22 @@ async function persistReport(report: AggregatedReport): Promise<void> {
   await writeFile(targetFile, JSON.stringify(report, null, 2), 'utf8');
 }
 
-async function handleReportRequest(options?: {
+type AggregatedOptions = {
   universe?: string[];
   since?: string;
-}) {
+  page?: number;
+  limit?: number;
+};
+
+function parsePositiveInt(param: string | null, fallback: number): number {
+  const value = Number(param);
+  if (Number.isNaN(value) || value < 1) {
+    return fallback;
+  }
+  return Math.floor(value);
+}
+
+async function handleReportRequest(options?: AggregatedOptions) {
   try {
     const report = await aggregateNews(options);
     let fsWarning: string | undefined;
@@ -47,13 +59,25 @@ async function handleReportRequest(options?: {
       const message = error instanceof Error ? error.message : 'unbekannter Dateifehler';
       fsWarning = `Dateischreibung fehlgeschlagen: ${message}`;
     }
-    const payload = fsWarning
-      ? {
-          ...report,
-          method_note: `${report.method_note} | Hinweis: ${fsWarning}`,
-        }
-      : report;
-    return NextResponse.json(payload, { headers: JSON_HEADERS });
+    const page = options?.page ?? 1;
+    const limit = options?.limit ?? 4;
+    const totalAssets = report.assets.length;
+    const start = (page - 1) * limit;
+    const paginatedAssets = report.assets.slice(start, start + limit);
+    const paginatedReport = {
+      ...report,
+      assets: paginatedAssets,
+      pagination: {
+        page,
+        limit,
+        total: totalAssets,
+        hasMore: start + limit < totalAssets,
+      },
+    };
+    if (fsWarning) {
+      paginatedReport.method_note = `${report.method_note} | Hinweis: ${fsWarning}`;
+    }
+    return NextResponse.json(paginatedReport, { headers: JSON_HEADERS });
   } catch (error) {
     console.error('Aggregationsfehler:', error);
     const message = error instanceof Error ? error.message : 'Aggregator-Fehler';
@@ -66,6 +90,8 @@ export async function GET(req: Request) {
   const options = {
     universe: parseUniverseParam(url.searchParams.get('universe')),
     since: url.searchParams.get('since') ?? undefined,
+    page: parsePositiveInt(url.searchParams.get('page'), 1),
+    limit: parsePositiveInt(url.searchParams.get('limit'), 4),
   };
   return handleReportRequest(options);
 }

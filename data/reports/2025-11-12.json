@@ -1,0 +1,63 @@
+{
+  "date": "2025-11-12",
+  "universe": [
+    "BTC",
+    "ETH",
+    "SOL"
+  ],
+  "assets": [
+    {
+      "symbol": "BTC",
+      "sentiment": "bullish",
+      "score": 0.85,
+      "confidence": 0.9,
+      "rationale": "Positive news from multiple sources including ETF inflows and market analysts labeling BTC as a safe haven, alongside on-chain data indicating accumulation.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "BTC ETF-Zuflüsse steigen über 250 Mio. USD; Kurs hält 70k."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Exchange netflow (netto Abflüsse); Reserve sinkt."
+        }
+      ]
+    },
+    {
+      "symbol": "ETH",
+      "sentiment": "bullish",
+      "score": 0.8,
+      "confidence": 0.85,
+      "rationale": "Social and news signals are optimistic about ETH's infrastructure growth and layer-2 developments; on-chain activity shows increasing active addresses.",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "Community notes fresh funding rounds for infrastructure builders."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Active addresses steigen; Staking-Quote bleibt stabil."
+        }
+      ]
+    },
+    {
+      "symbol": "SOL",
+      "sentiment": "neutral",
+      "score": 0.6,
+      "confidence": 0.75,
+      "rationale": "Mixed signals: while there are positive developments regarding infrastructure and activity, speculative trading on memecoins introduces uncertainty.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Solana-Infrastrukturfirmen berichten von erhöhtem Validator-Engagement."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Solana Validators sehen steigende Votes und On-Chain-Aktivität."
+        }
+      ]
+    }
+  ],
+  "macro_summary": "Overall, the macro sentiment in the crypto market appears bullish with particular strength in BTC driven by significant institutional flows and macroeconomic positioning as a safe haven asset. ETH also shows positive growth due to layer-2 expansion and increased on-chain activity. SOL shows potential yet speculative trends maintain a more balanced view.",
+  "method_note": "Analysis incorporates social signals, news events, and on-chain metrics to determine asset sentiment and trends. Scores reflect the intensity and confidence of detected signals."
+}

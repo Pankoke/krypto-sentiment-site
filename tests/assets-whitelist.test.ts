@@ -1,4 +1,4 @@
-﻿import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
   allowedAssets,
   buildAssetRedirectUrl,
@@ -31,3 +31,5 @@ describe('asset whitelist', () => {
     expect(url).toContain('?redirect=invalid-asset');
   });
 });
+
+
