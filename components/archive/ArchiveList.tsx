@@ -12,7 +12,7 @@ type Props = {
   localeRoot?: string;
 };
 
-export default function ArchiveList({ items }: Props) {
+export default function ArchiveList({ items, localeRoot }: Props) {
   const t = useTranslations();
   const [query, setQuery] = useState('');
   const [symbol, setSymbol] = useState('');
