@@ -114,7 +114,7 @@ function fallbackRationale(symbol: string, signals: Signal[]): string {
   return `Heuristische Zusammenfassung für ${symbol}: ${samples}`;
 }
 
-fufunction buildUserPrompt(symbol: string, signals: Signal[]): string {
+function buildUserPrompt(symbol: string, signals: Signal[]): string {
   const evidenceList = signals
     .map((signal) => `${signal.source}: ${signal.evidence.replace(/\s+/g, ' ').trim()}`)
     .join(', ');
