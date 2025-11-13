@@ -40,5 +40,13 @@
   },
   "footer": { "disclaimer": "KI-generierter Inhalt; keine Finanzberatung.", "disclaimerShort": "KI-generiert – keine Anlageberatung" },
   "archive": { "search": "Suche (Datum, Summary)", "allAssets": "Alle Assets", "details": "Details ansehen" },
+  "archive": {
+    "search": "Suche (Datum, Summary)",
+    "allAssets": "Alle Assets",
+    "details": "Details ansehen",
+    "complete": "Vollständiger Report",
+    "incomplete": "Unvollständiger Report",
+    "macroSummary": "Gründe unten"
+  },
   "detail": { "notFoundTitle": "Bericht nicht gefunden", "notFoundText": "Für das Datum {date} existiert kein Bericht.", "noSignals": "Keine Signale in dieser Kategorie." }
 }

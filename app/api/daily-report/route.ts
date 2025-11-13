@@ -2,6 +2,7 @@ import { mkdir, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { fetchAllSources } from '../../../lib/sources';
 import { runDailySentiment } from '../../../lib/sentiment';
+import { persistDailySnapshots } from '../../../lib/persistence';
 import type { DailyCryptoSentiment } from '../../../lib/types';
 
 export const runtime = 'nodejs';
@@ -31,6 +32,7 @@ export async function GET(req: Request): Promise<Response> {
     await writeFile(fullPath, JSON.stringify(report, null, 2) + '\n', 'utf8');
 
     const saved = `/data/reports/${filename}`;
+    await persistDailySnapshots(report);
     return Response.json({ ok: true, saved }, { headers: JSON_HEADERS });
   } catch (err: unknown) {
     // Loggen für Diagnose

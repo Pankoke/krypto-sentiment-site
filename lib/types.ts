@@ -27,6 +27,7 @@ export type ArchiveItem = {
   assetsCount: number;
   macroSummary: string;
   symbols: string[];
+  complete: boolean;
 };
 
 export interface NormalizedSourceEntry {

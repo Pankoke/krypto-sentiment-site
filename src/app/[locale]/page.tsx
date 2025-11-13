@@ -1,88 +1,78 @@
-import { readdir, readFile } from 'fs/promises';
-import { join } from 'path';
 import Link from 'next/link';
-import type { DailyCryptoSentiment } from '../../../lib/types';
-import { isDailyCryptoSentiment } from '../../../lib/types';
-import Card from '../../../components/ui/Card';
+import { listSnapshots } from '../../../lib/persistence';
 import Badge from '../../../components/ui/Badge';
+import Card from '../../../components/ui/Card';
 import Meter from '../../../components/ui/Meter';
-import GenerateButton from '../../../components/GenerateButton';
 import { meterColor, toneLabel } from '../../../lib/ui/sentiment';
+import { buildLocalePath } from '../../../lib/assets';
 import { getTranslations } from 'next-intl/server';
 
-async function loadLatestReport(): Promise<DailyCryptoSentiment | null> {
-  const dir = join(process.cwd(), 'data', 'reports');
-  let files: string[] = [];
-  try {
-    files = await readdir(dir);
-  } catch {
-    return null;
-  }
-  const jsonFiles = files.filter((f) => f.endsWith('.json'));
-  if (jsonFiles.length === 0) return null;
-  jsonFiles.sort();
-  const latest = jsonFiles[jsonFiles.length - 1]!;
-  const raw = await readFile(join(dir, latest), 'utf8');
-  const parsed = JSON.parse(raw) as unknown;
-  if (!isDailyCryptoSentiment(parsed)) return null;
-  return parsed;
+async function loadLatestSnapshot(locale: string) {
+  const snapshots = await listSnapshots(locale);
+  return snapshots.length ? snapshots[0] : null;
 }
 
-export default async function Page() {
+export default async function Page({ params }: { params: { locale: string } }) {
   const t = await getTranslations();
-  const report = await loadLatestReport();
+  const localeRoot = buildLocalePath(params.locale);
+  const snapshot = await loadLatestSnapshot(params.locale);
 
-  if (!report) {
+  if (!snapshot) {
     return (
       <section className="space-y-4">
         <h1 className="text-2xl font-semibold">{t('title.sentiment')}</h1>
-        <p className="text-sm text-gray-700">{t('home.noReport', { default: 'Kein Bericht gefunden.' })}</p>
-        <GenerateButton />
+        <p className="text-sm text-gray-700">{t('home.noReport')}</p>
+        <Link href="/reports" className="text-sm text-gray-700 hover:text-black">
+          {t('nav.archive')}
+        </Link>
       </section>
     );
   }
 
-  const { date, macro_summary, assets } = report;
-
   return (
     <section>
       <div className="flex items-baseline justify-between gap-4">
-        <h1 className="text-2xl font-semibold">{t('title.sentiment')} – {date}</h1>
-        <Link href={`/reports/${date}`} className="text-sm text-gray-700 hover:text-black">
-          {t('home.detailsFor', { date })}
+        <div>
+          <h1 className="text-2xl font-semibold">{t('title.sentiment')} · {snapshot.date}</h1>
+          <p className="text-xs text-gray-500">
+            {snapshot.complete ? t('archive.complete', { default: 'Vollständiger Report' }) : t('archive.incomplete', { default: 'Unvollständiger Report' })}
+            {' • '}
+            {new Date(snapshot.generatedAt).toLocaleString()}
+          </p>
+        </div>
+        <Link href={`/reports/${snapshot.date}`} className="text-sm text-gray-700 hover:text-black">
+          {t('home.detailsFor', { date: snapshot.date })}
         </Link>
       </div>
-      <p className="mt-4 text-base">{macro_summary}</p>
-
+      <p className="mt-4 text-base text-gray-700">{snapshot.macro_summary}</p>
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {assets.map((a) => {
-          const confPct = Math.round(a.confidence * 100);
-          const top = a.top_signals.slice(0, 3);
-          return (
-            <Card key={`${a.symbol}-${a.sentiment}-${a.score}`}>
-              <header className="mb-2 flex items-center justify-between">
-                <h2 className="font-semibold">{a.symbol}</h2>
-                <Badge tone={a.sentiment}>{toneLabel(a.sentiment)}</Badge>
-              </header>
-              <div className="text-sm text-gray-700 mb-1">
-                Score {a.score.toFixed(2)} • {confPct}% {t('label.confidence')}
+        {snapshot.assets.map((asset) => (
+          <Card key={asset.asset}>
+            <header className="mb-2 flex items-center justify-between">
+              <div>
+                <h2 className="font-semibold">{asset.asset}</h2>
+                <p className="text-xs text-gray-500">{asset.label}</p>
               </div>
-              <Meter percent={confPct} colorClass={meterColor(a.sentiment)} className="mb-3" />
-              <p className="text-sm mb-3">{a.rationale}</p>
-              {top.length > 0 && (
-                <ul className="text-sm list-disc pl-5 space-y-1">
-                  {top.map((s, i) => (
-                    <li key={i}>
-                      <span className="font-medium">{s.source}:</span> {s.evidence}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </Card>
-          );
-        })}
+              <Badge tone={asset.label as any}>{toneLabel(asset.label as any)}</Badge>
+            </header>
+            <div className="text-sm text-gray-700 mb-1">
+              Score {asset.totalScore.toFixed(2)} · {asset.score01}/100
+            </div>
+            <Meter percent={asset.score01} colorClass={meterColor(asset.label as any)} className="mb-3" />
+            <div className="text-xs text-gray-500 mb-2">
+              Confidence {asset.confidence}% · {asset.reasons[0]}
+            </div>
+            <ul className="text-sm list-disc pl-5 space-y-1">
+              {asset.reasons.map((reason, idx) => (
+                <li key={idx}>{reason}</li>
+              ))}
+            </ul>
+            <div className="mt-3 text-xs text-gray-500">
+              {t('scoring.asOf', { default: 'Stand' })}: {new Date(asset.asOf).toLocaleTimeString()}
+            </div>
+          </Card>
+        ))}
       </div>
     </section>
   );
 }
-

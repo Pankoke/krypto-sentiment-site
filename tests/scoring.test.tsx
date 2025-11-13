@@ -14,6 +14,7 @@ describe('Scoring MVP', () => {
       price: 0,
     });
     expect(result.score01).toBeGreaterThan(60);
+    expect(result.label).toBe('bullish');
   });
 
   it('boosts news weight when event severity is active', () => {
@@ -27,5 +28,38 @@ describe('Scoring MVP', () => {
     const base = buildWeights();
     const highVol = buildWeights(undefined, 'high');
     expect(highVol.derivatives).toBeGreaterThan(base.derivatives);
+  });
+
+  it('maintains label via hysteresis for small oscillations', () => {
+    const initial = computeAssetScore('SOL', {
+      social: 0.5,
+      derivatives: 0.5,
+      news: 0,
+      onChain: 0,
+      price: 0,
+    });
+    expect(initial.label).toBe('neutral');
+    const second = computeAssetScore(
+      'SOL',
+      { social: 0.55, derivatives: 0.55, news: 0, onChain: 0, price: 0 },
+      { previousLabel: initial.label }
+    );
+    expect(second.label).toBe('neutral');
+  });
+
+  it('confidence drops when coverage is low', () => {
+    const result = computeAssetScore('XRP', { social: 0.7 }, { previousLabel: 'neutral' });
+    expect(result.confidence).toBeLessThan(80);
+  });
+
+  it('reasons mention dominant signals', () => {
+    const result = computeAssetScore('ETH', {
+      social: -0.6,
+      derivatives: 0.1,
+      news: 0.4,
+      onChain: 0,
+      price: 0,
+    });
+    expect(result.reasons[0]).toContain('Social');
   });
 });

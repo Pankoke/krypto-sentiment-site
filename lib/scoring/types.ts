@@ -1,4 +1,5 @@
 export type SourceCategory = 'social' | 'news' | 'derivatives' | 'onChain' | 'price';
+export type ScoreLabel = 'bullish' | 'neutral' | 'bearish';
 
 export interface AssetFeatureSet {
   social?: number;
@@ -8,6 +9,19 @@ export interface AssetFeatureSet {
   price?: number;
   eventSeverity?: number;
   volatilityRegime?: 'high' | 'low' | 'normal';
+  diversity?: number;
+  scoreHistory?: number[];
+}
+
+export interface ScoreContext {
+  previousLabel?: ScoreLabel;
+}
+
+export interface ScoreConfidence {
+  coverage: number;
+  diversity: number;
+  agreement: number;
+  stability: number;
 }
 
 export interface ScoreResult {
@@ -17,4 +31,7 @@ export interface ScoreResult {
   totalScore: number;
   score01: number;
   confidence: number;
+  confidenceDetails: ScoreConfidence;
+  label: ScoreLabel;
+  reasons: string[];
 }

@@ -72,7 +72,14 @@ export default function ArchiveList({ items, localeRoot }: Props) {
             <Card key={it.date}>
               <header className="mb-2 flex items-center justify-between">
                 <h2 className="font-semibold">{it.date}</h2>
-                <div className="text-xs text-gray-600">{it.assetsCount} Assets</div>
+                <div className="text-xs text-gray-600 flex items-center gap-2">
+                  <span>{it.assetsCount} Assets</span>
+                  {!it.complete && (
+                    <span className="rounded-full border border-orange-200 bg-orange-50 px-2 py-0.5 text-xs text-orange-700">
+                      {t('archive.incomplete', { default: 'Unvollständig' })}
+                    </span>
+                  )}
+                </div>
               </header>
               <p className="text-sm text-gray-800 line-clamp-3">{it.macroSummary}</p>
               {it.symbols.length > 0 && (
