@@ -137,6 +137,7 @@ Optional: Endpoint mit `CRON_SECRET` schützen (z. B. `GET /api/daily-report?k
   Das Kommando liefert die CJS-Deprecation-Warnung, zeigt die Logs `module loaded`/`before describe` und verifiziert alle 12 Specs. Bei Bedarf `NODE_OPTIONS=--trace-warnings` ergänzen, um tiefere Startup-Details zu erhalten.
 
 - `npx vitest tests/scoring.test.ts` validiert die neuen Scoring-Regeln (Subscores + Event/Regime-Gewichte) und kann ebenfalls einzeln ausgeführt werden.
+- **Erweitern des Scoring-MVPs:** Neue Features ergänzen `lib/scoring/types.ts`/`index.ts` und werden über `computeAssetScore` verarbeitet. Achte darauf, den Subscore-Wert auf [-1,1] zu clampen, neue Modulatoren in `buildWeights` zu integrieren und den Confidence-Wert über die tatsächlich vorhandenen Kategorien zu berechnen. Ergänze im Test `tests/scoring.test.tsx` einen weiteren `it`, sobald ein neues Regime oder eine neue Ebene hinzugefügt wird.
 
 ## Encoding
 
