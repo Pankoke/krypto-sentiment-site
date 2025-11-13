@@ -51,11 +51,8 @@ function makeAsset(symbol: string): AssetReport {
   };
 }
 
-const originalFetch = globalThis.fetch;
-
 afterEach(() => {
   vi.restoreAllMocks();
-  globalThis.fetch = originalFetch;
 });
 
 describe('NewsList states', () => {
@@ -66,15 +63,17 @@ describe('NewsList states', () => {
         ok: true,
         json: async () => ({ assets: [], pagination: { hasMore: false } }),
       } as Response);
-    globalThis.fetch = fetchMock as typeof fetch;
+    vi.stubGlobal('fetch', fetchMock);
 
+    console.log('[news] rendering empty state');
     render(<NewsList />);
     await screen.findByText('No news available.');
   });
 
   it('shows error message with retry when fetch fails', async () => {
     const fetchMock = vi.fn().mockRejectedValue(new Error('boom'));
-    globalThis.fetch = fetchMock as typeof fetch;
+    vi.stubGlobal('fetch', fetchMock);
+    console.log('[news] rendering error state');
     render(<NewsList />);
     await screen.findByText('Error loading: boom');
     const retryButtons = screen.getAllByRole('button', { name: 'Retry' });
@@ -98,10 +97,14 @@ describe('NewsList states', () => {
         }),
       } as Response);
 
-    globalThis.fetch = fetchMock as typeof fetch;
+    vi.stubGlobal('fetch', fetchMock);
+    console.log('[news] rendering filter state');
     render(<NewsList />);
     await screen.findByText('BTC');
     const select = screen.getAllByLabelText('Asset')[0];
+    if (!select) {
+      throw new Error('Asset-Filter nicht gefunden');
+    }
     fireEvent.change(select, { target: { value: 'SOL' } });
     await waitFor(() => expect(screen.getByText('SOL')).toBeInTheDocument());
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
@@ -125,7 +128,8 @@ describe('NewsList states', () => {
         }),
       } as Response);
 
-    globalThis.fetch = fetchMock as typeof fetch;
+    vi.stubGlobal('fetch', fetchMock);
+    console.log('[news] rendering pagination state');
     render(<NewsList />);
     await screen.findByText('BTC');
     fireEvent.click(await screen.findByRole('button', { name: 'Load more' }));

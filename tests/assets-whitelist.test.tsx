@@ -1,6 +1,8 @@
+console.log('[assets] module loaded');
 import { describe, it, expect } from 'vitest';
 import { allowedAssets, buildAssetRedirectUrl, filterAssetsByWhitelist, isTickerAllowed } from '../lib/assets';
 
+console.log('[assets] before describe');
 describe('asset whitelist', () => {
   it('exposes exactly four assets', () => {
     expect(allowedAssets.map((asset) => asset.ticker)).toEqual(['BTC', 'ETH', 'SOL', 'XRP']);

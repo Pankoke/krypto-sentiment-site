@@ -124,6 +124,18 @@ Optional: Endpoint mit `CRON_SECRET` schützen (z. B. `GET /api/daily-report?k
 - Neue Adapter werden unter `lib/sources/` angelegt und liefern `AdapterEntryInput`-Objekte. `fetchAllSources()` vereint die Daten, gibt verbliebene Einträge zurück und schreibt Warnungen in `getSourceWarnings()`, falls ein Adapter ausfällt.
 - ENV-Variablen `NEWS_API_KEY`, `SOCIAL_API_KEY`, `ONCHAIN_API_KEY` (siehe `.env.example`) halten Provider-Schlüssel bereit. Timeouts/Retry regeln `SOURCE_TIMEOUT_MS`, `SOURCE_RETRY_LIMIT` und `SOURCE_BACKOFF_BASE_MS` in `lib/sources/utils.ts`.
 
+## Tests
+
+- `vitest.setup.ts` stellt `expect` global und lädt `@testing-library/jest-dom`, deshalb einfache Komponenten- und API-Tests ohne zusätzliches Bootstrapping funktionieren.
+- Die neuen Suites `tests/assets-whitelist.test.tsx`, `tests/encoding.test.tsx`, `tests/sources.test.ts` und `tests/news-page.test.tsx` liegen getrennt und können einzeln mit `npx vitest tests/<file>.tsx --reporter=verbose` ausgeführt werden. Jeder Test gibt beim Laden einen `console.log` aus, so dass man im Verbose-Modus erkennt, welche Module geladen wurden.
+- Für einen vollständigen Durchlauf aller vier Suites ohne Watch-Modus:
+
+  ```
+  npx vitest run tests/assets-whitelist.test.tsx tests/encoding.test.tsx tests/sources.test.ts tests/news-page.test.tsx --reporter=verbose
+  ```
+
+  Das Kommando liefert die CJS-Deprecation-Warnung, zeigt die Logs `module loaded`/`before describe` und verifiziert alle 12 Specs. Bei Bedarf `NODE_OPTIONS=--trace-warnings` ergänzen, um tiefere Startup-Details zu erhalten.
+
 ## Encoding
 
 - **UTF-8 überall**: JSON, Locale- und Textdateien im `app`, `data`, `lib`, `public` etc. liegen als UTF-8 ohne BOM vor. Neue Datenquellen sollten beim Einlesen explizit als UTF-8 dekodiert werden; wenn der Content-Type fehlt, defensiv `TextDecoder('utf-8')` nutzen.

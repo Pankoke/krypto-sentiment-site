@@ -28,7 +28,7 @@ function completenessScore(entry: NormalizedSourceEntry): number {
 function deduplicate(entries: NormalizedSourceEntry[]): NormalizedSourceEntry[] {
   const buckets = new Map<string, NormalizedSourceEntry>();
   for (const entry of entries) {
-    const key = `${entry.asset}|${normalizeTextForKey(entry.title)}|${normalizeTextForKey(entry.summary)}`;
+    const key = `${entry.asset}|${normalizeTextForKey(entry.summary)}`;
     const existing = buckets.get(key);
     if (!existing) {
       buckets.set(key, entry);

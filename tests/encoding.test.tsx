@@ -1,9 +1,11 @@
+console.log('[encoding] module loaded');
 import React from 'react';
 import { describe, expect, it } from 'vitest';
 import { renderToString } from 'react-dom/server';
 import EncodingTest, { encodingTestString } from '../src/components/EncodingTest';
 import { GET as sentimentGet } from '../app/api/sentiment/route';
 
+console.log('[encoding] before describe');
 describe('encoding coverage', () => {
   it('renders the umlaut test string via the EncodingTest component', () => {
     const html = renderToString(<EncodingTest />);

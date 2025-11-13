@@ -1,9 +1,12 @@
 import { expect } from 'vitest';
 
 declare global {
-  var expect: typeof import('vitest')['expect'];
+  interface Window {
+    expect: typeof expect;
+  }
+  var expect: typeof expect;
 }
 
-(globalThis as typeof globalThis & { expect: typeof import('vitest')['expect'] }).expect = expect;
+(globalThis as typeof globalThis & { expect: typeof expect }).expect = expect;
 
 void import('@testing-library/jest-dom');

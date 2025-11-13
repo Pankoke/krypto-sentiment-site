@@ -1,3 +1,4 @@
+console.log('[sources] module loaded');
 import { describe, expect, it, beforeEach, vi } from 'vitest';
 
 const mockFetchNews = vi.fn();
@@ -16,6 +17,7 @@ vi.mock('../lib/sources/onchain', () => ({
 
 import { fetchAllSources, getSourceWarnings } from '../lib/sources';
 
+console.log('[sources] before describe');
 describe('source aggregation', () => {
   beforeEach(() => {
     mockFetchNews.mockReset();
