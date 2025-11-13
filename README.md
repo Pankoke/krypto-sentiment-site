@@ -103,6 +103,27 @@ Optional: Endpoint mit `CRON_SECRET` schützen (z. B. `GET /api/daily-report?k
 - Auf der Seite erscheint ein Filter (Dropdown oder Tabs) für die vier erlaubten Assets; jede Änderung führt zu einem neuen Fetch, der nur Nachrichten für das ausgewählte Asset lädt.
 - Pagination läuft über den Button „Mehr laden“, der so lange neue Seiten vom Server anfordert, wie `hasMore` true ist. Filter und Pagination arbeiten gemeinsam über die Query-Parameter.
 - Zustände: Beim Laden erscheint ein Skeleton/Status, bei Fehlern zeigt die UI eine verständliche Fehlermeldung mit „Erneut versuchen“, bei leeren Ergebnissen wird ein Hinweis + Button zum Nachladen angezeigt. Damit bleibt die Seite immer bedienbar.
+## Aggregator - Schema & Fallbacks
+
+- Die Aggregationsschicht (`lib/sources/*`) liefert ein einheitliches Schema pro Drittdaten-Entry und stellt sicher, dass nur `BTC`, `ETH`, `SOL` und `XRP` weitergereicht werden. Jeder Eintrag enthält `id`, `asset`, `type`, `summary`, `source`, `timestamp` (UTC) und `importance`; `title`/`url` sind optional (Beispiel unten).
+- Die Normalisierung (`lib/sources/utils.ts`) erzeugt IDs aus `source+externalId+timestamp+asset`, normalisiert Zeitstempel auf ISO und berechnet eine Importance-Balance aus Engagement und Heuristik. Doppelte Inhalte (gleiche Kombination aus Asset + Titel/Summary) werden zusammengefasst; der Eintrag mit kompletteren Metadaten bleibt erhalten.
+- Beispiel-Entry:
+  ```json
+  {
+    "id": "a3f9f7f4c5b3e6d1f0a2",
+    "asset": "ETH",
+    "type": "news",
+    "title": "Ethereum Layer-2 gewinnt Tempo",
+    "summary": "Dencun reduziert L2-Gebühren, Rollups gewinnen an Boden.",
+    "source": "news-wire",
+    "url": "https://news.example.com/eth",
+    "timestamp": "2025-11-12T08:30:00.000Z",
+    "importance": 0.68
+  }
+  ```
+- Neue Adapter werden unter `lib/sources/` angelegt und liefern `AdapterEntryInput`-Objekte. `fetchAllSources()` vereint die Daten, gibt verbliebene Einträge zurück und schreibt Warnungen in `getSourceWarnings()`, falls ein Adapter ausfällt.
+- ENV-Variablen `NEWS_API_KEY`, `SOCIAL_API_KEY`, `ONCHAIN_API_KEY` (siehe `.env.example`) halten Provider-Schlüssel bereit. Timeouts/Retry regeln `SOURCE_TIMEOUT_MS`, `SOURCE_RETRY_LIMIT` und `SOURCE_BACKOFF_BASE_MS` in `lib/sources/utils.ts`.
+
 ## Encoding
 
 - **UTF-8 überall**: JSON, Locale- und Textdateien im `app`, `data`, `lib`, `public` etc. liegen als UTF-8 ohne BOM vor. Neue Datenquellen sollten beim Einlesen explizit als UTF-8 dekodiert werden; wenn der Content-Type fehlt, defensiv `TextDecoder('utf-8')` nutzen.

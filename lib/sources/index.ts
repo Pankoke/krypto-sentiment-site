@@ -1,43 +1,78 @@
-import type { UnifiedPost } from '../types';
+import type { AdapterEntryInput, NormalizedSourceEntry } from '../types';
 import { fetchNews } from './news';
-import { fetchSocial } from './social';
 import { fetchOnchain } from './onchain';
+import { fetchSocial } from './social';
+import { normalizeAdapterEntry } from './utils';
 
-function keyFor(p: UnifiedPost): string {
-  return `${p.asset}||${p.text.trim().toLowerCase()}`;
+const adapters: Array<{ name: string; run: () => Promise<AdapterEntryInput[]> }> = [
+  { name: 'news', run: fetchNews },
+  { name: 'social', run: fetchSocial },
+  { name: 'onchain', run: fetchOnchain },
+];
+
+const adapterWarnings: string[] = [];
+
+function normalizeTextForKey(value?: string): string {
+  return (value ?? '').trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
-function safeTime(ts: string): number {
-  const n = Date.parse(ts);
-  return Number.isNaN(n) ? 0 : n;
+function completenessScore(entry: NormalizedSourceEntry): number {
+  return (
+    (entry.title ? 1 : 0)
+      + (entry.url ? 1 : 0)
+      + (entry.summary ? 1 : 0)
+      + entry.importance
+  );
 }
 
-export async function fetchAllSources(): Promise<UnifiedPost[]> {
-  const [news, social, onchain] = await Promise.all([
-    fetchNews(),
-    fetchSocial(),
-    fetchOnchain()
-  ]);
-
-  const all: ReadonlyArray<UnifiedPost> = [...news, ...social, ...onchain];
-  const dedup = new Map<string, UnifiedPost>();
-
-  for (const p of all) {
-    const k = keyFor(p);
-    const existing = dedup.get(k);
+function deduplicate(entries: NormalizedSourceEntry[]): NormalizedSourceEntry[] {
+  const buckets = new Map<string, NormalizedSourceEntry>();
+  for (const entry of entries) {
+    const key = `${entry.asset}|${normalizeTextForKey(entry.title)}|${normalizeTextForKey(entry.summary)}`;
+    const existing = buckets.get(key);
     if (!existing) {
-      dedup.set(k, p);
+      buckets.set(key, entry);
       continue;
     }
-    const byEng = (p.engagement ?? 0) - (existing.engagement ?? 0);
-    const byTs = safeTime(p.ts) - safeTime(existing.ts);
-    if (byEng > 0 || (byEng === 0 && byTs > 0)) {
-      dedup.set(k, p);
-    }
+    const preferred =
+      completenessScore(entry) > completenessScore(existing)
+        ? entry
+        : completenessScore(entry) === completenessScore(existing) && entry.timestamp > existing.timestamp
+        ? entry
+        : existing;
+    buckets.set(key, preferred);
   }
-
-  const merged = Array.from(dedup.values());
-  merged.sort((a, b) => safeTime(b.ts) - safeTime(a.ts));
-  return merged;
+  const deduped = Array.from(buckets.values());
+  deduped.sort((a, b) => b.timestamp.localeCompare(a.timestamp));
+  return deduped;
 }
 
+export async function fetchAllSources(): Promise<NormalizedSourceEntry[]> {
+  adapterWarnings.length = 0;
+  const settled = await Promise.allSettled(adapters.map((adapter) => adapter.run()));
+  const normalizedEntries: NormalizedSourceEntry[] = [];
+
+  settled.forEach((result, idx) => {
+    const adapter = adapters[idx];
+    const adapterName = adapter?.name ?? `adapter-${idx}`;
+    if (result.status === 'fulfilled') {
+      for (const entry of result.value) {
+        const normalized = normalizeAdapterEntry(entry);
+        if (normalized) {
+          normalizedEntries.push(normalized);
+        }
+      }
+      return;
+    }
+    const reason = result.reason instanceof Error ? result.reason.message : String(result.reason);
+    const warning = `Adapter "${adapterName}" konnte nicht geladen werden: ${reason}`;
+    adapterWarnings.push(warning);
+    console.warn(warning);
+  });
+
+  return deduplicate(normalizedEntries);
+}
+
+export function getSourceWarnings(): readonly string[] {
+  return [...adapterWarnings];
+}

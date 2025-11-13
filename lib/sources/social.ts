@@ -1,57 +1,60 @@
-import type { UnifiedPost } from '../types';
-import { buildSocialPost, pick, randomInt, timestampMinutesAgo } from './utils';
+import type { AdapterEntryInput } from '../types';
+import { pick, timestampMinutesAgo } from './utils';
 
 const socialSignals = [
   {
     asset: 'ETH',
     snippets: [
-      'ETH gas fees super low rn, L2s buzzing.',
-      'Layer-2 communities celebrating smoother rollups.',
+      'ETH-Gebühren bleiben niedrig, Layer-2-Communities feiern.',
+      'L2s berichten von deutlich niedrigeren Durchsätzen pro Transaktion.',
     ],
-    engagement: [800, 1400],
   },
   {
     asset: 'SOL',
     snippets: [
-      'SOL memecoins pumping again, volume picking up.',
-      'SOL devs hyped about upcoming governance push.',
+      'SOL-Memecoins bringen wieder Volumen, Token-Entwickler planen Governance-Bump.',
+      'Dezentrale Projekte setzen auf Solana für Releases in Q4.',
     ],
-    engagement: [400, 900],
   },
   {
     asset: 'BTC',
     snippets: [
-      'BTC whales moving? on-chain says outflows from exchanges.',
-      'ETF narrative not over yet, institutions still buying.',
-      'Bitcoin on-chain data hints at renewed accumulation.',
+      'Whale-Muster zeigen Anhäufung, traditionelle Börsen verzeichnen Zuflüsse.',
+      'ETF-Narrativ lebt weiter, institutionelle Käufer bleiben aktiv.',
     ],
-    engagement: [300, 1200],
   },
 ];
 
 const extraSocial = [
-  'Community notes fresh funding rounds for infrastructure builders.',
-  'Traders watch stablecoin balances alongside BTC inflows.',
-  'Minutes from the last council highlight scheduling for scaling updates.',
+  'Community diskutiert frische Finanzierungsrunden für Layer-1-Infrastruktur.',
+  'Trader beobachten Stablecoin-Balances parallel zu BTC-Zuflüssen.',
+  'Council Minutes geben Hinweise auf Zeitpläne für Scaling-Updates.',
 ];
 
-export async function fetchSocial(): Promise<UnifiedPost[]> {
+export async function fetchSocial(): Promise<AdapterEntryInput[]> {
   const dynamic = socialSignals.map((signal) => {
-    const [minEng, maxEng] = signal.engagement;
-    return buildSocialPost(
-      signal.asset,
-      pick(signal.snippets),
-      minEng,
-      maxEng
-    );
+    const summary = pick(signal.snippets);
+    return {
+      type: 'social',
+      source: 'social',
+      asset: signal.asset,
+      summary,
+      timestamp: timestampMinutesAgo(2, 18),
+      importance: 0.45,
+      externalId: `social-${signal.asset}-${summary.slice(0, 10)}`,
+      engagement: Math.floor(Math.random() * 900) + 300,
+    } satisfies AdapterEntryInput;
   });
 
-  const bonus: UnifiedPost[] = extraSocial.map((text, idx) => ({
+  const bonus: AdapterEntryInput[] = extraSocial.map((text, idx) => ({
+    type: 'social',
     source: 'social',
-    asset: pick(['BTC', 'ETH', 'SOL', 'AVAX']),
-    text,
-    ts: timestampMinutesAgo(2 + idx * 3, 6 + idx * 3),
-    engagement: randomInt(250, 700),
+    asset: pick(['BTC', 'ETH', 'SOL', 'XRP']),
+    summary: text,
+    timestamp: timestampMinutesAgo(1 + idx * 3, 5 + idx * 3),
+    importance: 0.35,
+    externalId: `social-bonus-${idx}`,
+    engagement: Math.floor(Math.random() * 500) + 200,
   }));
 
   return [...dynamic, ...bonus];

@@ -1,4 +1,4 @@
-import type { UnifiedPost } from '../types';
+import type { NormalizedSourceEntry } from '../types';
 import { fetchAllSources } from '../sources';
 import { getAllowedTickerOrder, isTickerAllowed } from '../assets';
 
@@ -95,7 +95,7 @@ function heuristicSentiment(signals: Signal[]): { score: number; sentiment: Asse
   return { score, sentiment };
 }
 
-function heuristicConfidence(posts: UnifiedPost[]): number {
+function heuristicConfidence(posts: NormalizedSourceEntry[]): number {
   const engagement = posts.reduce((total, post) => total + (post.engagement ?? 0), 0);
   const uniqueSources = new Set(posts.map((post) => post.source)).size;
   const engagementFactor = clamp(engagement / 1500);
@@ -238,7 +238,7 @@ export async function aggregateNews(options?: {
       return false;
     }
     if (sinceTimestamp) {
-      const postTime = safeTime(post.ts);
+      const postTime = safeTime(post.timestamp);
       return postTime >= sinceTimestamp;
     }
     return true;
@@ -252,7 +252,7 @@ export async function aggregateNews(options?: {
     };
   }
 
-  const buckets = new Map<string, UnifiedPost[]>();
+  const buckets = new Map<string, NormalizedSourceEntry[]>();
   for (const post of filtered) {
     const symbol = post.asset.toUpperCase();
     const bucket = buckets.get(symbol) ?? [];
@@ -269,17 +269,17 @@ export async function aggregateNews(options?: {
       continue;
     }
     const topSignals = [...posts]
-      .sort((a, b) => {
+        .sort((a, b) => {
         const engagementDiff = (b.engagement ?? 0) - (a.engagement ?? 0);
         if (engagementDiff !== 0) {
           return engagementDiff;
         }
-        return safeTime(b.ts) - safeTime(a.ts);
+        return safeTime(b.timestamp) - safeTime(a.timestamp);
       })
       .slice(0, TOP_SIGNALS_COUNT)
       .map((post) => ({
         source: post.source,
-        evidence: post.text.trim(),
+        evidence: post.summary.trim(),
       }));
 
     let { sentiment, score } = heuristicSentiment(topSignals);

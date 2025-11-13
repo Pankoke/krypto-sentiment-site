@@ -1,42 +1,50 @@
-import type { UnifiedPost } from '../types';
+import type { AdapterEntryInput } from '../types';
 import { pick, timestampMinutesAgo } from './utils';
 
 const onchainSignals = [
   {
     asset: 'BTC',
     snippets: [
-      'Exchange netflow (netto Abflüsse); Reserve sinkt.',
-      'Bitcoin UTXOs mit >1k BTC bewegen sich vermehrt.',
+      'Netto-Abflüsse von Exchanges lassen Reserven schrumpfen.',
+      'UTXOs mit über 1k BTC werden wieder aktiv bewegt.',
     ],
+    title: 'Exchange-Reserven und UTXOs im Fokus',
   },
   {
     asset: 'ETH',
     snippets: [
-      'Active addresses steigen; Staking-Quote bleibt stabil.',
-      'L2-Transaktionen zeigen wachsende Durchsätze seit dem Dencun-Upgrade.',
+      'Aktive Adressen steigen, Staking-Quote stabil.',
+      'Layer-2-Transaktionen zeigen höhere Durchsätze seit dem Dencun-Upgrade.',
     ],
+    title: 'Ethereum On-Chain-Activity klettert',
   },
   {
     asset: 'SOL',
     snippets: [
-      'Neue Adressen; TPS stabil hoch; DEX-Volumen +7% d/d.',
-      'Solana Validators sehen steigende Votes und On-Chain-Aktivität.',
+      'Neue Adressen und hohe TPS, DEX-Volumen plus 7% d/d.',
+      'Validatoren sehen steigende Votes und On-Chain-Aktivität.',
     ],
+    title: 'Solana On-Chain-Kennzahlen bleiben stark',
   },
   {
-    asset: 'AVAX',
+    asset: 'XRP',
     snippets: [
-      'Avalanche-Brücken melden mehr Mittelzufluss in Smart-Contracts.',
-      'AVAX-Miner sichern weiterhin hohe TPS mit stabilem Belohnungsfluss.',
+      'Brücken melden Mittelzuflüsse in Smart-Contracts.',
+      'Validatoren sichern hohe TPS bei stabilem Belohnungsfluss.',
     ],
+    title: 'Ripple Brücken und Validatoren aktiv',
   },
 ];
 
-export async function fetchOnchain(): Promise<UnifiedPost[]> {
+export async function fetchOnchain(): Promise<AdapterEntryInput[]> {
   return onchainSignals.map((signal, index) => ({
+    type: 'onchain',
     source: 'onchain',
     asset: signal.asset,
-    text: pick(signal.snippets),
-    ts: timestampMinutesAgo(5 + index * 2, 10 + index * 2),
+    summary: pick(signal.snippets),
+    title: signal.title,
+    timestamp: timestampMinutesAgo(5 + index * 2, 10 + index * 2),
+    importance: 0.55,
+    externalId: `onchain-${signal.asset}-${index}`,
   }));
 }

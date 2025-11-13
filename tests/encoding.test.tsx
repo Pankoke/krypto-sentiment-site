@@ -16,3 +16,4 @@ describe('encoding coverage', () => {
     expect(contentType).toContain('charset=utf-8');
   });
 });
+

@@ -29,12 +29,30 @@ export type ArchiveItem = {
   symbols: string[];
 };
 
-export interface UnifiedPost {
-  source: SourceType;
+export interface NormalizedSourceEntry {
+  id: string;
   asset: string;
-  text: string;
-  ts: string;
+  type: SourceType;
+  title?: string;
+  summary: string;
+  source: string;
+  url?: string;
+  timestamp: string;
+  importance: number;
   engagement?: number;
+}
+
+export interface AdapterEntryInput {
+  source: string;
+  type: SourceType;
+  asset: string;
+  summary?: string;
+  title?: string;
+  url?: string;
+  timestamp?: string | Date;
+  importance?: number;
+  engagement?: number;
+  externalId?: string;
 }
 
 function isObject(value: unknown): value is Record<string, unknown> {

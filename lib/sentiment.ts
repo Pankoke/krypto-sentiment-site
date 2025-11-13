@@ -1,5 +1,5 @@
 import { openai } from './openai';
-import type { DailyCryptoSentiment, UnifiedPost } from './types';
+import type { DailyCryptoSentiment, NormalizedSourceEntry } from './types';
 import { isDailyCryptoSentiment } from './types';
 import { isTickerAllowed } from './assets';
 // Import des JSON-Schemas mit Import-Attribut (ESM)
@@ -52,7 +52,7 @@ function findOutputJson(resp: unknown): unknown | undefined {
 }
 
 export async function runDailySentiment(
-  unified: ReadonlyArray<UnifiedPost>
+  unified: ReadonlyArray<NormalizedSourceEntry>
 ): Promise<DailyCryptoSentiment> {
   const system =
     'Du bist eine Krypto-Analyse-KI. Aggregiere Signale aus Social, News und On-Chain, ' +

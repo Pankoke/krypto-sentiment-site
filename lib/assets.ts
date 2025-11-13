@@ -18,7 +18,7 @@ const normalizedAssets: AssetDefinition[] = assetData.map((asset) => ({
 export const assetDefinitions = Object.freeze(normalizedAssets);
 export const allowedAssets = assetDefinitions.filter((asset) => asset.enabled);
 export const allowedTickerOrder = Object.freeze(allowedAssets.map((asset) => asset.ticker));
-const allowedTickerSet = new Set(allowedTickerOrder);
+export const allowedTickerSet = new Set(allowedTickerOrder);
 
 export function isTickerAllowed(ticker?: string): boolean {
   if (!ticker) return false;

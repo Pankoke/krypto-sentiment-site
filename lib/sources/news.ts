@@ -1,57 +1,66 @@
-import type { UnifiedPost } from '../types';
+import type { AdapterEntryInput } from '../types';
 import { pick, timestampMinutesAgo } from './utils';
 
 const newsBlueprints = [
   {
     asset: 'BTC',
     snippets: [
-      'BTC ETF-Zuflüsse steigen über 250 Mio. USD; Kurs hält 70k.',
-      'Bitcoin-Miner sehen steigende Erlöse bei stabiler Hashrate.',
+      'Bitcoin-ETF-Zuflüsse steigen über 250 Mio. USD, der Kurs bleibt über 70k.',
+      'Miner melden steigende Erlöse bei stabiler Hashrate.',
     ],
+    title: 'ETF-Flüsse und Miner-Erlöse im Blick',
   },
   {
     asset: 'ETH',
     snippets: [
-      'Ethereum Dencun-Upgrade senkt L2-Gebühren weiter laut mehreren Rollups.',
-      'Layer-2-Ökosystem verzeichnet neue Kapitalkraft für Asset-Interoperabilität.',
+      'Dencun-Upgrade reduziert L2-Gebühren, Rollups melden steigende Aktivität.',
+      'Layer-2-Ökosystem erhält neue Kapitalkraft für Asset-Interoperabilität.',
     ],
+    title: 'Ethereum Layer-2-Ökosystem gewinnt Tempo',
   },
   {
     asset: 'SOL',
     snippets: [
-      'Solana DeFi-TVL erreicht neues Jahreshoch; Aktivität im Ökosystem nimmt zu.',
-      'Solana-Infrastrukturfirmen berichten von erhöhtem Validator-Engagement.',
+      'Solana-DeFi-TVL erreicht neues Jahreshoch, Aktivitäten im Ökosystem nehmen zu.',
+      'Infrastrukturfirmen berichten von erhöhtem Validator-Engagement.',
     ],
+    title: 'Solana-Infrastruktur verzeichnet Wachstum',
   },
   {
-    asset: 'AVAX',
+    asset: 'XRP',
     snippets: [
-      'Avalanche-DApps melden wachsende TVL nach erfolgreichem Update.',
-      'AVAX-Community diskutiert Multi-Chain-Strategien und neue Brücken.',
+      'Ripple kündigt neue Partnerschaften mit Zahlungsdienstleistern an.',
+      'XRP-Transactions zeigen erhöhtes Volumen bei On-Chain-Sicherheit.',
     ],
+    title: 'Ripple kooperiert mit Zahlungsdienstleistern',
   },
 ];
 
-export async function fetchNews(): Promise<UnifiedPost[]> {
+export async function fetchNews(): Promise<AdapterEntryInput[]> {
   return newsBlueprints.flatMap((blueprint, index) => {
-    const text = pick(blueprint.snippets);
-    const basePost: UnifiedPost = {
-      source: 'news',
+    const summary = pick(blueprint.snippets);
+    const baseEntry: AdapterEntryInput = {
+      source: 'news-wire',
+      type: 'news',
       asset: blueprint.asset,
-      text,
-      ts: timestampMinutesAgo(4 + index * 3, 8 + index * 3),
+      title: blueprint.title,
+      summary,
+      url: `https://news.example.com/${blueprint.asset.toLowerCase()}`,
+      timestamp: timestampMinutesAgo(4 + index * 2, 8 + index * 2),
+      importance: 0.6,
+      externalId: `news-${blueprint.asset}-${index}`,
     };
     if (blueprint.asset === 'BTC') {
       return [
-        basePost,
+        baseEntry,
         {
-          source: 'news',
-          asset: 'BTC',
-          text: 'Makro-Analysten sehen Bitcoin als sicheren Hafen während traditioneller Märkte schwächeln.',
-          ts: timestampMinutesAgo(10 + index * 2, 14 + index * 2),
+          ...baseEntry,
+          summary: 'Makro-Analysten sehen Bitcoin als sicheren Hafen während traditioneller Märkte schwächeln.',
+          timestamp: timestampMinutesAgo(10 + index * 2, 14 + index * 2),
+          externalId: `news-${blueprint.asset}-bonus`,
         },
       ];
     }
-    return [basePost];
+    return [baseEntry];
   });
 }
