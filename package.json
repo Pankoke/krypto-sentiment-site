@@ -9,6 +9,7 @@
     "clean": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true});\"",
     "lint": "next lint",
     "test": "vitest",
+    "score:test": "vitest run tests/scoring.test.tsx",
     "cron:run": "curl -fsS http://localhost:3000/api/daily-report"
   },
   "dependencies": {

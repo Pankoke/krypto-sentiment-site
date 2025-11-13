@@ -136,6 +136,8 @@ Optional: Endpoint mit `CRON_SECRET` schützen (z. B. `GET /api/daily-report?k
 
   Das Kommando liefert die CJS-Deprecation-Warnung, zeigt die Logs `module loaded`/`before describe` und verifiziert alle 12 Specs. Bei Bedarf `NODE_OPTIONS=--trace-warnings` ergänzen, um tiefere Startup-Details zu erhalten.
 
+- `npx vitest tests/scoring.test.ts` validiert die neuen Scoring-Regeln (Subscores + Event/Regime-Gewichte) und kann ebenfalls einzeln ausgeführt werden.
+
 ## Encoding
 
 - **UTF-8 überall**: JSON, Locale- und Textdateien im `app`, `data`, `lib`, `public` etc. liegen als UTF-8 ohne BOM vor. Neue Datenquellen sollten beim Einlesen explizit als UTF-8 dekodiert werden; wenn der Content-Type fehlt, defensiv `TextDecoder('utf-8')` nutzen.
