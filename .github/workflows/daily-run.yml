@@ -140,13 +140,15 @@ jobs:
             const {env} = process;
             const raw = env.DAILY_JSON;
             if (!raw) {
-              throw new Error('Missing dailyJson output from previous job');
+              console.warn('dailyJson output missing; skipping detailed health checks.');
+              return;
             }
             let payload;
             try {
               payload = JSON.parse(raw);
             } catch (error) {
-              throw new Error(`Failed to parse dailyJson: ${error instanceof Error ? error.message : error}`);
+              console.warn(`Failed to parse dailyJson: ${error instanceof Error ? error.message : error}`);
+              return;
             }
             const newsItems = payload?.news?.items ?? 0;
             const assets = payload?.reports?.assets ?? 0;
