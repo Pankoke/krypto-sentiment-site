@@ -1,6 +1,41 @@
+import type { Metadata } from 'next';
 import { buildLocalePath } from '../../../../lib/assets';
 import { getTranslations } from 'next-intl/server';
 import NewsList from '../../../../src/components/news/NewsList';
+
+const BASE_URL = process.env.APP_BASE_URL ?? 'https://krypto-sentiment-site.com';
+const OG_LOCALES: Record<'de' | 'en', string> = {
+  de: 'de_DE',
+  en: 'en_US',
+};
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: 'de' | 'en' };
+}): Promise<Metadata> {
+  const t = await getTranslations();
+  const base = new URL(BASE_URL);
+  const canonical = new URL(buildLocalePath(params.locale), base).toString();
+  return {
+    title: t('news.title'),
+    description: t('news.description'),
+    alternates: {
+      canonical,
+      languages: {
+        de: new URL('/de', base).toString(),
+        en: new URL('/en', base).toString(),
+      },
+    },
+    openGraph: {
+      title: t('news.title'),
+      description: t('news.description'),
+      url: canonical,
+      locale: OG_LOCALES[params.locale],
+      siteName: 'Krypto Sentiment',
+    },
+  };
+}
 
 export const revalidate = 86400;
 export const dynamic = 'force-static';

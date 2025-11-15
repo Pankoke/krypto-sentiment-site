@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const entries: string[] = [];
   LOCALES.forEach((locale) => {
     entries.push(`/${locale}`);
+    entries.push(`/${locale}/news`);
     entries.push(`/${locale}/${methodPageSlug[locale]}`);
   });
   return entries.map((path) => ({ url: new URL(path, base).toString() }));

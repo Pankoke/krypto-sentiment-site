@@ -1,8 +1,11 @@
 import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import type { DailyCryptoSentiment } from '../../lib/types';
 import { isDailyCryptoSentiment } from '../../lib/types';
 import {
+  buildLocalePath,
   filterAssetsByWhitelist,
   sortAssetsByWhitelistOrder,
 } from '../../lib/assets';
@@ -11,10 +14,13 @@ import Badge from '../../components/ui/Badge';
 import Meter from '../../components/ui/Meter';
 import GenerateButton from '../../components/GenerateButton';
 import { meterColor, toneLabel } from '../../lib/ui/sentiment';
-import { getTranslations } from 'next-intl/server';
 import EncodingTest from '@/components/EncodingTest';
 
-export const revalidate = 3600;
+const BASE_URL = process.env.APP_BASE_URL ?? 'https://krypto-sentiment-site.com';
+const OG_LOCALES: Record<'de' | 'en', string> = {
+  de: 'de_DE',
+  en: 'en_US',
+};
 
 async function loadLatestReport(): Promise<DailyCryptoSentiment | null> {
   const dir = join(process.cwd(), 'data', 'reports');
@@ -34,7 +40,38 @@ async function loadLatestReport(): Promise<DailyCryptoSentiment | null> {
   return parsed;
 }
 
-export default async function Page({ params }: { params: { locale: string } }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: 'de' | 'en' };
+}): Promise<Metadata> {
+  const t = await getTranslations();
+  const localeRoot = buildLocalePath(params.locale);
+  const base = new URL(BASE_URL);
+  const canonical = new URL(localeRoot, base).toString();
+  return {
+    title: t('news.title'),
+    description: t('news.description'),
+    alternates: {
+      canonical,
+      languages: {
+        de: new URL('/de', base).toString(),
+        en: new URL('/en', base).toString(),
+      },
+    },
+    openGraph: {
+      title: t('news.title'),
+      description: t('news.description'),
+      url: canonical,
+      locale: OG_LOCALES[params.locale],
+      siteName: 'Krypto Sentiment',
+    },
+  };
+}
+
+export const revalidate = 3600;
+
+export default async function Page() {
   const t = await getTranslations();
   const report = await loadLatestReport();
 
@@ -78,7 +115,7 @@ export default async function Page({ params }: { params: { locale: string } }) {
                 <Badge tone={a.sentiment}>{toneLabel(a.sentiment)}</Badge>
               </header>
               <div className="text-sm text-gray-700 mb-1">
-                Score {a.score.toFixed(2)} · {confPct}% {t('label.confidence')}
+                Score {a.score.toFixed(2)} – {confPct}% {t('label.confidence')}
               </div>
               <Meter percent={confPct} colorClass={meterColor(a.sentiment)} className="mb-3" />
               <p className="text-sm mb-3">{a.rationale}</p>
@@ -99,4 +136,3 @@ export default async function Page({ params }: { params: { locale: string } }) {
     </section>
   );
 }
-

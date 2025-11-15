@@ -1,12 +1,12 @@
-# Krypto Sentiment Site – Quickstart
+ï»¿# Krypto Sentiment Site - Quickstart
 
-Die Repo benutzt Next.js 14 (App Router) mit TypeScript strict und i18n (de/en). Die Startseite zeigt den aktuellen News-Score für BTC/ETH/SOL/XRP aus den persistierten Snapshots; eine eigene `/reports/[date]`-Detailseite gibt es nicht mehr, dafür sind die Daten weiterhin als JSON unter `data/reports/YYYY-MM-DD.json` verfügbar. Secrets (News- und Sentiment-APIs) laufen ausschließlich serverseitig.
+Die Repo nutzt Next.js 14 (App Router) mit TypeScript strict und i18n (de/en). Die Startseite zeigt den aktuellen News-Score fÃ¼r BTC/ETH/SOL/XRP aus persistierten Snapshots; eine eigene `/reports/[date]`-Detailseite gibt es nicht mehr, die Daten liegen weiterhin als JSON unter `data/reports/YYYY-MM-DD.json`. Secrets (News- und Sentiment-APIs) laufen ausschlieÃŸlich serverseitig.
 
 ## Voraussetzungen
 
 - Node.js 18.18 LTS oder neuer
 - npm (pnpm/yarn/bun funktionieren ebenfalls)
-- `.env.local` mit den secrets aus dem Abschnitt unten
+- `.env.local` mit den Secrets aus dem Abschnitt weiter unten
 
 ## Installation & Betrieb
 
@@ -21,33 +21,44 @@ Tests:
 
 ```bash
 npm run lint
-npm run score:test   # führt `vitest tests/scoring.test.tsx` (ohne Watch) aus
+npm run score:test   # fÃ¼hrt `vitest tests/scoring.test.tsx` (ohne Watch) aus
 npx vitest run tests/news-page.test.tsx
 ```
 
 ## Architektur & Routing
 
-- `app/` enthält die App-Router-Struktur: `/[locale]` ist die News-Startseite, `app/[locale]/(pages)/news/page.tsx` liest den Tages-Snapshot, `app/[locale]/methodik` zeigt die Methodik-Page. Die Navigation (LocaleNav) respektiert das aktuelle Locale und liefert nur noch Home/Methodik.
+- `app/` enthÃ¤lt die App-Router-Struktur: `/[locale]` ist die News-Startseite, `app/[locale]/(pages)/news/page.tsx` liest den Tages-Snapshot, `app/[locale]/methodik` zeigt die Methodik-Page. Die Navigation (LocaleNav) respektiert das Locale und liefert nur noch Home/Methodik.
 - Die News-Seite ist eine Server Component mit ISR (revalidate=86400) und nutzt das Cache-Tag `news-daily`, das nach jedem Snapshot-Refresh invalidiert wird.
-- Die Daily-Report-Detailseiten unter `/reports` wurden entfernt; der UI-Flow arbeitet direkt mit den gepersistierten JSON-Snapshots.
+- Die Daily-Report-Detailseiten unter `/reports` wurden entfernt; die UI arbeitet direkt mit den gepersistierten JSON-Snapshots.
 
 ## Daten & Persistenz
 
-- `data/reports/` enthält die täglichen Sentiment-Berichte (UUID `YYYY-MM-DD.json` für die Offline-Auswertung, etwa für Backfills oder Admin-Checks).
-- `data/news/` speichert die locale-spezifischen News-Snapshots `YYYY-MM-DD.{locale}.json`, die die News-Startseite und andere statische Seiten lesen. Fehlt eine Datei, zeigt die Seite einen sanften Empty-State („Kein Report gespeichert“).
-- Archiv-Seiten (z.?B. `app/[locale]/(pages)/reports`) wurden entfernt; das Archiv lebt nur noch in den persistierten Dateien und etwaigen externen Tools.
+- `data/reports/` enthÃ¤lt die tÃ¤glichen Sentiment-Berichte (Format `YYYY-MM-DD.json`) fÃ¼r Backfills und Admin-Checks.
+- `data/news/` speichert locale-spezifische News-Snapshots `YYYY-MM-DD.{locale}.json`, aus denen die News-Startseite und andere statische Seiten lesen. Fehlt eine Datei, zeigt die Seite einen sanften Empty-State ("Kein Report gespeichert").
 
 ## Daily APIs & Cron
 
-- `GET /api/daily/generate` (internes Secret über `DAILY_API_SECRET`) löst das Scoring und die Snapshot-Persistenz aus. Standardmäßig überschreibt `mode=overwrite`, mit `mode=skip` bleiben fertige Tage unverändert. Die Route liefert `{ ok, date, locales, assets }` plus Logs (Adapter-Fehler, Dedupe).
-- `GET /api/news/generate` aggregiert die News einmal täglich, schreibt die locale-spezifischen Dateien und ruft `revalidateTag('news-daily')` auf.
-- Cron (z.?B. Vercel) ruft `/api/news/generate` plus optional `/api/daily/generate` wie geplant ab (06:00 CET empfohlen). Die News-Home-Seite benutzt anschließend ISR bzw. das `news-daily`-Tag.
+- `GET /api/daily/generate` (internes Secret Ã¼ber `DAILY_API_SECRET`) lÃ¶st das Scoring und die Snapshot-Persistenz aus. StandardmÃ¤ÃŸig Ã¼berschreibt `mode=overwrite`; mit `mode=skip` bleiben bestehende Tage unangetastet. Die Route liefert `{ ok, date, locales, assets }` plus Logs (Adapter-Fehler, Dedupe).
+- `GET /api/news/generate` aggregiert einmal tÃ¤glich die News, schreibt die locale-spezifischen Dateien und ruft `revalidateTag('news-daily')` auf.
+- Cron (z.â€¯B. Vercel) ruft `/api/news/generate` plus optional `/api/daily/generate` (06:00 CET empfohlen) ab; danach ist die News-Home-Seite Ã¼ber ISR bzw. den `news-daily`-Tag frisch.
+
+## Redirects & SEO
+
+- `next.config.mjs` verweist `/reports/*`, `/daily/*`, `/[locale]/reports/*`, `/[locale]/daily/*` und die Listen auf `/[locale]/news` (bzw. `/[locale]`), damit alte Daily-Pfade permanent (301/308) auf den News-Home umgestellt werden.
+- `app/sitemap.ts` exportiert nur noch `/de`, `/en`, `/de/news`, `/en/news` und die Methodik-Slugs; Daily-Detail-URLs tauchen nicht mehr auf.
+- `app/[locale]/page.tsx` und `app/[locale]/(pages)/news/page.tsx` teilen sich metadata-basierte Canonicals und hreflang-Alternates, daher ist `/de` (resp. `/en`) die eindeutige kanonische URL und die OpenGraph-Texte beschreiben den aktuellen Snapshot des jeweiligen Locale.
 
 ## Testing & Validation
 
-- `npm run score:test` oder `npx vitest run tests/scoring.test.tsx` prüfen das Scoring-MVP (Confidence, Hysterese, Reasons).
+- `npm run score:test` oder `npx vitest run tests/scoring.test.tsx` prÃ¼fen das Scoring-MVP (Confidence, Hysterese, Reasons).
 - `npx vitest run tests/news-page.test.tsx` validiert News-UI, Snapshot-Metadaten und lokalisierten Text.
-- Smoke-Tests: `/de` & `/en` liefern die News-Home; alte `/de/heute`-URLs sollten auf `/de` weiterleiten.
+
+### Smoke-Tests
+
+1. `curl -I http://localhost:3000/de/news` bzw. `/en/news`: 200 OK, Inhalte sichtbar (Server-Components), keine zusÃ¤tzlichen Aggregations-Requests.
+2. `curl -I http://localhost:3000/de/reports/2025-11-12` oder `/en/daily/2025-11-12`: permanente Redirect-Antwort (301/308) zur jeweils passenden News-Startseite, die Locale bleibt erhalten.
+3. Sitemap prÃ¼fen (`http://localhost:3000/sitemap.xml`): nur `/de`, `/en`, `/de/news`, `/en/news` und Methodik-Links enthalten; keine Daily-Details.
+4. DevTools Network wÃ¤hrend `/de/news`: max. ein schneller Server-Load (Snapshot-Read), keine wiederholten Fetches beim Reload oder Tab-Fokus.
 
 ## Environment (`.env.local`)
 
@@ -60,5 +71,4 @@ DAILY_GENERATE_MODE=overwrite  # skip|overwrite
 NEWS_GENERATE_SECRET=...
 ```
 
-Secrets bleiben auf dem Server und dürfen nie in den Client gebunden werden. Die News-Startseite, die Daily-API und Persistenz-Logik laufen ausschließlich auf dem Server.
-
+Secrets bleiben auf dem Server und dÃ¼rfen nie in den Client gebunden werden. Die News-Startseite, die Daily-API und Persistenz-Logik laufen ausschlieÃŸlich auf dem Server.
