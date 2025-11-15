@@ -47,10 +47,9 @@
     "detailsFor": "Details für {date}"
   },
   "nav": {
+    "newsHome": "News",
     "archive": "Archiv",
-    "today": "Heute",
     "backHome": "Zur Startseite",
-    "news": "Nachrichten",
     "methodik": "Methodik"
   },
   "news": {

@@ -14,13 +14,10 @@ export function LocaleNav() {
   return (
     <nav className="text-sm flex items-center gap-4">
       <Link href={`/${locale}`} className="text-gray-700 hover:text-black">
-        {t('today')}
+        {t('newsHome')}
       </Link>
       <Link href={`/${locale}/reports`} className="text-gray-700 hover:text-black">
         {t('archive')}
-      </Link>
-      <Link href={`/${locale}/news`} className="text-gray-700 hover:text-black">
-        {t('news')}
       </Link>
       <Link href={`/${locale}/${methodPageSlug[locale]}`} className="text-gray-700 hover:text-black">
         {t('methodik')}

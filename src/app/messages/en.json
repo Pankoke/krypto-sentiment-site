@@ -44,10 +44,9 @@
     "detailsFor": "Details for {date}"
   },
   "nav": {
+    "newsHome": "News",
     "archive": "Archive",
-    "today": "Today",
-    "backHome": "Back to home",
-    "news": "News",
+    "backHome": "Back home",
     "methodik": "Methodology"
   },
   "news": {
