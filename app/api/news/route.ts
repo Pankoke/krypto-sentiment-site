@@ -1,15 +1,17 @@
 import { NextResponse } from 'next/server';
-import path from 'node:path';
-import { mkdir, writeFile } from 'node:fs/promises';
-import { aggregateNews, type AggregatedReport } from '../../../lib/news/aggregator';
+import { aggregateNews } from '../../../lib/news/aggregator';
+import { latestNewsSnapshot, persistDailyNewsSnapshots } from '../../../lib/news/snapshot';
 
-const REPORTS_DIR = path.join(process.cwd(), 'data', 'reports');
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' } as const;
 
+type AggregatedOptions = {
+  universe?: string[];
+  since?: string;
+  force?: boolean;
+};
+
 function parseUniverseParam(param: string | null): string[] | undefined {
-  if (!param) {
-    return undefined;
-  }
+  if (!param) return undefined;
   const list = param
     .split(',')
     .map((item) => item.trim())
@@ -18,9 +20,7 @@ function parseUniverseParam(param: string | null): string[] | undefined {
 }
 
 function sanitizeUniverseInput(value: unknown): string[] | undefined {
-  if (!Array.isArray(value)) {
-    return undefined;
-  }
+  if (!Array.isArray(value)) return undefined;
   const list = value
     .filter((item): item is string => typeof item === 'string')
     .map((item) => item.trim())
@@ -28,56 +28,17 @@ function sanitizeUniverseInput(value: unknown): string[] | undefined {
   return list.length ? list : undefined;
 }
 
-async function persistReport(report: AggregatedReport): Promise<void> {
-  await mkdir(REPORTS_DIR, { recursive: true });
-  const targetFile = path.join(REPORTS_DIR, `${report.date}-news.json`);
-  await writeFile(targetFile, JSON.stringify(report, null, 2), 'utf8');
-}
-
-type AggregatedOptions = {
-  universe?: string[];
-  since?: string;
-  page?: number;
-  limit?: number;
-};
-
-function parsePositiveInt(param: string | null, fallback: number): number {
-  const value = Number(param);
-  if (Number.isNaN(value) || value < 1) {
-    return fallback;
-  }
-  return Math.floor(value);
-}
-
 async function handleReportRequest(options?: AggregatedOptions) {
   try {
+    if (!options?.force) {
+      const snapshot = await latestNewsSnapshot('en');
+      if (snapshot) {
+        return NextResponse.json(snapshot, { headers: JSON_HEADERS });
+      }
+    }
     const report = await aggregateNews(options);
-    let fsWarning: string | undefined;
-    try {
-      await persistReport(report);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'unbekannter Dateifehler';
-      fsWarning = `Dateischreibung fehlgeschlagen: ${message}`;
-    }
-    const page = options?.page ?? 1;
-    const limit = options?.limit ?? 4;
-    const totalAssets = report.assets.length;
-    const start = (page - 1) * limit;
-    const paginatedAssets = report.assets.slice(start, start + limit);
-    const paginatedReport = {
-      ...report,
-      assets: paginatedAssets,
-      pagination: {
-        page,
-        limit,
-        total: totalAssets,
-        hasMore: start + limit < totalAssets,
-      },
-    };
-    if (fsWarning) {
-      paginatedReport.method_note = `${report.method_note} | Hinweis: ${fsWarning}`;
-    }
-    return NextResponse.json(paginatedReport, { headers: JSON_HEADERS });
+    await persistDailyNewsSnapshots(report);
+    return NextResponse.json(report, { headers: JSON_HEADERS });
   } catch (error) {
     console.error('Aggregationsfehler:', error);
     const message = error instanceof Error ? error.message : 'Aggregator-Fehler';
@@ -87,11 +48,10 @@ async function handleReportRequest(options?: AggregatedOptions) {
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  const options = {
+  const options: AggregatedOptions = {
     universe: parseUniverseParam(url.searchParams.get('universe')),
     since: url.searchParams.get('since') ?? undefined,
-    page: parsePositiveInt(url.searchParams.get('page'), 1),
-    limit: parsePositiveInt(url.searchParams.get('limit'), 4),
+    force: url.searchParams.get('refresh') === '1',
   };
   return handleReportRequest(options);
 }
@@ -100,10 +60,10 @@ export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
   const payloadBody =
     body && typeof body === 'object' ? (body as Record<string, unknown>) : undefined;
-  const options = {
+  const options: AggregatedOptions = {
     universe: sanitizeUniverseInput(payloadBody?.universe),
-    since:
-      typeof payloadBody?.since === 'string' ? payloadBody.since : undefined,
+    since: typeof payloadBody?.since === 'string' ? payloadBody.since : undefined,
+    force: payloadBody?.force === true,
   };
   return handleReportRequest(options);
 }

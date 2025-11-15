@@ -1,6 +1,8 @@
 import { access, constants, mkdir, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { fetchAllSources } from '../sources';
+import { aggregateNews } from '../news/aggregator';
+import { persistDailyNewsSnapshots } from '../news/snapshot';
 import { runDailySentiment } from '../sentiment';
 import { persistDailySnapshots } from '../persistence';
 import type { DailyCryptoSentiment } from '../types';
@@ -42,6 +44,13 @@ export async function generateDailyReport(
   await mkdir(REPORT_DIR, { recursive: true });
   await writeFile(path, JSON.stringify(report, null, 2) + '\n', 'utf8');
   await persistDailySnapshots(report);
+  try {
+    const newsReport = await aggregateNews();
+    await persistDailyNewsSnapshots(newsReport);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn('news snapshot failed', error);
+  }
 
   return { report, path, skipped: false };
 }

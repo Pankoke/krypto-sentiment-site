@@ -65,7 +65,9 @@
     "showRationale": "Show rationale",
     "noRationale": "No rationale available.",
     "topSignals": "Top signals",
-    "hint": "Note: {note}"
+    "hint": "Note: {note}",
+    "emptySnapshot": "No news yet.",
+    "generatedAt": "As of {date}"
   },
   "tooltip": {
     "definitionTitle": "Definition",
