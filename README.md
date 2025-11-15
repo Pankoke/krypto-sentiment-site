@@ -55,6 +55,8 @@ OPENAI_MODEL=gpt-4.1            # GPT-4.1 über Responses API
 # Optional
 APP_BASE_URL=http://localhost:3000  # für lokale Cron-Tests/Callbacks
 # CRON_SECRET=...                   # falls /api/daily-report geschützt wird
+DAILY_API_SECRET=...               # Geheimnis für /api/daily/generate
+DAILY_GENERATE_MODE=overwrite       # skip|overwrite; `skip` lässt bereits existierende Tage unangetastet
 ```
 
 Hinweise:
@@ -84,6 +86,12 @@ curl -sS "http://localhost:3000/api/daily-report"
 - Windows Task Scheduler: Geplante Aufgabe, täglich, Aktion: `curl -fsS https://<domain>/api/daily-report`.
 
 Optional: Endpoint mit `CRON_SECRET` schützen (z. B. `GET /api/daily-report?key=<secret>`); Secret nur serverseitig prüfen.
+
+## Daily-API & ISR: Ablauf & Sicherheit
+
+- **Internal trigger**: Cron/Automation ruft `GET /api/daily/generate?key=<DAILY_API_SECRET>` auf. Die Route nimmt optional `mode=skip|overwrite` entgegen (Standard `overwrite`, `skip` lässt bestehende Tagesdateien unangetastet) und gibt `{ ok, date, skipped, locales, assets }` zurück. Durch den Secret-Check (`DAILY_API_SECRET` oder fallback `CRON_SECRET`) bleibt der Endpunkt intern.
+- **Manual trigger**: Für lokale Tests oder den Button auf der Startseite bleibt `GET /api/daily-report` aktiv; er nutzt dieselbe Persistenz und schreibt `data/reports/YYYY-MM-DD.json` inkl. Snapshots.
+- **Snapshots & ISR**: Jeder Cron-Lauf schreibt JSON-Snapshots je Locale (`data/reports/YYYY-MM-DD.{locale}.json`). Die Startseite (`app/[locale]/page.tsx`) und die Archivliste (`/reports`) sind so konfiguriert, dass sie alle 60 Minuten revalidiert werden (`revalidate = 3600`), wodurch neue Tage nach einem Cron-Lauf innerhalb einer Stunde auftauchen. Archivdetailseiten lesen statisch die JSON-Snapshots (keine Neuberechnung), weshalb ein fehlender Snapshot sanft als „Kein Bericht gespeichert“/Badge „Unvollständig“ angezeigt wird.
 
 ## Entwicklungshinweise
 

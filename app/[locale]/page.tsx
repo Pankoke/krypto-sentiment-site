@@ -16,6 +16,8 @@ import { meterColor, toneLabel } from '../../lib/ui/sentiment';
 import { getTranslations } from 'next-intl/server';
 import EncodingTest from '@/components/EncodingTest';
 
+export const revalidate = 3600;
+
 async function loadLatestReport(): Promise<DailyCryptoSentiment | null> {
   const dir = join(process.cwd(), 'data', 'reports');
   let files: string[] = [];

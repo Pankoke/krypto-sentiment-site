@@ -2,6 +2,8 @@ import { buildLocalePath } from '../../../../lib/assets';
 import { listSnapshots } from '../../../../lib/persistence';
 import ArchiveList from '../../../../components/archive/ArchiveList';
 
+export const revalidate = 3600;
+
 async function loadArchive(locale: string) {
   return listSnapshots(locale).map((snapshot) => ({
     date: snapshot.date,
