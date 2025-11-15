@@ -3,21 +3,17 @@ import { join } from 'path';
 import { locales } from '../i18n';
 import type { DailyCryptoSentiment } from './types';
 import type { AssetReport } from './news/aggregator';
+import {
+  type ScoreContext,
+  type ScoreLabel,
+  type ScoreResult,
+} from './scoring/types';
 import { computeAssetScore } from './scoring';
 
-export interface SnapshotAsset {
-  asset: string;
-  score01: number;
-  totalScore: number;
-  label: string;
-  confidence: number;
-  confidenceDetails: Record<string, number>;
-  reasons: string[];
-  subscores: Record<string, number>;
-  weights: Record<string, number>;
+export type SnapshotAsset = ScoreResult & {
   asOf: string;
   history: number[];
-}
+};
 
 export interface DailySnapshot {
   date: string;
@@ -82,10 +78,10 @@ export async function persistDailySnapshots(
   for (const locale of locales) {
     const previous = await loadSnapshot(report.date, locale);
     const prevHistory = new Map(previous?.assets.map((a) => [a.asset, a.history]) ?? []);
-    const prevLabels = new Map(previous?.assets.map((a) => [a.asset, a.label as string]) ?? []);
+    const prevLabels = new Map<string, ScoreLabel>(previous?.assets.map((a) => [a.asset, a.label]) ?? []);
     const assets: SnapshotAsset[] = report.assets.map((asset) => {
       const features = deriveFeatures(asset, previous?.assets.find((a) => a.asset === asset.symbol));
-      const context = { previousLabel: prevLabels.get(asset.symbol) as any };
+      const context: ScoreContext = { previousLabel: prevLabels.get(asset.symbol) };
       const result = computeAssetScore(asset.symbol, features, context);
       const history = [...(prevHistory.get(asset.symbol) ?? []), result.totalScore].slice(-5);
       return {

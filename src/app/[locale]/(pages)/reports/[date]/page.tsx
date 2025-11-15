@@ -2,25 +2,18 @@ import Link from 'next/link';
 import { readSnapshot } from '../../../../lib/persistence';
 import { buildLocalePath } from '../../../../lib/assets';
 import type { DailySnapshot } from '../../../../lib/persistence';
+import type { ScoreLabel } from '../../../../lib/scoring/types';
 import Badge from '../../../../components/ui/Badge';
 import Card from '../../../../components/ui/Card';
 import Meter from '../../../../components/ui/Meter';
 import { meterColor, toneLabel } from '../../../../lib/ui/sentiment';
 import { getTranslations } from 'next-intl/server';
 
-type SnapshotAsset = DailySnapshot['assets'][number];
-
 async function loadReportByDate(date: string, locale: string): Promise<DailySnapshot | null> {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     return null;
   }
   return readSnapshot(date, locale);
-}
-
-function labelToTone(label: string) {
-  if (label === 'bullish') return 'bullish';
-  if (label === 'bearish') return 'bearish';
-  return 'neutral';
 }
 
 export const metadata = {
@@ -65,8 +58,10 @@ export default async function Page({ params }: { params: { locale: string; date:
             {t('title.sentiment')} · {report.date}
           </h1>
           <p className="text-xs text-gray-500">
-            {report.complete ? t('archive.complete', { default: 'Vollständiger Report' }) : t('archive.incomplete', { default: 'Unvollständiger Report' })}
-            {' • '}
+            {report.complete
+              ? t('archive.complete', { default: 'Vollstaendiger Report' })
+              : t('archive.incomplete', { default: 'Unvollstaendiger Report' })}
+            {' · '}
             {new Date(report.generatedAt).toLocaleString()}
           </p>
         </div>
@@ -77,33 +72,43 @@ export default async function Page({ params }: { params: { locale: string; date:
       <p className="mt-3 text-base text-gray-700">{report.macro_summary}</p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {allowedAssets.map((asset) => (
-          <Card key={asset.asset}>
-            <header className="mb-2 flex items-center justify-between">
-              <div>
-                <h2 className="font-semibold">{asset.asset}</h2>
-                <p className="text-xs text-gray-500">{asset.label.toUpperCase()}</p>
+        {allowedAssets.map((asset) => {
+          const tone: ScoreLabel = asset.label;
+          return (
+            <Card key={asset.asset}>
+              <header className="mb-2 flex items-center justify-between">
+                <div>
+                  <h2 className="font-semibold">{asset.asset}</h2>
+                  <p className="text-xs text-gray-500">{asset.label.toUpperCase()}</p>
+                </div>
+                <Badge tone={tone}>{toneLabel(tone)}</Badge>
+              </header>
+              <div className="text-sm text-gray-700 mb-1">
+                Score {asset.totalScore.toFixed(2)} · {asset.score01}/100
               </div>
-              <Badge tone={labelToTone(asset.label)}>{toneLabel(asset.label as any)}</Badge>
-            </header>
-            <div className="text-sm text-gray-700 mb-1">
-              Score {asset.totalScore.toFixed(2)} · {asset.score01}/100
-            </div>
-            <Meter percent={asset.score01} colorClass={meterColor(asset.label as any)} className="mb-3" />
-            <div className="text-xs text-gray-500 mb-2">
-              Confidence {asset.confidence}% · {t('archive.macroSummary', { default: 'Reasons below' })}
-            </div>
-            <ul className="text-sm list-disc pl-5 space-y-1 mb-3">
-              {asset.reasons.map((reason, idx) => (
-                <li key={idx}>{reason}</li>
-              ))}
-            </ul>
-            <div className="text-xs text-gray-500">
-              <p>{t('scoring.weights', { default: 'Weights' })}: {Object.entries(asset.weights).map(([key, weight]) => `${key}: ${(weight * 100).toFixed(0)}%`).join(', ')}</p>
-              <p>{t('scoring.asOf', { default: 'Stand' })}: {new Date(asset.asOf).toLocaleTimeString()}</p>
-            </div>
-          </Card>
-        ))}
+              <Meter percent={asset.score01} colorClass={meterColor(tone)} className="mb-3" />
+              <div className="text-xs text-gray-500 mb-2">
+                Confidence {asset.confidence}% · {t('archive.macroSummary', { default: 'Reasons below' })}
+              </div>
+              <ul className="text-sm list-disc pl-5 space-y-1 mb-3">
+                {asset.reasons.map((reason, idx) => (
+                  <li key={idx}>{reason}</li>
+                ))}
+              </ul>
+              <div className="text-xs text-gray-500">
+                <p>
+                  {t('scoring.weights', { default: 'Weights' })}:{' '}
+                  {Object.entries(asset.weights)
+                    .map(([key, weight]) => `${key}: ${(weight * 100).toFixed(0)}%`)
+                    .join(', ')}
+                </p>
+                <p>
+                  {t('scoring.asOf', { default: 'Stand' })}: {new Date(asset.asOf).toLocaleTimeString()}
+                </p>
+              </div>
+            </Card>
+          );
+        })}
       </div>
     </section>
   );

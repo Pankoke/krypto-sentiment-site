@@ -22,7 +22,7 @@ export default async function Page({ params }: { params: { locale: string } }) {
       <section className="space-y-4">
         <h1 className="text-2xl font-semibold">{t('title.sentiment')}</h1>
         <p className="text-sm text-gray-700">{t('home.noReport')}</p>
-        <Link href="/reports" className="text-sm text-gray-700 hover:text-black">
+        <Link href={`${localeRoot}/reports`} className="text-sm text-gray-700 hover:text-black">
           {t('nav.archive')}
         </Link>
       </section>
@@ -33,10 +33,14 @@ export default async function Page({ params }: { params: { locale: string } }) {
     <section>
       <div className="flex items-baseline justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">{t('title.sentiment')} · {snapshot.date}</h1>
+          <h1 className="text-2xl font-semibold">
+            {t('title.sentiment')} · {snapshot.date}
+          </h1>
           <p className="text-xs text-gray-500">
-            {snapshot.complete ? t('archive.complete', { default: 'Vollständiger Report' }) : t('archive.incomplete', { default: 'Unvollständiger Report' })}
-            {' • '}
+            {snapshot.complete
+              ? t('archive.complete', { default: 'Vollstaendiger Report' })
+              : t('archive.incomplete', { default: 'Unvollstaendiger Report' })}
+            {' · '}
             {new Date(snapshot.generatedAt).toLocaleString()}
           </p>
         </div>
@@ -45,6 +49,7 @@ export default async function Page({ params }: { params: { locale: string } }) {
         </Link>
       </div>
       <p className="mt-4 text-base text-gray-700">{snapshot.macro_summary}</p>
+
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {snapshot.assets.map((asset) => (
           <Card key={asset.asset}>
@@ -53,12 +58,12 @@ export default async function Page({ params }: { params: { locale: string } }) {
                 <h2 className="font-semibold">{asset.asset}</h2>
                 <p className="text-xs text-gray-500">{asset.label}</p>
               </div>
-              <Badge tone={asset.label as any}>{toneLabel(asset.label as any)}</Badge>
+              <Badge tone={asset.label}>{toneLabel(asset.label)}</Badge>
             </header>
             <div className="text-sm text-gray-700 mb-1">
               Score {asset.totalScore.toFixed(2)} · {asset.score01}/100
             </div>
-            <Meter percent={asset.score01} colorClass={meterColor(asset.label as any)} className="mb-3" />
+            <Meter percent={asset.score01} colorClass={meterColor(asset.label)} className="mb-3" />
             <div className="text-xs text-gray-500 mb-2">
               Confidence {asset.confidence}% · {asset.reasons[0]}
             </div>
