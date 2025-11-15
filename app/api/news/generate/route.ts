@@ -15,11 +15,6 @@ function normalizeLocale(param?: string | null): 'de' | 'en' {
 
 type GenerateMode = 'overwrite' | 'skip';
 
-function shouldSkip(mode: GenerateMode, locale: 'de' | 'en') {
-  if (mode !== 'skip') return false;
-  return latestNewsSnapshot(locale).then((snapshot) => !!snapshot);
-}
-
 async function triggerAlert(durationMs: number, itemCount: number) {
   const maxDuration = Number(process.env.NEWS_ALERT_MAX_MS ?? 5000);
   const minItems = Number(process.env.NEWS_ALERT_MIN_ITEMS ?? 1);
