@@ -1,7 +1,8 @@
 import type { MetadataRoute } from 'next';
+import { methodPageSlug } from 'lib/methodPages';
 
 const BASE_URL = process.env.APP_BASE_URL ?? 'https://krypto-sentiment-site.com';
-const LOCALES = ['de', 'en'];
+const LOCALES: Array<'de' | 'en'> = ['de', 'en'];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = new URL(BASE_URL);
@@ -10,7 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entries.push(`/${locale}`);
     entries.push(`/${locale}/news`);
     entries.push(`/${locale}/reports`);
-    entries.push(`/${locale}/${locale === 'de' ? 'methodik' : 'methodology'}`);
+    entries.push(`/${locale}/${methodPageSlug[locale]}`);
   });
   return entries.map((path) => ({ url: new URL(path, base).toString() }));
 }

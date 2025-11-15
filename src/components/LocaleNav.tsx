@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { methodPageSlug } from 'lib/methodPages';
 
 export function LocaleNav() {
   const pathname = usePathname();
@@ -21,14 +22,7 @@ export function LocaleNav() {
       <Link href={`/${locale}/news`} className="text-gray-700 hover:text-black">
         {t('news')}
       </Link>
-      <Link
-        href={
-          locale === 'de'
-            ? '/de/methodik'
-            : '/en/methodology'
-        }
-        className="text-gray-700 hover:text-black"
-      >
+      <Link href={`/${locale}/${methodPageSlug[locale]}`} className="text-gray-700 hover:text-black">
         {t('methodik')}
       </Link>
     </nav>

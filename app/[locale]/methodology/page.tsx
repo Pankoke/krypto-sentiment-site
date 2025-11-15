@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import { methodikContent } from 'lib/methodik';
+import { methodPageSlug } from 'lib/methodPages';
 
 const BASE_URL = process.env.APP_BASE_URL ?? 'https://krypto-sentiment-site.com';
 
 export function generateStaticParams() {
-  return [{ locale: 'de' }];
+  return [{ locale: 'en' }];
 }
 
 function createMetadata(locale: 'de' | 'en', slug: string, content: { title: string; description: string }) {
@@ -20,20 +21,20 @@ function createMetadata(locale: 'de' | 'en', slug: string, content: { title: str
     alternates: {
       canonical,
       languages: {
-        de: `${BASE_URL}/de/methodik`,
-        en: `${BASE_URL}/en/methodology`,
+        de: `${BASE_URL}/de/${methodPageSlug.de}`,
+        en: `${BASE_URL}/en/${methodPageSlug.en}`,
       },
     },
   } satisfies Metadata;
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const content = methodikContent.de;
-  return createMetadata('de', 'methodik', content);
+  const content = methodikContent.en;
+  return createMetadata('en', methodPageSlug.en, content);
 }
 
-export default function MethodikPage() {
-  const content = methodikContent.de;
+export default function MethodologyPage() {
+  const content = methodikContent.en;
   return (
     <section className="space-y-6 py-10 px-4">
       <header>
@@ -54,7 +55,7 @@ export default function MethodikPage() {
       <section className="space-y-2 rounded-xl border border-dashed border-gray-300 bg-gray-50 p-4">
         <h3 className="text-lg font-semibold">Disclaimer</h3>
         <p className="text-sm text-gray-600">{content.disclaimer}</p>
-        <h3 className="text-lg font-semibold">Weiterentwicklung</h3>
+        <h3 className="text-lg font-semibold">Scaling the coverage</h3>
         <p className="text-sm text-gray-600">{content.expansion}</p>
       </section>
     </section>
