@@ -50,12 +50,16 @@ function categorizeSource(source: string) {
   return null;
 }
 
+type SourceCategoryKey = 'social' | 'news' | 'derivatives' | 'onChain';
+
 function deriveFeatures(asset: AssetReport, previous?: SnapshotAsset) {
-  const counts: Record<string, number> = { social: 0, news: 0, derivatives: 0, onChain: 0 };
+  const counts: Record<SourceCategoryKey, number> = { social: 0, news: 0, derivatives: 0, onChain: 0 };
   const sources = new Set<string>();
   for (const signal of asset.top_signals) {
     const cat = categorizeSource(signal.source);
-    if (cat) counts[cat] += 1;
+    if (cat) {
+      counts[cat] += 1;
+    }
     sources.add(signal.source);
   }
   const total = Math.max(1, asset.top_signals.length);

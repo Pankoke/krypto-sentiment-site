@@ -1,12 +1,12 @@
 import Link from 'next/link';
-import { readSnapshot } from '../../../../lib/persistence';
-import { buildLocalePath } from '../../../../lib/assets';
-import type { DailySnapshot } from '../../../../lib/persistence';
-import type { ScoreLabel } from '../../../../lib/scoring/types';
-import Badge from '../../../../components/ui/Badge';
-import Card from '../../../../components/ui/Card';
-import Meter from '../../../../components/ui/Meter';
-import { meterColor, toneLabel } from '../../../../lib/ui/sentiment';
+import { readSnapshot } from 'lib/persistence';
+import { buildLocalePath } from 'lib/assets';
+import type { DailySnapshot } from 'lib/persistence';
+import type { ScoreLabel } from 'lib/scoring/types';
+import Badge from 'components/ui/Badge';
+import Card from 'components/ui/Card';
+import Meter from 'components/ui/Meter';
+import { meterColor, toneLabel } from 'lib/ui/sentiment';
 import { getTranslations } from 'next-intl/server';
 
 async function loadReportByDate(date: string, locale: string): Promise<DailySnapshot | null> {

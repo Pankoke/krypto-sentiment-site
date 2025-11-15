@@ -2,6 +2,7 @@ import { locales } from '../../../../i18n';
 import { generateDailyReport, type DailyGenerateMode } from '../../../../lib/daily/generator';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' } as const;
 
 export async function GET(req: Request): Promise<Response> {

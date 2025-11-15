@@ -98,8 +98,8 @@ function determineLabel(score01: number, previous?: ScoreLabel): ScoreLabel {
 function buildReasons(subscores: Record<SourceCategory, number>, weights: Record<SourceCategory, number>): string[] {
   const entries = Object.entries(subscores) as Array<[SourceCategory, number]>;
   const sorted = entries.sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
-  const primary = sorted[0];
-  const secondary = sorted[1];
+  const primary: [SourceCategory, number] = sorted[0] ?? ['social', 0];
+  const secondary: [SourceCategory, number] | null = sorted[1] ?? null;
   const labelMap: Record<SourceCategory, string> = {
     social: 'Social',
     news: 'News',

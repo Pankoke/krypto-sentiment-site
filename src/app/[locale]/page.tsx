@@ -1,10 +1,10 @@
 import Link from 'next/link';
-import { listSnapshots } from '../../../lib/persistence';
-import Badge from '../../../components/ui/Badge';
-import Card from '../../../components/ui/Card';
-import Meter from '../../../components/ui/Meter';
-import { meterColor, toneLabel } from '../../../lib/ui/sentiment';
-import { buildLocalePath } from '../../../lib/assets';
+import { listSnapshots } from 'lib/persistence';
+import Badge from 'components/ui/Badge';
+import Card from 'components/ui/Card';
+import Meter from 'components/ui/Meter';
+import { meterColor, toneLabel } from 'lib/ui/sentiment';
+import { buildLocalePath } from 'lib/assets';
 import { getTranslations } from 'next-intl/server';
 
 async function loadLatestSnapshot(locale: string) {
