@@ -223,7 +223,7 @@ export async function listSnapshotMetadata(locale: string, limit = 7): Promise<S
   const selected = snapshots.slice(0, limit);
   const metadata: SnapshotMetadata[] = [];
   for (const snapshot of selected) {
-    const file = snapshotPath(snapshot.date, locale);
+    const file = snapshotPath(NEWS_DIR, snapshot.date, locale);
     try {
       const stats = await stat(file);
     metadata.push({
