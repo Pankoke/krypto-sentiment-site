@@ -42,10 +42,7 @@ export default async function NewsPage({ params }: { params: { locale: 'de' | 'e
         <p className="text-xs text-gray-500">{t('news.emptySnapshot')}</p>
       )}
       <div className="text-sm">
-        <a
-          href={`${buildLocalePath(params.locale)}/reports`}
-          className="text-gray-700 hover:text-black"
-        >
+        <a href={buildLocalePath(params.locale)} className="text-gray-700 hover:text-black">
           {t('nav.backHome')}
         </a>
       </div>

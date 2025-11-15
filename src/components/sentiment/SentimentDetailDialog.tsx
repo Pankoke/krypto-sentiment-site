@@ -52,7 +52,7 @@ export function SentimentDetailDialog({ open, item, onOpenChange }: SentimentDet
                 {t(`group.${group}`)}
               </h3>
               {items.length === 0 ? (
-                <p className="text-sm text-gray-500">{t('detail.noSignals')}</p>
+                <p className="text-sm text-gray-500">{t('news.noSignals')}</p>
               ) : (
                 <ul className="list-disc pl-5 text-sm text-gray-800 space-y-1">
                   {items.map((bullet, idx) => (

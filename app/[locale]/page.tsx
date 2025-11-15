@@ -1,10 +1,8 @@
 import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
-import Link from 'next/link';
 import type { DailyCryptoSentiment } from '../../lib/types';
 import { isDailyCryptoSentiment } from '../../lib/types';
 import {
-  buildLocalePath,
   filterAssetsByWhitelist,
   sortAssetsByWhitelistOrder,
 } from '../../lib/assets';
@@ -38,7 +36,6 @@ async function loadLatestReport(): Promise<DailyCryptoSentiment | null> {
 
 export default async function Page({ params }: { params: { locale: string } }) {
   const t = await getTranslations();
-  const localeRoot = buildLocalePath(params.locale);
   const report = await loadLatestReport();
 
   if (!report) {
@@ -57,9 +54,6 @@ export default async function Page({ params }: { params: { locale: string } }) {
       <section className="space-y-3">
         <h1 className="text-2xl font-semibold">{t('title.sentiment')}</h1>
         <p className="text-sm text-gray-700">{t('empty.noResults')}</p>
-        <Link href={`${localeRoot}/reports`} className="text-sm text-gray-700 hover:text-black">
-          {t('nav.backHome')}
-        </Link>
       </section>
     );
   }
@@ -70,9 +64,6 @@ export default async function Page({ params }: { params: { locale: string } }) {
     <section>
       <div className="flex items-baseline justify-between gap-4">
         <h1 className="text-2xl font-semibold">{t('title.sentiment')} – {date}</h1>
-        <Link href={`${localeRoot}/reports/${date}`} className="text-sm text-gray-700 hover:text-black">
-          {t('home.detailsFor', { date })}
-        </Link>
       </div>
       <p className="mt-4 text-base">{macro_summary}</p>
 

@@ -57,7 +57,7 @@
     "description": "Aggregierte Signale und kurze Begründungen pro Asset.",
     "filterLabel": "Asset",
     "filterAll": "Alle Assets",
-    "loading": "Lade Nachrichten …",
+    "loading": "Lade Nachrichten.",
     "empty": "Keine News verfügbar.",
     "errorLoading": "Fehler beim Laden: {error}",
     "retry": "Erneut versuchen",
@@ -69,7 +69,8 @@
     "topSignals": "Top-Signale",
     "hint": "Hinweis: {note}",
     "emptySnapshot": "Noch keine News vorhanden.",
-    "generatedAt": "Stand: {date}"
+    "generatedAt": "Stand: {date}",
+    "noSignals": "Keine Signale in dieser Kategorie."
   },
   "tooltip": {
     "definitionTitle": "Definition",
@@ -82,18 +83,12 @@
   "archive": {
     "search": "Suche (Datum, Summary)",
     "allAssets": "Alle Assets",
-    "details": "Details ansehen",
     "complete": "Vollständiger Report",
     "incomplete": "Unvollständiger Report",
     "macroSummary": "Gründe unten",
     "assets": "{count} Assets",
     "avgConfidenceLabel": "Durchschnittliches Vertrauen: {value}%",
     "generatedAt": "Generiert am {date}"
-  },
-  "detail": {
-    "notFoundTitle": "Bericht nicht gefunden",
-    "notFoundText": "Für das Datum {date} existiert kein Bericht.",
-    "noSignals": "Keine Signale in dieser Kategorie."
   },
   "scoreCard": {
     "scoreLabel": "Score",

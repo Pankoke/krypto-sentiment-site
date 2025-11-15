@@ -79,18 +79,12 @@
   "archive": {
     "search": "Search (date, summary)",
     "allAssets": "All assets",
-    "details": "View details",
     "complete": "Complete report",
     "incomplete": "Incomplete report",
     "macroSummary": "Reasons below",
     "assets": "{count} assets",
     "avgConfidenceLabel": "Avg. confidence: {value}%",
     "generatedAt": "Generated at {date}"
-  },
-  "detail": {
-    "notFoundTitle": "Report not found",
-    "notFoundText": "No report exists for {date}.",
-    "noSignals": "No signals available in this category."
   },
   "error": {
     "fetchSentiment": "Failed to load sentiment data, please try again."

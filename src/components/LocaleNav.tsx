@@ -16,9 +16,6 @@ export function LocaleNav() {
       <Link href={`/${locale}`} className="text-gray-700 hover:text-black">
         {t('newsHome')}
       </Link>
-      <Link href={`/${locale}/reports`} className="text-gray-700 hover:text-black">
-        {t('archive')}
-      </Link>
       <Link href={`/${locale}/${methodPageSlug[locale]}`} className="text-gray-700 hover:text-black">
         {t('methodik')}
       </Link>

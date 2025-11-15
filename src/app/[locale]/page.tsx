@@ -1,7 +1,6 @@
 import { listSnapshots } from 'lib/persistence';
 import { allowedTickerOrder, allowedTickerSet } from 'lib/assets';
 import AssetScoreCard from 'components/ui/AssetScoreCard';
-import { buildLocalePath } from 'lib/assets';
 import EncodingTest from '@/components/EncodingTest';
 import { getTranslations } from 'next-intl/server';
 
@@ -12,7 +11,6 @@ async function loadLatestSnapshot(locale: string) {
 
 export default async function Page({ params }: { params: { locale: string } }) {
   const t = await getTranslations();
-  const localeRoot = buildLocalePath(params.locale);
   const snapshot = await loadLatestSnapshot(params.locale);
 
   if (!snapshot) {
@@ -20,12 +18,6 @@ export default async function Page({ params }: { params: { locale: string } }) {
       <section className="space-y-4">
         <h1 className="text-2xl font-semibold">{t('title.sentiment')}</h1>
         <p className="text-sm text-gray-700">{t('home.noReport')}</p>
-        <a
-          href={`${localeRoot}/reports`}
-          className="text-sm text-gray-700 hover:text-black"
-        >
-          {t('nav.archive')}
-        </a>
       </section>
     );
   }
@@ -40,12 +32,6 @@ export default async function Page({ params }: { params: { locale: string } }) {
       <section className="space-y-3">
         <h1 className="text-2xl font-semibold">{t('title.sentiment')}</h1>
         <p className="text-sm text-gray-700">{t('empty.noResults')}</p>
-        <a
-          href={`${localeRoot}/reports`}
-          className="text-sm text-gray-700 hover:text-black"
-        >
-          {t('nav.backHome')}
-        </a>
       </section>
     );
   }
@@ -57,12 +43,7 @@ export default async function Page({ params }: { params: { locale: string } }) {
           <h1 className="text-2xl font-semibold">{t('title.sentiment')}</h1>
           <p className="text-sm text-gray-700">{snapshot.macro_summary}</p>
         </div>
-        <a
-          href={`${localeRoot}/reports`}
-          className="text-sm text-gray-700 hover:text-black"
-        >
-          {t('home.detailsFor', { date: snapshot.date })}
-        </a>
+        <p className="text-sm text-gray-500">{snapshot.date}</p>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {filteredAssets.map((asset) => (
