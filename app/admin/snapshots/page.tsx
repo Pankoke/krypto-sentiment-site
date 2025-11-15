@@ -75,10 +75,10 @@ export default async function AdminSnapshotsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 bg-white">
-                {metadata[index].map((snapshot) => (
+                {(metadata[index] ?? []).map((snapshot) => (
                   <SnapshotRow key={snapshot.path} snapshot={snapshot} />
                 ))}
-                {metadata[index].length === 0 && (
+                {(metadata[index] ?? []).length === 0 && (
                   <tr>
                     <td colSpan={6} className="px-3 py-6 text-center text-xs text-slate-500">
                       Keine Snapshots gefunden.
