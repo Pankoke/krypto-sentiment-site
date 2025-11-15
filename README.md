@@ -43,6 +43,12 @@ npx vitest run tests/news-page.test.tsx
 - `GET /api/news/generate` aggregiert einmal täglich die News, schreibt die locale-spezifischen Dateien und ruft `revalidateTag('news-daily')` auf.
 - Cron (z. B. Vercel) ruft `/api/news/generate` plus optional `/api/daily/generate` (06:00 CET empfohlen) ab; danach ist die News-Home-Seite über ISR bzw. den `news-daily`-Tag frisch.
 
+## Admin-Tool (DEV)
+
+- Zugriff über `/admin/snapshots` (nur während `NODE_ENV !== 'production'`), listet die letzten sieben Dateien pro Locale mit Pfad, Größe, mtime und Item-Anzahl.
+- Buttons `Neu generieren` + `Validieren` nutzen `/api/news/generate` bzw. `/api/news/validate`, fordern `news-daily`-Revalidation an und zeigen die Antwort direkt an. Das `Anzeigen`-Details-Panel rendert eine kurze Vorschau der Assets.
+- Nutze das Tool, um leere/fehlende Snapshots schnell zu identifizieren, bevor du den Dev-Button via Navbar oder Home benutzt.
+
 ## Redirects & SEO
 
 - `next.config.mjs` verweist `/reports/*`, `/daily/*`, `/[locale]/reports/*`, `/[locale]/daily/*` sowie `/`, `/en` auf `/de/news`, damit der globale Home-Pfad immer die deutsche News-Startseite bleibt.

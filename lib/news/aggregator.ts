@@ -343,7 +343,7 @@ if (fallbackAssets.length) {
     universe,
     assets: allowedReports.sort((a, b) => b.score - a.score),
     method_note: methodNoteParts.join(' '),
-    adapterWarnings,
+    adapterWarnings: [...adapterWarnings],
     uniqueAssets,
     dedupeCount,
   };

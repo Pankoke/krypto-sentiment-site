@@ -182,3 +182,39 @@ export async function latestNewsSnapshot(locale: string): Promise<NewsSnapshot |
 export async function readNewsSnapshot(date: string, locale: string): Promise<NewsSnapshot | null> {
   return loadSnapshot(date, locale);
 }
+
+export type SnapshotMetadata = {
+  date: string;
+  locale: string;
+  path: string;
+  size: number;
+  mtime: string;
+  items: number;
+  generatedAt: string;
+  snapshot: NewsSnapshot;
+};
+
+export async function listSnapshotMetadata(locale: string, limit = 7): Promise<SnapshotMetadata[]> {
+  const snapshots = await listNewsSnapshots(locale);
+  const selected = snapshots.slice(0, limit);
+  const metadata: SnapshotMetadata[] = [];
+  for (const snapshot of selected) {
+    const file = snapshotPath(snapshot.date, locale);
+    try {
+      const stats = await stat(file);
+    metadata.push({
+      date: snapshot.date,
+      locale,
+      path: file,
+      size: stats.size,
+      mtime: stats.mtime.toISOString(),
+      items: snapshot.assets.length,
+      generatedAt: snapshot.generatedAt,
+      snapshot,
+    });
+    } catch {
+      // ignore missing stats
+    }
+  }
+  return metadata;
+}
