@@ -1,9 +1,9 @@
 import { mkdir, readFile, readdir, stat, writeFile } from 'fs/promises';
 import { join } from 'path';
-import os from 'os';
 import { locales } from '../../i18n';
 import type { AggregatedReport } from './aggregator';
 import { addDays, berlinDateString, berlinHour } from '../timezone';
+import { ensurePersistenceAllowed } from '../persistenceGuard';
 const DATA_DIR = process.env.GENERATE_DATA_DIR ?? join(process.cwd(), 'data');
 
 export interface NewsSnapshot extends AggregatedReport {
@@ -12,24 +12,19 @@ export interface NewsSnapshot extends AggregatedReport {
 }
 
 const NEWS_DIR = join(DATA_DIR, 'news');
-const FALLBACK_NEWS_DIR = join(os.tmpdir(), 'krypto-data', 'news');
 
-function snapshotPath(dir: string, date: string, locale: string) {
-  return join(dir, `${date}.${locale}.json`);
+function snapshotPath(date: string, locale: string) {
+  return join(NEWS_DIR, `${date}.${locale}.json`);
 }
 
 async function loadSnapshot(date: string, locale: string): Promise<NewsSnapshot | null> {
-  const directories = [NEWS_DIR, FALLBACK_NEWS_DIR];
-  for (const dir of directories) {
-    const filePath = snapshotPath(dir, date, locale);
-    try {
-      const raw = await readFile(filePath, 'utf8');
-      return JSON.parse(raw) as NewsSnapshot;
-    } catch {
-      continue;
-    }
+  const filePath = snapshotPath(date, locale);
+  try {
+    const raw = await readFile(filePath, 'utf8');
+    return JSON.parse(raw) as NewsSnapshot;
+  } catch {
+    return null;
   }
-  return null;
 }
 
 type SnapshotMeta = {
@@ -45,7 +40,7 @@ async function loadSnapshotMeta(date: string, locale: string): Promise<SnapshotM
   if (!snapshot) {
     return null;
   }
-  const file = snapshotPath(NEWS_DIR, date, locale);
+  const file = snapshotPath(date, locale);
   const stats = await stat(file);
   return {
     snapshot,
@@ -148,6 +143,7 @@ export async function persistDailyNewsSnapshots(
   report: AggregatedReport,
   options?: { locales?: Array<'de' | 'en'>; force?: boolean }
 ): Promise<void> {
+  ensurePersistenceAllowed();
   await mkdir(NEWS_DIR, { recursive: true }).catch(() => undefined);
   const timestamp = new Date().toISOString();
   const targetLocales = options?.locales ?? locales;
@@ -167,15 +163,13 @@ export async function persistDailyNewsSnapshots(
     try {
       await writeFile(filePath, JSON.stringify(snapshot, null, 2) + '\n', 'utf8');
     } catch {
-      await mkdir(FALLBACK_NEWS_DIR, { recursive: true });
-      const fallbackPath = join(FALLBACK_NEWS_DIR, `${report.date}.${locale}.json`);
-      await writeFile(fallbackPath, JSON.stringify(snapshot, null, 2) + '\n', 'utf8');
+      throw new Error('Persistenz erfolgt via GitHub Action Commit');
     }
   }
 }
 
 export async function listNewsSnapshots(locale: string): Promise<NewsSnapshot[]> {
-  const directories = [NEWS_DIR, FALLBACK_NEWS_DIR];
+  const directories = [NEWS_DIR];
   const pattern = new RegExp(`^\\d{4}-\\d{2}-\\d{2}\\.${locale}\\.json$`);
   const snapshots: NewsSnapshot[] = [];
   for (const dir of directories) {
@@ -223,7 +217,7 @@ export async function listSnapshotMetadata(locale: string, limit = 7): Promise<S
   const selected = snapshots.slice(0, limit);
   const metadata: SnapshotMetadata[] = [];
   for (const snapshot of selected) {
-    const file = snapshotPath(NEWS_DIR, snapshot.date, locale);
+    const file = snapshotPath(snapshot.date, locale);
     try {
       const stats = await stat(file);
     metadata.push({

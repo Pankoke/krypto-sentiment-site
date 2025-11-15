@@ -10,6 +10,8 @@ const OG_LOCALES: Record<'de' | 'en', string> = {
   en: 'en_US',
 };
 
+export const runtime = 'nodejs';
+
 type NewsPageProps = { params: { locale: 'de' | 'en' } };
 
 export async function generateMetadata({ params }: NewsPageProps): Promise<Metadata> {
@@ -69,6 +71,8 @@ export default async function NewsPage({ params }: NewsPageProps) {
   }
 
   const regenUrl = '/api/news/generate?mode=overwrite';
+  const assetsCount = snapshot?.assets.length ?? 0;
+  const hasContent = Boolean(snapshot && assetsCount > 0);
   return (
     <main className="container mx-auto px-4 py-8 space-y-6">
       <header>
@@ -80,7 +84,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
           {banner}
         </div>
       ) : null}
-      {snapshot ? (
+      {hasContent ? (
         <>
           <NewsList
             assets={snapshot.assets}

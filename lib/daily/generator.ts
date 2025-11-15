@@ -7,6 +7,7 @@ import { persistDailyNewsSnapshots } from '../news/snapshot';
 import { runDailySentiment } from '../sentiment';
 import { persistDailySnapshots } from '../persistence';
 import type { DailyCryptoSentiment } from '../types';
+import { ensurePersistenceAllowed } from '../persistenceGuard';
 
 const DATA_DIR = process.env.GENERATE_DATA_DIR ?? join(process.cwd(), 'data');
 const FALLBACK_REPORT_DIR = join(os.tmpdir(), 'krypto-data', 'reports');
@@ -34,6 +35,7 @@ async function exists(path: string): Promise<boolean> {
 export async function generateDailyReport(
   options?: { mode?: DailyGenerateMode; date?: string }
 ): Promise<DailyGenerationResult> {
+  ensurePersistenceAllowed();
   const posts = await fetchAllSources();
   const report = await runDailySentiment(posts);
   const dateForFile = options?.date ?? report.date;

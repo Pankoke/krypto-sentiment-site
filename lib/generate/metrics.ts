@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
+import { ensurePersistenceAllowed } from '../persistenceGuard';
 
 const DATA_DIR = process.env.GENERATE_DATA_DIR ?? join(process.cwd(), 'data');
 const METRICS_DIR = join(DATA_DIR, 'metrics');
@@ -37,6 +38,7 @@ export type DailyRunDumpMetrics = {
 };
 
 export async function saveDailyRunMetrics(metrics: DailyRunMetrics): Promise<void> {
+  ensurePersistenceAllowed();
   await mkdir(METRICS_DIR, { recursive: true });
   await writeFile(METRICS_FILE, JSON.stringify(metrics, null, 2) + '\n', 'utf8');
 }
@@ -51,6 +53,7 @@ export async function readDailyRunMetrics(): Promise<DailyRunMetrics | null> {
 }
 
 export async function writeDailyRunDumpMetrics(metrics: DailyRunDumpMetrics): Promise<void> {
+  ensurePersistenceAllowed();
   await mkdir(METRICS_DIR, { recursive: true });
   await writeFile(METRICS_FILE, JSON.stringify(metrics, null, 2) + '\n', 'utf8');
 }

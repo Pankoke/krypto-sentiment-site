@@ -36,7 +36,7 @@ npx vitest run tests/news-page.test.tsx
 - `data/reports/` enthält die täglichen Sentiment-Berichte (Format `YYYY-MM-DD.json`) für Backfills und Admin-Checks.
 - `data/news/` speichert locale-spezifische News-Snapshots `YYYY-MM-DD.{locale}.json`, aus denen die News-Startseite und andere statische Seiten lesen. Fehlt eine Datei, zeigt die Seite einen sanften Empty-State ("Kein Report gespeichert").
 - Die Snapshot-Dateien orientieren sich am Europe/Berlin-Datum; vor 06:00 Uhr fällt die Seite auf den letzten verfügbaren Stand zurück und zeigt ein Hinweis-Banner. Jeder Snapshot-Zugriff loggt Pfad, Größe, Deduplizierung und Adapter-Warnungen.
-- **Hinweis für Serverless:** Damit Vercel / AWS keine Schreibfehler werfen, setze die Environment-Variable `GENERATE_DATA_DIR=/tmp/data` (z. B. in Vercel oder GitHub Secrets). Lokal kann der Pfad weiterhin auf `./data` liegen.
+- **Hinweis für Serverless:** Alle Persistenz erfolgt über den Snapshot-Dump im GitHub-Workflow; Dateien liegen im Repository `data/{news,reports,metrics}`. Schreibe nicht direkt ins Dateisystem auf Vercel.
 
 ## Daily APIs & Cron
 

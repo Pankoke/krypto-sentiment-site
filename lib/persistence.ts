@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile, readdir } from 'fs/promises';
 import { join } from 'path';
 import os from 'os';
 import { locales } from '../i18n';
+import { ensurePersistenceAllowed } from './persistenceGuard';
 const DATA_DIR = process.env.GENERATE_DATA_DIR ?? join(process.cwd(), 'data');
 const FALLBACK_DATA_DIR = join(os.tmpdir(), 'krypto-data');
 import type { DailyCryptoSentiment } from './types';
@@ -83,6 +84,7 @@ function deriveFeatures(asset: AssetReport, previous?: SnapshotAsset) {
 export async function persistDailySnapshots(
   report: DailyCryptoSentiment
 ): Promise<void> {
+  ensurePersistenceAllowed();
   let targetDir = REPORT_DIR;
   try {
     await mkdir(targetDir, { recursive: true });

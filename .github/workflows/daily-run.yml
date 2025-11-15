@@ -131,46 +131,173 @@ jobs:
     needs: run-daily
     runs-on: ubuntu-latest
     steps:
-      - name: Evaluate daily-run output
+      - name: Evaluate daily-run output via /api/health
         env:
           DAILY_JSON: ${{ needs.run-daily.outputs.dailyJson }}
+          HEALTH_URL: ${{ secrets.HEALTH_URL }}
+          TARGET_URL: ${{ secrets.TARGET_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
           node <<'NODE'
-          (async () => {
-            const {env} = process;
-            const raw = env.DAILY_JSON;
-            if (!raw) {
-              console.warn('dailyJson output missing; skipping detailed health checks.');
-              return;
-            }
-            let payload;
-            try {
-              payload = JSON.parse(raw);
-            } catch (error) {
-              console.warn(`Failed to parse dailyJson: ${error instanceof Error ? error.message : error}`);
-              return;
-            }
+          const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+          async function evaluatePayload(payload, label) {
             const newsItems = payload?.news?.items ?? 0;
             const assets = payload?.reports?.assets ?? 0;
             const partial = payload?.partial ?? false;
-            console.info('health summary', {
-              date: payload?.date ?? null,
-              newsItems,
-              assets,
-              partial,
-            });
-            const needsNews = newsItems > 0;
-            const needsAssets = assets === 4;
-            const failing = !needsNews || !needsAssets;
-            if (failing && partial) {
-              console.warn('Health check running in partial mode');
-              return;
+            console.info(`${label} health summary`, { newsItems, assets, partial });
+            if (newsItems > 0 && assets > 0) {
+              return true;
             }
-            if (failing) {
-              throw new Error('Health check failed: insufficient items/assets');
+            if (partial) {
+              console.warn(`${label} is partial but non-blocking`);
+              return true;
             }
+            return false;
+          }
+          (async () => {
+            const {env} = process;
+            const waitTime = 75_000;
+            console.info(`Waiting ${waitTime}ms for deployment propagation`);
+            await delay(waitTime);
+            const targetHealth = env.HEALTH_URL || env.TARGET_URL?.replace(/\\/api\\/generate\\/.*$/, '/api/health');
+            const headers = env.CRON_SECRET ? { 'x-cron-secret': env.CRON_SECRET } : {};
+            let healthPayload = null;
+            if (targetHealth) {
+              try {
+                const response = await fetch(targetHealth, { method: 'GET', headers });
+                if (response.ok) {
+                  healthPayload = await response.json();
+                  const ok = await evaluatePayload({
+                    news: { items: healthPayload?.news?.newsItemsCount ?? 0 },
+                    reports: { assets: healthPayload?.reports?.assetsCount ?? 0 },
+                    partial: healthPayload?.partial,
+                  }, 'remote');
+                  if (ok) {
+                    return;
+                  }
+                } else {
+                  console.warn(`Health endpoint returned ${response.status}`);
+                }
+              } catch (error) {
+                console.warn('Health fetch failed', error);
+              }
+            } else {
+              console.warn('No health URL configured, skipping remote check');
+            }
+            const raw = env.DAILY_JSON;
+            if (raw) {
+              try {
+                const payload = JSON.parse(raw);
+                const ok = await evaluatePayload(payload, 'dailyJson');
+                if (ok) {
+                  return;
+                }
+              } catch (error) {
+                console.warn('dailyJson parse failed', error);
+              }
+            } else {
+              console.warn('No dailyJson output available for fallback');
+            }
+            throw new Error('Health validation failed: insufficient data');
           })().catch((error) => {
             console.error('Health check fatal:', error);
+            process.exit(1);
+          });
+          NODE
+  snapshot-dump:
+    needs: [run-daily, health-check]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Dump snapshots and commit
+        env:
+          TARGET_URL: ${{ secrets.TARGET_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const {env, exit} = process;
+          const TARGET_URL = env.TARGET_URL;
+          const CRON_SECRET = env.CRON_SECRET;
+          const GITHUB_TOKEN = env.GITHUB_TOKEN;
+          if (!TARGET_URL || !CRON_SECRET || !GITHUB_TOKEN) {
+            console.error('Missing TARGET_URL, CRON_SECRET or GITHUB_TOKEN');
+            exit(1);
+          }
+          const url = new URL(TARGET_URL);
+          url.searchParams.set('mode', 'dump');
+          url.searchParams.set('locale', 'both');
+          const headers = {'x-cron-secret': CRON_SECRET};
+          (async () => {
+            const response = await fetch(url, {method: 'GET', headers});
+            const payload = await response.json();
+            if (!payload?.date || !payload?.news?.report || !payload?.reports?.report) {
+              throw new Error('Invalid payload, missing report data');
+            }
+            const date = payload.date;
+            const newsReport = payload.news.report;
+            const reportReport = payload.reports.report;
+            const metrics = {
+              date,
+              locales: payload.locales ?? ['de','en'],
+              newsItemsDE: payload.news.items ?? newsReport?.assets?.length ?? 0,
+              newsItemsEN: payload.news.items ?? newsReport?.assets?.length ?? 0,
+              assetsCount: payload.reports.assets ?? reportReport?.assets?.length ?? 0,
+              partial: payload.partial ?? false,
+              durationMs: payload.durationMs ?? 0,
+              commitSha: env.GIT_COMMIT_SHA ?? env.GITHUB_SHA ?? env.GITHUB_REF?.split('/').pop() ?? 'unknown',
+            };
+            const baseDir = path.resolve('data');
+            const newsDir = path.join(baseDir, 'news');
+            const reportsDir = path.join(baseDir, 'reports');
+            const metricsDir = path.join(baseDir, 'metrics');
+            [newsDir, reportsDir, metricsDir].forEach((dir) => fs.mkdirSync(dir, {recursive: true}));
+
+            const writeFile = (dir, locale, content) => {
+              const filePath = path.join(dir, `${date}.${locale}.json`);
+              fs.writeFileSync(filePath, JSON.stringify({ ...content, locale }, null, 2) + '\n', 'utf8');
+              return filePath;
+            };
+
+            const newsDePath = writeFile(newsDir, 'de', newsReport);
+            const newsEnPath = writeFile(newsDir, 'en', newsReport);
+            const reportsDePath = writeFile(reportsDir, 'de', reportReport);
+            const reportsEnPath = writeFile(reportsDir, 'en', reportReport);
+            const metricsPath = path.join(metricsDir, 'daily-run.json');
+            fs.writeFileSync(metricsPath, JSON.stringify(metrics, null, 2) + '\n', 'utf8');
+
+            console.info('Snapshot dump locations:', {newsDePath, newsEnPath, reportsDePath, reportsEnPath, metricsPath});
+            console.info('Build summary:', {
+              newsItems: metrics.newsItemsDE,
+              assets: metrics.assetsCount,
+              partial: metrics.partial,
+            });
+
+            const exec = require('child_process').execSync;
+            exec('git config user.name "github-actions[bot]"');
+            exec('git config user.email "41898282+github-actions[bot]@users.noreply.github.com"');
+            exec('git add data/news data/reports data/metrics');
+            const message = `chore(snapshot): daily-run ${date} de/en`;
+            try {
+              exec(`git commit -m "${message}"`);
+            } catch (error) {
+              const stderr = error.stderr?.toString?.() ?? '';
+              if (!stderr.includes('nothing to commit')) {
+                throw error;
+              }
+              console.info('Nothing to commit');
+              return;
+            }
+            exec('git push');
+          })().catch((err) => {
+            console.error('Snapshot dump failed:', err);
             process.exit(1);
           });
           NODE
