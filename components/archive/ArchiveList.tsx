@@ -1,64 +1,91 @@
 "use client";
 
-import { useMemo, useState } from 'react';
 import Link from 'next/link';
+import { useMemo, useState } from 'react';
 import Card from '../ui/Card';
+import ScoreBadge from '../ui/ScoreBadge';
+import StatusBadges, { type StatusKey } from '../ui/StatusBadges';
 import type { ArchiveItem } from '../../lib/types';
 import { useTranslations } from 'next-intl';
-import { getAllowedTickerOrder } from '../../lib/assets';
 
 type Props = {
   items: ArchiveItem[];
   localeRoot?: string;
 };
 
+const determineDayStatuses = (item: ArchiveItem): StatusKey[] => {
+  const statuses = new Set<StatusKey>();
+  if (!item.complete) {
+    statuses.add('lowConfidence');
+  }
+  if (item.avgScore >= 75) {
+    statuses.add('highImpact');
+  }
+  if (item.avgConfidence < 50) {
+    statuses.add('lowConfidence');
+  }
+  return Array.from(statuses);
+};
+
 export default function ArchiveList({ items, localeRoot }: Props) {
   const t = useTranslations();
   const [query, setQuery] = useState('');
   const [symbol, setSymbol] = useState('');
+  const reportsBase = `${localeRoot ?? '/reports'}`;
 
   const symbols = useMemo(() => {
     const all = new Set<string>();
     for (const it of items) {
-      for (const s of it.symbols) all.add(s);
+      it.symbols.forEach((s) => all.add(s));
     }
-    const order = getAllowedTickerOrder();
-    return order.filter((ticker) => all.has(ticker));
+    return Array.from(all).sort();
   }, [items]);
-
-  const reportsBase = localeRoot ?? '/reports';
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return items.filter((it) => {
-      const qOk = !q || it.date.toLowerCase().includes(q) || it.macroSummary.toLowerCase().includes(q);
-      const sOk = !symbol || it.symbols.includes(symbol);
-      return qOk && sOk;
+      const matchesQuery =
+        !q ||
+        it.date.toLowerCase().includes(q) ||
+        it.macroSummary.toLowerCase().includes(q);
+      const matchesSymbol = !symbol || it.symbols.includes(symbol);
+      return matchesQuery && matchesSymbol;
     });
   }, [items, query, symbol]);
 
+  const statusLabels = {
+    highImpact: t('status.highImpact', { default: 'High-Impact' }),
+    eventWindow: t('status.eventWindow', { default: 'Event-Window' }),
+    lowConfidence: t('status.lowConfidence', { default: 'Low Confidence' }),
+    highVolRegime: t('status.highVolRegime', { default: 'High-Vol Regime' }),
+  };
+
   return (
     <section>
-      <div className="flex items-end justify-between gap-4">
+      <div className="flex flex-col gap-4">
         <div>
           <h1 className="text-2xl font-semibold">{t('nav.archive')}</h1>
-          <div className="text-sm text-gray-600">{filtered.length} / {items.length}</div>
+          <div className="text-sm text-gray-600">
+            {filtered.length} / {items.length}
+          </div>
         </div>
         <div className="flex flex-wrap gap-3">
           <input
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(event) => setQuery(event.target.value)}
             placeholder={t('archive.search', { default: 'Suche (Datum, Summary)' })}
             className="h-9 w-64 rounded-md border px-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-black/20"
           />
           <select
             value={symbol}
-            onChange={(e) => setSymbol(e.target.value)}
+            onChange={(event) => setSymbol(event.target.value)}
             className="h-9 rounded-md border px-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-black/20"
           >
             <option value="">{t('archive.allAssets', { default: 'Alle Assets' })}</option>
             {symbols.map((s) => (
-              <option key={s} value={s}>{s}</option>
+              <option key={s} value={s}>
+                {s}
+              </option>
             ))}
           </select>
         </div>
@@ -67,28 +94,44 @@ export default function ArchiveList({ items, localeRoot }: Props) {
       {filtered.length === 0 ? (
         <div className="mt-6 text-sm text-gray-700">{t('empty.noResults')}</div>
       ) : (
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          {filtered.map((it) => (
-            <Card key={it.date}>
-              <header className="mb-2 flex items-center justify-between">
-                <h2 className="font-semibold">{it.date}</h2>
-                <div className="text-xs text-gray-600 flex items-center gap-2">
-                  <span>{it.assetsCount} Assets</span>
-                  {!it.complete && (
-                    <span className="rounded-full border border-orange-200 bg-orange-50 px-2 py-0.5 text-xs text-orange-700">
-                      {t('archive.incomplete', { default: 'Unvollständig' })}
-                    </span>
-                  )}
+        <div className="mt-6 space-y-4">
+          {filtered.map((item) => (
+            <Card key={item.date}>
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h2 className="text-lg font-semibold">{item.date}</h2>
+                  <p className="text-sm text-gray-600 line-clamp-2">{item.macroSummary}</p>
+                  <p className="mt-2 text-xs text-gray-500">
+                    {t('archive.generatedAt', { date: new Date(item.generatedAt).toLocaleString() })}
+                  </p>
                 </div>
-              </header>
-              <p className="text-sm text-gray-800 line-clamp-3">{it.macroSummary}</p>
-              {it.symbols.length > 0 && (
-                <div className="mt-2 text-xs text-gray-600">{it.symbols.join(', ')}</div>
-              )}
-              <div className="mt-3">
+                <ScoreBadge
+                  score={item.avgScore}
+                  label={t('scoreCard.scoreLabel', { default: 'Score' })}
+                  helperText={t('archive.assets', { count: item.assetsCount })}
+                  className="max-w-[120px] flex-none"
+                />
+              </div>
+              <div className="mt-3 flex flex-wrap items-center gap-3">
+                <span className="text-sm text-gray-600">
+                  {t('archive.avgConfidenceLabel', { value: item.avgConfidence })}
+                </span>
+                <StatusBadges statuses={determineDayStatuses(item)} labels={statusLabels} />
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {item.symbols.map((symbolName) => (
+                  <span
+                    key={symbolName}
+                    className="rounded-full border border-gray-200 px-3 py-1 text-xs font-semibold text-gray-700"
+                  >
+                    {symbolName}
+                  </span>
+                ))}
+              </div>
+              <div className="mt-4 text-right">
                 <Link
-                  href={`${reportsBase}/${it.date}`}
-                  className="text-sm text-gray-700 hover:text-black underline underline-offset-4"
+                  href={`${reportsBase}/${item.date}`}
+                  className="text-sm font-semibold text-black hover:text-gray-800 underline underline-offset-4"
                 >
                   {t('archive.details', { default: 'Details ansehen' })}
                 </Link>

@@ -1,47 +1,46 @@
-import { readdir, readFile } from 'fs/promises';
-import { join } from 'path';
-import type { DailyCryptoSentiment, ArchiveItem } from 'lib/types';
-import { isDailyCryptoSentiment } from 'lib/types';
+import { listSnapshots } from 'lib/persistence';
 import ArchiveList from 'components/archive/ArchiveList';
+import { buildLocalePath } from 'lib/assets';
+import type { ArchiveItem } from 'lib/types';
 
-async function loadArchive(): Promise<ArchiveItem[]> {
-  const dir = join(process.cwd(), 'data', 'reports');
-  let files: string[] = [];
-  try {
-    files = await readdir(dir);
-  } catch {
-    return [];
-  }
-  const jsonFiles = files.filter((f) => f.endsWith('.json'));
-  const items: ArchiveItem[] = [];
-  for (const f of jsonFiles) {
-    try {
-      const raw = await readFile(join(dir, f), 'utf8');
-      const parsed = JSON.parse(raw) as unknown;
-      if (!isDailyCryptoSentiment(parsed)) continue;
-      const rep = parsed as DailyCryptoSentiment;
-      items.push({
-        date: rep.date,
-        assetsCount: rep.assets.length,
-        macroSummary: rep.macro_summary,
-        symbols: Array.from(new Set(rep.assets.map((a) => a.symbol))).sort(),
-        complete: rep.assets.length > 0,
-      });
-    } catch {
-      // ignore
-    }
-  }
-  items.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
-  return items;
+export const revalidate = 3600;
+
+async function loadArchive(locale: string): Promise<ArchiveItem[]> {
+  const snapshots = await listSnapshots(locale);
+  return snapshots.map((snapshot) => {
+    const avgScore =
+      snapshot.assets.length === 0
+        ? 0
+        : Math.round(
+            snapshot.assets.reduce((sum, asset) => sum + asset.score01, 0) /
+              snapshot.assets.length
+          );
+    const avgConfidence =
+      snapshot.assets.length === 0
+        ? 0
+        : Math.round(
+            snapshot.assets.reduce((sum, asset) => sum + asset.confidence, 0) /
+              snapshot.assets.length
+          );
+    return {
+      date: snapshot.date,
+      assetsCount: snapshot.assets.length,
+      macroSummary: snapshot.macro_summary,
+      symbols: snapshot.assets.map((asset) => asset.asset),
+      complete: snapshot.complete,
+      avgScore,
+      avgConfidence,
+      generatedAt: snapshot.generatedAt,
+    };
+  });
 }
 
 export const metadata = {
   robots: { index: false, follow: true },
 };
 
-export default async function Page() {
-  const items = await loadArchive();
-  // ArchiveList ist clientseitig, nutzt eigene Labels; TODO: i18n-Props durchreichen
-  return <ArchiveList items={items} />;
+export default async function Page({ params }: { params: { locale: string } }) {
+  const items = await loadArchive(params.locale);
+  const localeRoot = buildLocalePath(params.locale);
+  return <ArchiveList items={items} localeRoot={localeRoot} />;
 }
-

@@ -1,22 +1,57 @@
 {
-  "title": { "sentiment": "Krypto-Sentiment" },
+  "title": {
+    "sentiment": "Krypto-Sentiment"
+  },
   "label": {
     "score": "Score",
     "confidence": "Vertrauen",
     "updated": "Zuletzt aktualisiert",
     "nextUpdate": "Nächste Aktualisierung in ~{mins} Min."
   },
-  "badge": { "bullish": "Bullish", "neutral": "Neutral", "bearish": "Bearish" },
-  "group": { "news": "News", "onchain": "On-Chain", "social": "Social" },
-  "empty": { "noResults": "Keine Treffer für die aktuelle Auswahl." },
-  "error": { "fetchSentiment": "Fehler beim Laden der Sentiment-Daten. Bitte erneut versuchen." },
-  "select": {
-    "trend": { "label": "Trend", "all": "Alle Trends" },
-    "sort": { "label": "Sortierung", "score": "Score (absteigend)", "confidence": "Vertrauen", "symbol": "Symbol (A-Z)" }
+  "badge": {
+    "bullish": "Bullish",
+    "neutral": "Neutral",
+    "bearish": "Bearish"
   },
-  "action": { "details": "Details", "retry": "Erneut laden", "close": "Schließen", "info": "Info" },
-  "home": { "noReport": "Kein Bericht gefunden. Du kannst jetzt einen Tagesbericht erzeugen.", "detailsFor": "Details für {date}" },
-  "nav": { "archive": "Archiv", "today": "Heute", "backHome": "Zur Startseite", "news": "Nachrichten" },
+  "group": {
+    "news": "News",
+    "onchain": "On-Chain",
+    "social": "Social"
+  },
+  "empty": {
+    "noResults": "Keine Treffer für die aktuelle Auswahl."
+  },
+  "error": {
+    "fetchSentiment": "Fehler beim Laden der Sentiment-Daten. Bitte erneut versuchen."
+  },
+  "select": {
+    "trend": {
+      "label": "Trend",
+      "all": "Alle Trends"
+    },
+    "sort": {
+      "label": "Sortierung",
+      "score": "Score (absteigend)",
+      "confidence": "Vertrauen",
+      "symbol": "Symbol (A-Z)"
+    }
+  },
+  "action": {
+    "details": "Details",
+    "retry": "Erneut laden",
+    "close": "Schließen",
+    "info": "Info"
+  },
+  "home": {
+    "noReport": "Kein Bericht gefunden. Du kannst jetzt einen Tagesbericht erzeugen.",
+    "detailsFor": "Details für {date}"
+  },
+  "nav": {
+    "archive": "Archiv",
+    "today": "Heute",
+    "backHome": "Zur Startseite",
+    "news": "Nachrichten"
+  },
   "news": {
     "title": "Nachrichten & Signale",
     "description": "Aggregierte Signale und kurze Begründungen pro Asset.",
@@ -38,15 +73,42 @@
     "definitionTitle": "Definition",
     "calibration": "Zuverlässigkeit anhand historischer Treffer ähnlicher Muster. Kalibrierung der letzten 30 Tage verfügbar in den Details."
   },
-  "footer": { "disclaimer": "KI-generierter Inhalt; keine Finanzberatung.", "disclaimerShort": "KI-generiert – keine Anlageberatung" },
-  "archive": { "search": "Suche (Datum, Summary)", "allAssets": "Alle Assets", "details": "Details ansehen" },
+  "footer": {
+    "disclaimer": "KI-generierter Inhalt; keine Finanzberatung.",
+    "disclaimerShort": "KI-generiert – keine Anlageberatung"
+  },
   "archive": {
     "search": "Suche (Datum, Summary)",
     "allAssets": "Alle Assets",
     "details": "Details ansehen",
     "complete": "Vollständiger Report",
     "incomplete": "Unvollständiger Report",
-    "macroSummary": "Gründe unten"
+    "macroSummary": "Gründe unten",
+    "assets": "{count} Assets",
+    "avgConfidenceLabel": "Durchschnittliches Vertrauen: {value}%",
+    "generatedAt": "Generiert am {date}"
   },
-  "detail": { "notFoundTitle": "Bericht nicht gefunden", "notFoundText": "Für das Datum {date} existiert kein Bericht.", "noSignals": "Keine Signale in dieser Kategorie." }
+  "detail": {
+    "notFoundTitle": "Bericht nicht gefunden",
+    "notFoundText": "Für das Datum {date} existiert kein Bericht.",
+    "noSignals": "Keine Signale in dieser Kategorie."
+  },
+  "scoreCard": {
+    "scoreLabel": "Score",
+    "scoreHelper": "Total: {total}",
+    "confidenceLabel": "Vertrauen"
+  },
+  "confidence": {
+    "level": {
+      "low": "Niedrig",
+      "medium": "Mittel",
+      "high": "Hoch"
+    }
+  },
+  "status": {
+    "highImpact": "High Impact",
+    "eventWindow": "Event Window",
+    "lowConfidence": "Geringes Vertrauen",
+    "highVolRegime": "High-Vol Regime"
+  }
 }

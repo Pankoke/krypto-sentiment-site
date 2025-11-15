@@ -156,4 +156,15 @@ Optional: Endpoint mit `CRON_SECRET` schützen (z. B. `GET /api/daily-report?k
 - **Tests decken**: Vitest prüft, dass die Umlaut-Komponente korrekt gerendert wird, und dass `GET /api/sentiment` den `charset=utf-8` Header setzt.
 - **Neue Datenquellen**: Beim Hinzufügen externer Feeds vor dem Parsen immer Dekodierung als UTF-8 erzwingen und BOM entfernen, damit keine Windows-1252-Artefakte ins System gelangen.
 
+## UI-Komponenten & Reuse
+
+- `ScoreBadge`: Zeigt Zahlen (0–100) plus optionalen Trendpfeil; mit `loading`-Flag liefert sie eine Skeleton-Variante. Texte wie Label/Helper können über `props` lokalisiert werden.
+- `LabelPill`: Farbige Pillen für `bullish`, `neutral`, `bearish` mit Fokus-Akzent und eigener `aria-label`, damit dieselbe Komponente auf Startseite, Archiv und News wiederverwendet werden kann.
+- `ConfidenceBar`: Visualisiert das Vertrauen (0–100) mit Prozentwert, farbigem Balken und Textstufe (`low/medium/high`). Labels lassen sich per Prop übersetzen.
+- `ReasonChips`: Trennt bis zu drei Gründe in Chips (Trunkierung + Tooltip), optional mit Skeleton-Platzhaltern.
+- `StatusBadges`: Markiert High-Impact-, Event-Window-, Low-Confidence- oder High-Vol-Regime-Zustände; Labels und Farben bleiben konsistent, der Fokus liegt auf Kontrast und Screenreader-Labels.
+- `AssetScoreCard`: Kombiniert alle Bausteine (ScoreBadge, LabelPill, ConfidenceBar, ReasonChips, StatusBadges) in einer durchgehenden Asset-Card, die Startseite und Archiv-Detail in Layout und Datenpunkt abstimmt.
+
+Alle Komponenten sind rein präsentational, erhalten Daten via Props und benötigen keine Business-Logik. Sie sind durch ihre `loading`/`aria`-Optionen für i18n und A11y vorbereitet.
+
 

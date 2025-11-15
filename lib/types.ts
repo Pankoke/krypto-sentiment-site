@@ -28,6 +28,9 @@ export type ArchiveItem = {
   macroSummary: string;
   symbols: string[];
   complete: boolean;
+  avgScore: number;
+  avgConfidence: number;
+  generatedAt: string;
 };
 
 export interface NormalizedSourceEntry {
