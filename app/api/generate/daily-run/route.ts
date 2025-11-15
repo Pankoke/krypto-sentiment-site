@@ -4,7 +4,7 @@ import { aggregateNews } from '../../../../lib/news/aggregator';
 import { persistDailyNewsSnapshots } from '../../../../lib/news/snapshot';
 import { generateDailyReport, DailyGenerateMode } from '../../../../lib/daily/generator';
 import { berlinDateString } from '../../../../lib/timezone';
-import { saveDailyRunMetrics } from '../../../../lib/generate/metrics';
+import { saveDailyRunMetrics, writeDailyRunDumpMetrics } from '../../../../lib/generate/metrics';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' } as const;
 const LOCALES: Array<'de' | 'en'> = ['de', 'en'];
@@ -53,7 +53,7 @@ function buildResult(
   };
 }
 
-async function runNewsPart(mode: DailyGenerateMode) {
+async function runNewsPart(mode: DailyGenerateMode, options?: { forceSnapshot?: boolean }) {
   const start = Date.now();
   const payload: Partial<NewsResult> = { ok: false, items: 0, warnings: [] };
   try {
@@ -62,7 +62,8 @@ async function runNewsPart(mode: DailyGenerateMode) {
       ...(report.method_note ? [report.method_note] : []),
       ...(report.adapterWarnings ?? []),
     ];
-    await persistDailyNewsSnapshots(report, { force: mode === 'overwrite' });
+    const forceSnapshot = options?.forceSnapshot ?? mode === 'overwrite';
+    await persistDailyNewsSnapshots(report, { force: forceSnapshot });
     payload.ok = true;
     payload.items = report.assets.length;
     payload.warnings = warnings;
@@ -98,11 +99,15 @@ export async function GET(req: Request) {
     );
   }
 
-  const mode: DailyGenerateMode = url.searchParams.get('mode') === 'skip' ? 'skip' : 'overwrite';
+  const requestedMode = url.searchParams.get('mode');
+  const isDump = requestedMode === 'dump';
+  const mode: DailyGenerateMode = requestedMode === 'skip' ? 'skip' : 'overwrite';
   const dateBerlin = berlinDateString(new Date());
   const start = Date.now();
 
-  const newsResult = await runNewsPart(mode);
+  const newsResult = await runNewsPart(mode, {
+    forceSnapshot: isDump || mode === 'overwrite',
+  });
   const reportsResult = await runReportsPart(mode, dateBerlin);
 
   const partial = !(newsResult.ok && reportsResult.ok);
@@ -124,6 +129,9 @@ export async function GET(req: Request) {
     dateBerlin,
     partial: response.partial,
     durationMs: response.durationMs,
+    newsItems: newsResult.items,
+    assets: reportsResult.assets,
+    dumpMode: isDump,
   });
 
   await saveDailyRunMetrics({
@@ -145,6 +153,28 @@ export async function GET(req: Request) {
     durationMs: response.durationMs,
     status,
   });
+
+  if (isDump) {
+    const dumpMetrics = {
+      date: dateBerlin,
+      locales: LOCALES,
+      newsItemsDE: newsResult.items ?? 0,
+      newsItemsEN: newsResult.items ?? 0,
+      assetsCount: reportsResult.assets ?? 0,
+      partial: response.partial,
+      durationMs: response.durationMs,
+      commit:
+        process.env.VERCEL_GIT_COMMIT_SHA ??
+        process.env.GITHUB_SHA ??
+        process.env.GITHUB_REF?.split('/').pop() ??
+        'unknown',
+    };
+    try {
+      await writeDailyRunDumpMetrics(dumpMetrics);
+    } catch (error) {
+      console.warn('Failed to write dump metrics', error);
+    }
+  }
 
   return NextResponse.json(response, {
     headers: JSON_HEADERS,

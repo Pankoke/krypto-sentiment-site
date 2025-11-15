@@ -1,6 +1,9 @@
 import { mkdir, readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
-import os from 'os';
+
+const DATA_DIR = process.env.GENERATE_DATA_DIR ?? join(process.cwd(), 'data');
+const METRICS_DIR = join(DATA_DIR, 'metrics');
+const METRICS_FILE = join(METRICS_DIR, 'daily-run.json');
 
 export type DailyRunMetrics = {
   date: string;
@@ -22,8 +25,16 @@ export type DailyRunMetrics = {
   status: 'ok' | 'partial' | 'fail';
 };
 
-const METRICS_DIR = join(os.tmpdir(), 'krypto-generate');
-const METRICS_FILE = join(METRICS_DIR, 'daily-run.json');
+export type DailyRunDumpMetrics = {
+  date: string;
+  locales: Array<'de' | 'en'>;
+  newsItemsDE: number;
+  newsItemsEN: number;
+  assetsCount: number;
+  partial: boolean;
+  durationMs: number;
+  commit: string;
+};
 
 export async function saveDailyRunMetrics(metrics: DailyRunMetrics): Promise<void> {
   await mkdir(METRICS_DIR, { recursive: true });
@@ -37,4 +48,9 @@ export async function readDailyRunMetrics(): Promise<DailyRunMetrics | null> {
   } catch {
     return null;
   }
+}
+
+export async function writeDailyRunDumpMetrics(metrics: DailyRunDumpMetrics): Promise<void> {
+  await mkdir(METRICS_DIR, { recursive: true });
+  await writeFile(METRICS_FILE, JSON.stringify(metrics, null, 2) + '\n', 'utf8');
 }
