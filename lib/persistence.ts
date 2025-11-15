@@ -1,7 +1,9 @@
 import { mkdir, readFile, writeFile, readdir } from 'fs/promises';
 import { join } from 'path';
+import os from 'os';
 import { locales } from '../i18n';
 const DATA_DIR = process.env.GENERATE_DATA_DIR ?? join(process.cwd(), 'data');
+const FALLBACK_DATA_DIR = join(os.tmpdir(), 'krypto-data');
 import type { DailyCryptoSentiment } from './types';
 import type { AssetReport } from './news/aggregator';
 import {
@@ -27,19 +29,21 @@ export interface DailySnapshot {
 }
 
 const REPORT_DIR = join(DATA_DIR, 'reports');
-
-function snapshotPath(date: string, locale: string) {
-  return join(REPORT_DIR, `${date}.${locale}.json`);
-}
+const FALLBACK_REPORT_DIR = join(FALLBACK_DATA_DIR, 'reports');
+const REPORT_DIRS = [REPORT_DIR, FALLBACK_REPORT_DIR];
 
 async function loadSnapshot(date: string, locale: string): Promise<DailySnapshot | null> {
-  const file = snapshotPath(date, locale);
-  try {
-    const raw = await readFile(file, 'utf8');
-    return JSON.parse(raw) as DailySnapshot;
-  } catch {
-    return null;
+  const pattern = `${date}.${locale}.json`;
+  for (const dir of REPORT_DIRS) {
+    const filePath = join(dir, pattern);
+    try {
+      const raw = await readFile(filePath, 'utf8');
+      return JSON.parse(raw) as DailySnapshot;
+    } catch {
+      // try next
+    }
   }
+  return null;
 }
 
 function categorizeSource(source: string) {
@@ -79,7 +83,13 @@ function deriveFeatures(asset: AssetReport, previous?: SnapshotAsset) {
 export async function persistDailySnapshots(
   report: DailyCryptoSentiment
 ): Promise<void> {
-  await mkdir(REPORT_DIR, { recursive: true });
+  let targetDir = REPORT_DIR;
+  try {
+    await mkdir(targetDir, { recursive: true });
+  } catch {
+    targetDir = FALLBACK_REPORT_DIR;
+    await mkdir(targetDir, { recursive: true });
+  }
   for (const locale of locales) {
     const previous = await loadSnapshot(report.date, locale);
     const prevHistory = new Map(previous?.assets.map((a) => [a.asset, a.history]) ?? []);
@@ -104,25 +114,28 @@ export async function persistDailySnapshots(
       generatedAt: new Date().toISOString(),
       version: '1.0',
     };
-    await writeFile(snapshotPath(report.date, locale), JSON.stringify(snapshot, null, 2) + '\n', 'utf8');
+    const filePath = join(targetDir, `${report.date}.${locale}.json`);
+    await writeFile(filePath, JSON.stringify(snapshot, null, 2) + '\n', 'utf8');
   }
 }
 
 export async function listSnapshots(locale: string): Promise<DailySnapshot[]> {
-  let files: string[] = [];
-  try {
-    files = await readdir(REPORT_DIR);
-  } catch {
-    return [];
-  }
-  const pattern = new RegExp(`^\\d{4}-\\d{2}-\\d{2}\\.${locale}\\.json$`);
   const snapshots: DailySnapshot[] = [];
-  for (const file of files.filter((f) => pattern.test(f))) {
+  const pattern = new RegExp(`^\\d{4}-\\d{2}-\\d{2}\\.${locale}\\.json$`);
+  for (const dir of REPORT_DIRS) {
     try {
-      const raw = await readFile(join(REPORT_DIR, file), 'utf8');
-      snapshots.push(JSON.parse(raw) as DailySnapshot);
+      const dirFiles = await readdir(dir);
+      for (const file of dirFiles) {
+        if (!pattern.test(file)) continue;
+        try {
+          const raw = await readFile(join(dir, file), 'utf8');
+          snapshots.push(JSON.parse(raw) as DailySnapshot);
+        } catch {
+          // ignore
+        }
+      }
     } catch {
-      // ignore corrupt file
+      // ignore missing dir
     }
   }
   snapshots.sort((a, b) => (a.date < b.date ? 1 : -1));
