@@ -49,6 +49,9 @@ jobs:
             const {env, exit} = process;
             const TARGET_URL = env.TARGET_URL;
             const CRON_SECRET = env.CRON_SECRET;
+            const MODE = env.MODE;
+            const LOCALE_INPUT = env.LOCALE_INPUT;
+            const DRY_RUN = env.DRY_RUN;
             if (!TARGET_URL || !CRON_SECRET) {
               console.error('Missing TARGET_URL or CRON_SECRET');
               exit(1);
