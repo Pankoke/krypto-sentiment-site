@@ -1,5 +1,6 @@
 import { mkdir, readFile, readdir, stat, writeFile } from 'fs/promises';
 import { join } from 'path';
+import os from 'os';
 import { locales } from '../../i18n';
 import type { AggregatedReport } from './aggregator';
 import { addDays, berlinDateString, berlinHour } from '../timezone';
@@ -11,22 +12,21 @@ export interface NewsSnapshot extends AggregatedReport {
 }
 
 const NEWS_DIR = join(DATA_DIR, 'news');
-
-function snapshotPath(date: string, locale: string) {
-  return join(NEWS_DIR, `${date}.${locale}.json`);
-}
+const FALLBACK_NEWS_DIR = join(os.tmpdir(), 'krypto-data', 'news');
 
 async function loadSnapshot(date: string, locale: string): Promise<NewsSnapshot | null> {
-  const file = snapshotPath(date, locale);
-  try {
-    const raw = await readFile(file, 'utf8');
-    return JSON.parse(raw) as NewsSnapshot;
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-      return null;
+  const pattern = `${date}.${locale}.json`;
+  const directories = [NEWS_DIR, FALLBACK_NEWS_DIR];
+  for (const dir of directories) {
+    const filePath = join(dir, pattern);
+    try {
+      const raw = await readFile(filePath, 'utf8');
+      return JSON.parse(raw) as NewsSnapshot;
+    } catch {
+      continue;
     }
-    throw error;
   }
+  return null;
 }
 
 type SnapshotMeta = {
@@ -145,7 +145,7 @@ export async function persistDailyNewsSnapshots(
   report: AggregatedReport,
   options?: { locales?: Array<'de' | 'en'>; force?: boolean }
 ): Promise<void> {
-  await mkdir(NEWS_DIR, { recursive: true });
+  await mkdir(NEWS_DIR, { recursive: true }).catch(() => undefined);
   const timestamp = new Date().toISOString();
   const targetLocales = options?.locales ?? locales;
   for (const locale of targetLocales) {
@@ -160,25 +160,35 @@ export async function persistDailyNewsSnapshots(
       locale,
       generatedAt: timestamp,
     };
-    await writeFile(snapshotPath(report.date, locale), JSON.stringify(snapshot, null, 2) + '\n', 'utf8');
+    const filePath = join(NEWS_DIR, `${report.date}.${locale}.json`);
+    try {
+      await writeFile(filePath, JSON.stringify(snapshot, null, 2) + '\n', 'utf8');
+    } catch {
+      await mkdir(FALLBACK_NEWS_DIR, { recursive: true });
+      const fallbackPath = join(FALLBACK_NEWS_DIR, `${report.date}.${locale}.json`);
+      await writeFile(fallbackPath, JSON.stringify(snapshot, null, 2) + '\n', 'utf8');
+    }
   }
 }
 
 export async function listNewsSnapshots(locale: string): Promise<NewsSnapshot[]> {
-  let files: string[] = [];
-  try {
-    files = await readdir(NEWS_DIR);
-  } catch {
-    return [];
-  }
+  const directories = [NEWS_DIR, FALLBACK_NEWS_DIR];
   const pattern = new RegExp(`^\\d{4}-\\d{2}-\\d{2}\\.${locale}\\.json$`);
   const snapshots: NewsSnapshot[] = [];
-  for (const file of files.filter((f) => pattern.test(f))) {
+  for (const dir of directories) {
     try {
-      const raw = await readFile(join(NEWS_DIR, file), 'utf8');
-      snapshots.push(JSON.parse(raw) as NewsSnapshot);
+      const files = await readdir(dir);
+      for (const file of files) {
+        if (!pattern.test(file)) continue;
+        try {
+          const raw = await readFile(join(dir, file), 'utf8');
+          snapshots.push(JSON.parse(raw) as NewsSnapshot);
+        } catch {
+          // ignore corrupt
+        }
+      }
     } catch {
-      // ignore
+      // ignore missing dir
     }
   }
   snapshots.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
