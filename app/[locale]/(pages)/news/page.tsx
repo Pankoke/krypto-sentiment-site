@@ -1,13 +1,25 @@
 import { buildLocalePath } from '../../../../lib/assets';
-import { latestNewsSnapshot } from '../../../../lib/news/snapshot';
 import { getTranslations } from 'next-intl/server';
 import NewsList from '../../../../src/components/news/NewsList';
 
 export const revalidate = 86400;
+export const dynamic = 'force-static';
+
+async function fetchSnapshot(locale: 'de' | 'en') {
+  try {
+    const res = await fetch(`/api/news?locale=${locale}`, {
+      next: { tags: ['news-daily'], revalidate: 86400 },
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
+}
 
 export default async function NewsPage({ params }: { params: { locale: 'de' | 'en' } }) {
   const t = await getTranslations();
-  const snapshot = await latestNewsSnapshot(params.locale);
+  const snapshot = await fetchSnapshot(params.locale);
   const displayDate = snapshot?.date ?? new Date().toISOString().slice(0, 10);
   const generatedAt = snapshot?.generatedAt;
   return (
@@ -21,7 +33,6 @@ export default async function NewsPage({ params }: { params: { locale: 'de' | 'e
         reportDate={displayDate}
         generatedAt={generatedAt}
         methodNote={snapshot?.method_note}
-        translate={t}
       />
       {snapshot ? (
         <p className="text-xs text-gray-500">

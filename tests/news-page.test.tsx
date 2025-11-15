@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import NewsList from '../src/components/news/NewsList';
 
@@ -13,15 +13,17 @@ const translations: Record<string, string> = {
   noRationale: 'Keine Rationale',
 };
 
-const translate = (key: string, opts?: Record<string, string | number>) => {
-  let value = translations[key] ?? key;
-  if (opts) {
-    for (const [param, replacement] of Object.entries(opts)) {
-      value = value.replace(`{${param}}`, String(replacement));
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string, opts?: Record<string, string | number>) => {
+    let value = translations[key] ?? key;
+    if (opts) {
+      for (const [param, replacement] of Object.entries(opts)) {
+        value = value.replace(`{${param}}`, String(replacement));
+      }
     }
-  }
-  return value;
-};
+    return value;
+  },
+}));
 
 const makeAsset = (symbol: string) => ({
   symbol,
@@ -40,7 +42,6 @@ describe('NewsList snapshot renderer', () => {
         reportDate="2025-11-14"
         generatedAt="2025-11-14T06:00:00.000Z"
         methodNote="Methodisch up to date"
-        translate={translate}
       />
     );
     expect(screen.getByText('Stand: 2025-11-14T06:00:00.000Z')).toBeInTheDocument();
@@ -51,7 +52,7 @@ describe('NewsList snapshot renderer', () => {
   });
 
   it('renders empty snapshot message when no assets', () => {
-    render(<NewsList assets={[]} reportDate="2025-11-14" translate={translate} />);
+    render(<NewsList assets={[]} reportDate="2025-11-14" />);
     expect(screen.getByText('Noch keine News vorhanden.')).toBeInTheDocument();
   });
 });

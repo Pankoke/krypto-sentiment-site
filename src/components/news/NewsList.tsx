@@ -2,20 +2,18 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { useTranslations } from "next-intl";
 import type { AssetReport } from "lib/news/aggregator";
-
-type TranslationFn = (key: string, opts?: Record<string, string | number>) => string;
 
 type Props = {
   assets: AssetReport[];
   reportDate: string;
   generatedAt?: string;
   methodNote?: string;
-  translate: TranslationFn;
 };
 
-export default function NewsList({ assets, reportDate, generatedAt, methodNote, translate }: Props) {
-  const t = translate;
+export default function NewsList({ assets, reportDate, generatedAt, methodNote }: Props) {
+  const t = useTranslations("news");
   const displayDate = generatedAt ?? reportDate;
 
   if (!assets.length) {
