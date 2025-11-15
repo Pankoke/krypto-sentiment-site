@@ -82,15 +82,20 @@ export default async function NewsPage({ params }: NewsPageProps) {
       ) : (
         <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center space-y-3 text-sm text-gray-700">
           {snapshotResult.status === 'error' ? (
-            <p>{t('news.errorLoading', { error: snapshotResult.reason ?? 'unknown' })}</p>
+            <>
+              <p>{t('news.errorLoading', { error: snapshotResult.reason ?? 'unknown' })}</p>
+              <a
+                href="/de/news?retry=1"
+                className="font-semibold text-indigo-600 hover:text-indigo-700"
+              >
+                {t('news.retry')}
+              </a>
+            </>
           ) : (
             <p>{t('news.emptySnapshot')}</p>
           )}
           <div className="flex flex-wrap justify-center gap-3">
-            <a
-              href="/de/news"
-              className="text-gray-700 hover:text-black"
-            >
+            <a href="/de/news" className="text-gray-700 hover:text-black">
               {t('nav.backHome')}
             </a>
             {process.env.NODE_ENV !== 'production' ? (

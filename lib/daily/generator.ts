@@ -29,11 +29,13 @@ async function exists(path: string): Promise<boolean> {
 }
 
 export async function generateDailyReport(
-  options?: { mode?: DailyGenerateMode }
+  options?: { mode?: DailyGenerateMode; date?: string }
 ): Promise<DailyGenerationResult> {
   const posts = await fetchAllSources();
   const report = await runDailySentiment(posts);
-  const path = reportFile(report.date);
+  const dateForFile = options?.date ?? report.date;
+  const path = reportFile(dateForFile);
+  report.date = dateForFile;
   const alreadyExists = await exists(path);
   const mode = options?.mode ?? 'overwrite';
 
@@ -46,7 +48,7 @@ export async function generateDailyReport(
   await persistDailySnapshots(report);
   try {
     const newsReport = await aggregateNews();
-    await persistDailyNewsSnapshots(newsReport);
+    await persistDailyNewsSnapshots(newsReport, { force: true });
   } catch (error) {
     // eslint-disable-next-line no-console
     console.warn('news snapshot failed', error);

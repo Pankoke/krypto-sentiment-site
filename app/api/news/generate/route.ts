@@ -56,7 +56,7 @@ export async function GET(req: Request) {
   const start = Date.now();
   try {
     const report = await aggregateNews({ universe: undefined });
-    await persistDailyNewsSnapshots(report);
+    await persistDailyNewsSnapshots(report, { force: true });
     const durationMs = Date.now() - start;
     const unique = new Set(report.assets.map((asset) => asset.symbol)).size;
     const dedupeRatio = report.assets.length ? unique / report.assets.length : 0;

@@ -140,10 +140,20 @@ export async function loadSnapshotForLocale(locale: 'de' | 'en'): Promise<Snapsh
   };
 }
 
-export async function persistDailyNewsSnapshots(report: AggregatedReport): Promise<void> {
+export async function persistDailyNewsSnapshots(
+  report: AggregatedReport,
+  options?: { locales?: Array<'de' | 'en'>; force?: boolean }
+): Promise<void> {
   await mkdir(NEWS_DIR, { recursive: true });
   const timestamp = new Date().toISOString();
-  for (const locale of locales) {
+  const targetLocales = options?.locales ?? locales;
+  for (const locale of targetLocales) {
+    if (!options?.force) {
+      const existing = await loadSnapshot(report.date, locale);
+      if (existing) {
+        continue;
+      }
+    }
     const snapshot: NewsSnapshot = {
       ...report,
       locale,

@@ -1,0 +1,156 @@
+name: Daily News & Reports Run
+
+on:
+  schedule:
+    - cron: '0 5 * * *'
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Mode für die Lauf (overwrite oder skip)'
+        required: true
+        default: 'overwrite'
+        type: choice
+        options:
+          - overwrite
+          - skip
+      locale:
+        description: 'Locale für die GitHub-Aufrufe (de|en|both)'
+        required: true
+        default: 'both'
+        type: choice
+        options:
+          - de
+          - en
+          - both
+      dryRun:
+        description: 'Nur testen ohne eigentliche Persistenz'
+        required: true
+        default: 'no'
+        type: choice
+        options:
+          - yes
+          - no
+
+jobs:
+  run-daily:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call combined daily-run endpoint
+        env:
+          TARGET_URL: ${{ secrets.TARGET_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          MODE: ${{ github.event.inputs.mode || 'overwrite' }}
+          LOCALE_INPUT: ${{ github.event.inputs.locale || 'both' }}
+          DRY_RUN: ${{ github.event.inputs.dryRun || 'no' }}
+        run: |
+          node <<'NODE'
+          const {env, exit} = process;
+          const TARGET_URL = env.TARGET_URL;
+          const CRON_SECRET = env.CRON_SECRET;
+          if (!TARGET_URL || !CRON_SECRET) {
+            console.error('Missing TARGET_URL or CRON_SECRET');
+            exit(1);
+          }
+          const retries = [
+            {delay: 0, label: 'initial'},
+            {delay: 15000, label: 'retry1'},
+            {delay: 30000, label: 'retry2'},
+            {delay: 60000, label: 'retry3'},
+          ];
+          async function wait(ms) {
+            return new Promise((resolve) => setTimeout(resolve, ms));
+          }
+          async function call() {
+            const url = new URL(TARGET_URL);
+            const headers = {'x-cron-secret': CRON_SECRET};
+            url.searchParams.set('mode', MODE);
+            if (LOCALE_INPUT && LOCALE_INPUT !== 'both') {
+              url.searchParams.set('locale', LOCALE_INPUT);
+            }
+            url.searchParams.set('dryRun', DRY_RUN);
+            const response = await fetch(url, {method: 'GET', headers});
+            const text = await response.text();
+            let payload;
+            try {
+              payload = JSON.parse(text);
+            } catch {
+              throw new Error(`Invalid JSON response (status ${response.status})`);
+            }
+            return {response, payload};
+          }
+          let lastError = null;
+          for (const attempt of retries) {
+            if (attempt.delay && attempt.delay > 0) {
+              console.log(`Waiting ${attempt.delay}ms before ${attempt.label}`);
+              await wait(attempt.delay);
+            }
+            try {
+              const {response, payload} = await call();
+              const is5xx = response.status >= 500;
+              const okFlag = payload?.news?.ok ?? payload?.ok ?? false;
+              const partial = payload?.partial ?? okFlag === false;
+              const summary = {
+                status: response.status,
+                partial,
+                durationMs: payload?.durationMs ?? null,
+                items: payload?.news?.items ?? null,
+                assets: payload?.reports?.assets ?? null,
+                inputs: {mode: MODE, locale: LOCALE_INPUT, dryRun: DRY_RUN},
+              };
+              console.info('daily-run summary', summary);
+              if (is5xx || (!okFlag && partial === false)) {
+                throw new Error(`Unsuccessful run: ${JSON.stringify(summary)}`);
+              }
+              if (partial) {
+                console.warn('Partial result detected, job marked success with warning.');
+              }
+              return;
+            } catch (error) {
+              lastError = error;
+              console.warn(`Attempt ${attempt.label} failed`, error.message ?? error);
+              continue;
+            }
+          }
+          console.error('All retries exhausted');
+          if (lastError) console.error(lastError);
+          exit(1);
+          NODE
+  health-check:
+    needs: run-daily
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call health endpoint
+        env:
+          HEALTH_URL: ${{ secrets.HEALTH_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          node <<'NODE'
+          const {env, exit} = process;
+          const url = env.HEALTH_URL;
+          const secret = env.CRON_SECRET;
+          if (!url) {
+            console.error('HEALTH_URL missing');
+            exit(1);
+          }
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: secret ? {'x-cron-secret': secret} : {},
+          });
+          if (!response.ok) {
+            throw new Error(`Health endpoint returned ${response.status}`);
+          }
+          const data = await response.json();
+          const newsCount = data.news?.newsItemsCount ?? 0;
+          const assetsCount = data.reports?.assetsCount ?? 0;
+          const status = data.lastRunStatus ?? data.summary?.status ?? 'unknown';
+          console.info('health summary', {
+            date: data.news?.lastNewsSnapshotDate,
+            newsItemsCount: newsCount,
+            assetsCount,
+            status,
+          });
+          if (newsCount === 0 || status === 'fail') {
+            throw new Error('Health check failed: zero news items or fail status');
+          }
+          NODE

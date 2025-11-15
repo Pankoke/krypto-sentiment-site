@@ -1,4 +1,4 @@
-﻿# Krypto Sentiment Site - Quickstart
+# Krypto Sentiment Site - Quickstart
 
 Die Repo nutzt Next.js 14 (App Router) mit TypeScript strict und i18n (de/en). Die Startseite zeigt den aktuellen News-Score für BTC/ETH/SOL/XRP aus persistierten Snapshots; eine eigene `/reports/[date]`-Detailseite gibt es nicht mehr, die Daten liegen weiterhin als JSON unter `data/reports/YYYY-MM-DD.json`. Secrets (News- und Sentiment-APIs) laufen ausschließlich serverseitig.
 
@@ -49,6 +49,30 @@ npx vitest run tests/news-page.test.tsx
 - Buttons `Neu generieren` + `Validieren` nutzen `/api/news/generate` bzw. `/api/news/validate`, fordern `news-daily`-Revalidation an und zeigen die Antwort direkt an. Das `Anzeigen`-Details-Panel rendert eine kurze Vorschau der Assets.
 - Nutze das Tool, um leere/fehlende Snapshots schnell zu identifizieren, bevor du den Dev-Button via Navbar oder Home benutzt.
 
+## GitHub Action für Daily Run
+
+### Ablauf täglich 06:00 Berlin (GitHub Actions)
+
+- Zwei Cron-Trigger (UTC 05:00/CET + UTC 04:00/CEST) liefern 06:00 Europe/Berlin. Der Workflow ruft `/api/generate/daily-run` (TARGET_URL) mit Header `x-cron-secret` auf, erzeugt News- und Report-Snapshots für `de`/`en`, speichert Daily-Metriken und feuert `revalidateTag('news-daily')` sowie `revalidateTag('reports-daily')`.
+- Bis zu drei Versuche (15/30/60 s Backoff) prüfen Status und `partial`. `partial=false` + `ok=false` oder HTTP 5xx führen direkt zum Fehler, `partial=true` bleibt grün mit Warnung. Danach wird `/api/health` (HEALTH_URL) gezogen: `newsItemsCount>0`, `assetsCount>0`, `lastRunStatus≠fail` müssen stimmen.
+
+### Manuell auslösen (`workflow_dispatch`)
+
+- Inputs: `mode` (`overwrite|skip`), `locale` (`de|en|both`), `dryRun` (`yes|no`). Sie landen als Query-Parameter in TARGET_URL (Header bleibt `x-cron-secret`).
+- Beispiel: `mode=skip`, `locale=de`, `dryRun=yes` testet nur News-DE ohne Überschreiben.
+- Logs zeigen Inputs plus `items`, `assets`, `partial`, `durationMs`, sodass du Fixes sofort verifizieren kannst.
+
+### Fehler & Fallbacks
+
+- `partial=true` bedeutet, ein Teil hat Probleme. Workflow bleibt grün, Health und Banner zeigen „Stand … (letzter Snapshot)“. `partial=false && ok=false` oder 5xx führt zu rotem Status.
+- UI-Fallback: `/de/news` zeigt bei fehlendem heutigen Snapshot Banner + Retry-Link, bei echten Fehlern eine Fehlermeldung plus Button „Erneut versuchen“.
+- Logs protokollieren `snapshotPath`, `itemsTotal`, `dedupeCount`, `adaptersFailed`, aber niemals Secrets.
+
+### Security
+
+- Secrets (`TARGET_URL`, `HEALTH_URL`, `CRON_SECRET`) leben in GitHub Secrets; sie werden nie `echo`t oder in JSON zurückgegeben.
+- Der Workflow nutzt Header `x-cron-secret`, damit Monitoring-Tools nicht einfach Parameter auslesen.
+- Bei Rotation neue Secrets setzen; kein Code-Change nötig.
 ## Redirects & SEO
 
 - `next.config.mjs` verweist `/reports/*`, `/daily/*`, `/[locale]/reports/*`, `/[locale]/daily/*` sowie `/`, `/en` auf `/de/news`, damit der globale Home-Pfad immer die deutsche News-Startseite bleibt.
