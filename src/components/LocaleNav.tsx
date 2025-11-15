@@ -21,7 +21,16 @@ export function LocaleNav() {
       <Link href={`/${locale}/news`} className="text-gray-700 hover:text-black">
         {t('news')}
       </Link>
+      <Link
+        href={
+          locale === 'de'
+            ? '/de/methodik'
+            : '/en/methodology'
+        }
+        className="text-gray-700 hover:text-black"
+      >
+        {t('methodik')}
+      </Link>
     </nav>
   );
 }
-
