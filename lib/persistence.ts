@@ -114,8 +114,15 @@ export async function persistDailySnapshots(
       generatedAt: new Date().toISOString(),
       version: '1.0',
     };
-    const filePath = join(targetDir, `${report.date}.${locale}.json`);
-    await writeFile(filePath, JSON.stringify(snapshot, null, 2) + '\n', 'utf8');
+    let snapshotPath = join(targetDir, `${report.date}.${locale}.json`);
+    try {
+      await writeFile(snapshotPath, JSON.stringify(snapshot, null, 2) + '\n', 'utf8');
+    } catch {
+      targetDir = FALLBACK_REPORT_DIR;
+      await mkdir(targetDir, { recursive: true });
+      snapshotPath = join(targetDir, `${report.date}.${locale}.json`);
+      await writeFile(snapshotPath, JSON.stringify(snapshot, null, 2) + '\n', 'utf8');
+    }
   }
 }
 
