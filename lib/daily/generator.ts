@@ -51,6 +51,7 @@ export async function generateDailyReport(
   } catch {
     // ignore
   }
+  const filePath = join(REPORT_DIR, `${dateForFile}.json`);
   let writtenPath = filePath;
   try {
     await writeFile(filePath, JSON.stringify(report, null, 2) + '\n', 'utf8');
