@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile, readdir } from 'fs/promises';
 import { join } from 'path';
+import { locales } from '../i18n';
 const DATA_DIR = process.env.GENERATE_DATA_DIR ?? join(process.cwd(), 'data');
 import type { DailyCryptoSentiment } from './types';
 import type { AssetReport } from './news/aggregator';
