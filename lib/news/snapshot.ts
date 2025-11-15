@@ -45,7 +45,7 @@ async function loadSnapshotMeta(date: string, locale: string): Promise<SnapshotM
   if (!snapshot) {
     return null;
   }
-  const file = snapshotPath(date, locale);
+  const file = snapshotPath(NEWS_DIR, date, locale);
   const stats = await stat(file);
   return {
     snapshot,
