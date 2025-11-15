@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'fs/promises';
+import { mkdir, readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 import os from 'os';
 
@@ -26,6 +26,7 @@ const METRICS_DIR = join(os.tmpdir(), 'krypto-generate');
 const METRICS_FILE = join(METRICS_DIR, 'daily-run.json');
 
 export async function saveDailyRunMetrics(metrics: DailyRunMetrics): Promise<void> {
+  await mkdir(METRICS_DIR, { recursive: true });
   await writeFile(METRICS_FILE, JSON.stringify(metrics, null, 2) + '\n', 'utf8');
 }
 
