@@ -14,11 +14,14 @@ export interface NewsSnapshot extends AggregatedReport {
 const NEWS_DIR = join(DATA_DIR, 'news');
 const FALLBACK_NEWS_DIR = join(os.tmpdir(), 'krypto-data', 'news');
 
+function snapshotPath(dir: string, date: string, locale: string) {
+  return join(dir, `${date}.${locale}.json`);
+}
+
 async function loadSnapshot(date: string, locale: string): Promise<NewsSnapshot | null> {
-  const pattern = `${date}.${locale}.json`;
   const directories = [NEWS_DIR, FALLBACK_NEWS_DIR];
   for (const dir of directories) {
-    const filePath = join(dir, pattern);
+    const filePath = snapshotPath(dir, date, locale);
     try {
       const raw = await readFile(filePath, 'utf8');
       return JSON.parse(raw) as NewsSnapshot;
