@@ -88,7 +88,7 @@ async function runReportsPart(mode: DailyGenerateMode, berlinDate: string) {
 }
 
 export async function GET(req: Request) {
-  const secret = getSecret(req);
+  const secret = getSecret();
   const url = new URL(req.url);
   const key = url.searchParams.get('key') ?? req.headers.get('x-cron-secret');
   if (!secret || key !== secret) {
