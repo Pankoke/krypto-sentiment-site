@@ -1,0 +1,142 @@
+{
+  "date": "2025-11-15",
+  "locale": "de",
+  "macro_summary": "Stabile Marktverhältnisse mit breiten Akkumulationsbewegungen bei BTC und ETH; SOL und XRP profitieren besonders von DeFi- und Partnernachrichten.",
+  "assets": [
+    {
+      "asset": "ETH",
+      "subscores": {
+        "social": 0.9,
+        "news": 0.85,
+        "derivatives": 0.6,
+        "onChain": 0.8,
+        "price": 0.88
+      },
+      "weights": {
+        "social": 0.25,
+        "news": 0.25,
+        "derivatives": 0.15,
+        "onChain": 0.2,
+        "price": 0.15
+      },
+      "totalScore": 0.88,
+      "score01": 0.88,
+      "confidence": 0.92,
+      "confidenceDetails": {
+        "coverage": 0.8,
+        "diversity": 0.7,
+        "agreement": 0.85,
+        "stability": 0.9
+      },
+      "label": "bullish",
+      "reasons": [
+        "Starke Signaldiversität aus Social und Onchain.",
+        "Positive Preisimpulse bestätigen den Trend."
+      ],
+      "asOf": "2025-11-15T06:02:00.000Z",
+      "history": [0.76, 0.78, 0.83, 0.85, 0.88]
+    },
+    {
+      "asset": "BTC",
+      "subscores": {
+        "social": 0.82,
+        "news": 0.78,
+        "derivatives": 0.55,
+        "onChain": 0.7,
+        "price": 0.74
+      },
+      "weights": {
+        "social": 0.25,
+        "news": 0.25,
+        "derivatives": 0.15,
+        "onChain": 0.2,
+        "price": 0.15
+      },
+      "totalScore": 0.75,
+      "score01": 0.75,
+      "confidence": 0.88,
+      "confidenceDetails": {
+        "coverage": 0.76,
+        "diversity": 0.65,
+        "agreement": 0.8,
+        "stability": 0.85
+      },
+      "label": "bullish",
+      "reasons": [
+        "Traditionelle Zuflüsse bleiben stabil.",
+        "Miner-Erträge und UTXO-Aktivität nehmen zu."
+      ],
+      "asOf": "2025-11-15T06:02:00.000Z",
+      "history": [0.68, 0.71, 0.73, 0.74, 0.75]
+    },
+    {
+      "asset": "SOL",
+      "subscores": {
+        "social": 0.75,
+        "news": 0.7,
+        "derivatives": 0.5,
+        "onChain": 0.78,
+        "price": 0.72
+      },
+      "weights": {
+        "social": 0.25,
+        "news": 0.25,
+        "derivatives": 0.15,
+        "onChain": 0.2,
+        "price": 0.15
+      },
+      "totalScore": 0.72,
+      "score01": 0.72,
+      "confidence": 0.82,
+      "confidenceDetails": {
+        "coverage": 0.7,
+        "diversity": 0.6,
+        "agreement": 0.78,
+        "stability": 0.8
+      },
+      "label": "bullish",
+      "reasons": [
+        "DeFi-TVl und Governance-Nachrichten pushen das Ökosystem.",
+        "Neue Token-Entwickler signalisieren Uptick."
+      ],
+      "asOf": "2025-11-15T06:02:00.000Z",
+      "history": [0.62, 0.65, 0.7, 0.71, 0.72]
+    },
+    {
+      "asset": "XRP",
+      "subscores": {
+        "social": 0.68,
+        "news": 0.65,
+        "derivatives": 0.45,
+        "onChain": 0.7,
+        "price": 0.6
+      },
+      "weights": {
+        "social": 0.25,
+        "news": 0.25,
+        "derivatives": 0.15,
+        "onChain": 0.2,
+        "price": 0.15
+      },
+      "totalScore": 0.66,
+      "score01": 0.66,
+      "confidence": 0.8,
+      "confidenceDetails": {
+        "coverage": 0.65,
+        "diversity": 0.55,
+        "agreement": 0.7,
+        "stability": 0.78
+      },
+      "label": "bullish",
+      "reasons": [
+        "Neue Partnerschaften und Validator-Aktivitäten sind positiv.",
+        "On-Chain-Daten zeigen Mittelzuflüsse."
+      ],
+      "asOf": "2025-11-15T06:02:00.000Z",
+      "history": [0.58, 0.6, 0.62, 0.64, 0.66]
+    }
+  ],
+  "complete": true,
+  "generatedAt": "2025-11-15T06:02:00.000Z",
+  "version": "1.0"
+}

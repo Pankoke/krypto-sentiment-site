@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import NewsList from '../../../../src/components/news/NewsList';
-import { loadSnapshotForLocale } from '../../../../lib/news/snapshot';
+import { loadLatestAvailableSnapshot, loadSnapshotForLocale } from '../../../../lib/news/snapshot';
 import { formatBerlinSnapshotLabel } from '../../../../lib/timezone';
 
 const BASE_URL = process.env.APP_BASE_URL ?? 'https://krypto-sentiment-site.com';
@@ -42,29 +42,42 @@ export const dynamic = 'force-static';
 export default async function NewsPage({ params }: NewsPageProps) {
   const t = await getTranslations();
   const snapshotResult = await loadSnapshotForLocale(params.locale);
-  const snapshot = snapshotResult.snapshot;
+  let snapshot = snapshotResult.snapshot;
+  let banner: string | null = null;
+  if (!snapshot) {
+    if (snapshotResult.status === 'error') {
+      banner = null;
+    } else {
+      const latestResult = await loadLatestAvailableSnapshot(params.locale);
+      if (latestResult?.snapshot) {
+        snapshot = latestResult.snapshot;
+        const fallbackDateTime = formatBerlinSnapshotLabel(
+          latestResult.snapshot.generatedAt ?? new Date().toISOString()
+        );
+        banner = t('news.fallbackBanner', {
+          date: fallbackDateTime?.date ?? '',
+          time: fallbackDateTime?.time ?? '',
+        });
+      }
+    }
+  } else if (snapshotResult.usedFallback) {
+    const fallbackDateTime = formatBerlinSnapshotLabel(snapshot.generatedAt ?? new Date().toISOString());
+    banner = t('news.fallbackBanner', {
+      date: fallbackDateTime?.date ?? '',
+      time: fallbackDateTime?.time ?? '',
+    });
+  }
+
   const regenUrl = '/api/news/generate?mode=overwrite';
-  const fallbackDateTime = snapshot
-    ? formatBerlinSnapshotLabel(snapshot.generatedAt ?? new Date().toISOString())
-    : null;
-
-  const renderFallbackBadge = snapshot && snapshotResult.usedFallback;
-  const fallbackMessage = renderFallbackBadge
-    ? t('news.fallbackBanner', {
-        date: fallbackDateTime?.date ?? '',
-        time: fallbackDateTime?.time ?? '',
-      })
-    : null;
-
   return (
     <main className="container mx-auto px-4 py-8 space-y-6">
       <header>
         <h1 className="text-2xl font-semibold mb-2">{t('news.title')}</h1>
         <p className="text-sm text-gray-600">{t('news.description')}</p>
       </header>
-      {fallbackMessage ? (
+      {banner ? (
         <div className="rounded-xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-800">
-          {fallbackMessage}
+          {banner}
         </div>
       ) : null}
       {snapshot ? (

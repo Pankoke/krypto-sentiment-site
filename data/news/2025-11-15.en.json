@@ -1,0 +1,92 @@
+{
+  "date": "2025-11-15",
+  "universe": ["ETH", "BTC", "SOL", "XRP"],
+  "assets": [
+    {
+      "symbol": "ETH",
+      "sentiment": "bullish",
+      "score": 0.85,
+      "confidence": 0.9,
+      "rationale": "Positive momentum from higher Layer-2 activity and sustainably low fees. Analysts praise the infrastructure stabilization.",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "Community discusses fresh funding rounds and celebrated low fees."
+        },
+        {
+          "source": "news",
+          "evidence": "Dencun upgrade cuts L2 fees and boosts rollup engagement."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Layer-2 transaction counts climb since Dencun."
+        }
+      ]
+    },
+    {
+      "symbol": "BTC",
+      "sentiment": "bullish",
+      "score": 0.8,
+      "confidence": 0.85,
+      "rationale": "Strong accumulation patterns and inflows from traditional exchanges underline a resilient safe-haven narrative.",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "Whale implications show steady accumulation."
+        },
+        {
+          "source": "news",
+          "evidence": "Miners report rising yields while analysts call BTC a shelter asset."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Large UTXO activity reactivates."
+        }
+      ]
+    },
+    {
+      "symbol": "SOL",
+      "sentiment": "bullish",
+      "score": 0.75,
+      "confidence": 0.8,
+      "rationale": "DeFi growth and governance updates fuel optimism across the Solana ecosystem.",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "Developers plan a governance bump."
+        },
+        {
+          "source": "news",
+          "evidence": "DeFi TVL sets a new yearly high, ecosystem volume rising."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Fresh addresses, high TPS, increasing DEX volume."
+        }
+      ]
+    },
+    {
+      "symbol": "XRP",
+      "sentiment": "bullish",
+      "score": 0.7,
+      "confidence": 0.75,
+      "rationale": "Partner announcements and an active validator network keep the narrative constructive.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "New partnerships with payment providers."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Active bridges and validators showing inflows."
+        }
+      ]
+    }
+  ],
+  "method_note": "Aggregated signals from social, news and onchain sources. OpenAI fallback for XRP with heuristic rationale.",
+  "adapterWarnings": [],
+  "uniqueAssets": 4,
+  "dedupeCount": 0,
+  "locale": "en",
+  "generatedAt": "2025-11-15T06:00:00.000Z"
+}

@@ -242,3 +242,24 @@ export async function listSnapshotMetadata(locale: string, limit = 7): Promise<S
   }
   return metadata;
 }
+
+export async function loadLatestAvailableSnapshot(locale: 'de' | 'en'): Promise<SnapshotLoadResult | null> {
+  try {
+    const metadata = await listSnapshotMetadata(locale, 1);
+    const latest = metadata[0];
+    if (!latest) {
+      return null;
+    }
+    return {
+      snapshot: latest.snapshot,
+      status: 'found',
+      path: latest.path,
+      size: latest.size,
+      mtime: latest.mtime,
+      usedFallback: true,
+      fallbackDate: latest.date,
+    };
+  } catch {
+    return null;
+  }
+}

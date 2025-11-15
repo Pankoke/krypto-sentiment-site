@@ -46,12 +46,14 @@ jobs:
         run: |
           node <<'NODE'
           (async () => {
+            const fs = require('fs');
             const {env, exit} = process;
             const TARGET_URL = env.TARGET_URL;
             const CRON_SECRET = env.CRON_SECRET;
             const MODE = env.MODE;
             const LOCALE_INPUT = env.LOCALE_INPUT;
             const DRY_RUN = env.DRY_RUN;
+            const githubOutput = env.GITHUB_OUTPUT;
             if (!TARGET_URL || !CRON_SECRET) {
               console.error('Missing TARGET_URL or CRON_SECRET');
               exit(1);
@@ -101,6 +103,9 @@ jobs:
                   inputs: {mode: MODE, locale: LOCALE_INPUT, dryRun: DRY_RUN},
                 };
                 console.info('daily-run summary', summary);
+                if (githubOutput) {
+                  fs.appendFileSync(githubOutput, `dailyJson=${JSON.stringify(payload)}\n`);
+                }
                 if (is5xx || (!okFlag && partial === false)) {
                   throw new Error(`Unsuccessful run: ${JSON.stringify(summary)}`);
                 }
@@ -126,37 +131,44 @@ jobs:
     needs: run-daily
     runs-on: ubuntu-latest
     steps:
-      - name: Call health endpoint
+      - name: Evaluate daily-run output
         env:
-          HEALTH_URL: ${{ secrets.HEALTH_URL }}
-          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          DAILY_JSON: ${{ needs.run-daily.outputs.dailyJson }}
         run: |
           node <<'NODE'
-          const {env, exit} = process;
-          const url = env.HEALTH_URL;
-          const secret = env.CRON_SECRET;
-          if (!url) {
-            console.error('HEALTH_URL missing');
-            exit(1);
-          }
-          const response = await fetch(url, {
-            method: 'GET',
-            headers: secret ? {'x-cron-secret': secret} : {},
+          (async () => {
+            const {env} = process;
+            const raw = env.DAILY_JSON;
+            if (!raw) {
+              throw new Error('Missing dailyJson output from previous job');
+            }
+            let payload;
+            try {
+              payload = JSON.parse(raw);
+            } catch (error) {
+              throw new Error(`Failed to parse dailyJson: ${error instanceof Error ? error.message : error}`);
+            }
+            const newsItems = payload?.news?.items ?? 0;
+            const assets = payload?.reports?.assets ?? 0;
+            const partial = payload?.partial ?? false;
+            console.info('health summary', {
+              date: payload?.date ?? null,
+              newsItems,
+              assets,
+              partial,
+            });
+            const needsNews = newsItems > 0;
+            const needsAssets = assets === 4;
+            const failing = !needsNews || !needsAssets;
+            if (failing && partial) {
+              console.warn('Health check running in partial mode');
+              return;
+            }
+            if (failing) {
+              throw new Error('Health check failed: insufficient items/assets');
+            }
+          })().catch((error) => {
+            console.error('Health check fatal:', error);
+            process.exit(1);
           });
-          if (!response.ok) {
-            throw new Error(`Health endpoint returned ${response.status}`);
-          }
-          const data = await response.json();
-          const newsCount = data.news?.newsItemsCount ?? 0;
-          const assetsCount = data.reports?.assetsCount ?? 0;
-          const status = data.lastRunStatus ?? data.summary?.status ?? 'unknown';
-          console.info('health summary', {
-            date: data.news?.lastNewsSnapshotDate,
-            newsItemsCount: newsCount,
-            assetsCount,
-            status,
-          });
-          if (newsCount === 0 || status === 'fail') {
-            throw new Error('Health check failed: zero news items or fail status');
-          }
           NODE
