@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
-import { buildLocalePath } from '../../../../lib/assets';
 import { getTranslations } from 'next-intl/server';
 import NewsList from '../../../../src/components/news/NewsList';
+import { loadSnapshotForLocale } from '../../../../lib/news/snapshot';
+import { formatBerlinSnapshotLabel } from '../../../../lib/timezone';
 
 const BASE_URL = process.env.APP_BASE_URL ?? 'https://krypto-sentiment-site.com';
 const OG_LOCALES: Record<'de' | 'en', string> = {
@@ -9,22 +10,20 @@ const OG_LOCALES: Record<'de' | 'en', string> = {
   en: 'en_US',
 };
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: 'de' | 'en' };
-}): Promise<Metadata> {
+type NewsPageProps = { params: { locale: 'de' | 'en' } };
+
+export async function generateMetadata({ params }: NewsPageProps): Promise<Metadata> {
   const t = await getTranslations();
   const base = new URL(BASE_URL);
-  const canonical = new URL(buildLocalePath(params.locale), base).toString();
+  const canonical = new URL('/de/news', base).toString();
   return {
     title: t('news.title'),
     description: t('news.description'),
     alternates: {
       canonical,
       languages: {
-        de: new URL('/de', base).toString(),
-        en: new URL('/en', base).toString(),
+        de: new URL('/de/news', base).toString(),
+        en: new URL('/en/news', base).toString(),
       },
     },
     openGraph: {
@@ -40,44 +39,73 @@ export async function generateMetadata({
 export const revalidate = 86400;
 export const dynamic = 'force-static';
 
-async function fetchSnapshot(locale: 'de' | 'en') {
-  try {
-    const res = await fetch(`/api/news?locale=${locale}`, {
-      next: { tags: ['news-daily'], revalidate: 86400 },
-    });
-    if (!res.ok) return null;
-    return res.json();
-  } catch {
-    return null;
-  }
-}
-
-export default async function NewsPage({ params }: { params: { locale: 'de' | 'en' } }) {
+export default async function NewsPage({ params }: NewsPageProps) {
   const t = await getTranslations();
-  const snapshot = await fetchSnapshot(params.locale);
-  const displayDate = snapshot?.date ?? new Date().toISOString().slice(0, 10);
-  const generatedAt = snapshot?.generatedAt;
+  const snapshotResult = await loadSnapshotForLocale(params.locale);
+  const snapshot = snapshotResult.snapshot;
+  const regenUrl = '/api/news/generate?mode=overwrite';
+  const fallbackDateTime = snapshot
+    ? formatBerlinSnapshotLabel(snapshot.generatedAt ?? new Date().toISOString())
+    : null;
+
+  const renderFallbackBadge = snapshot && snapshotResult.usedFallback;
+  const fallbackMessage = renderFallbackBadge
+    ? t('news.fallbackBanner', {
+        date: fallbackDateTime?.date ?? '',
+        time: fallbackDateTime?.time ?? '',
+      })
+    : null;
+
   return (
     <main className="container mx-auto px-4 py-8 space-y-6">
       <header>
         <h1 className="text-2xl font-semibold mb-2">{t('news.title')}</h1>
         <p className="text-sm text-gray-600">{t('news.description')}</p>
       </header>
-      <NewsList
-        assets={snapshot?.assets ?? []}
-        reportDate={displayDate}
-        generatedAt={generatedAt}
-        methodNote={snapshot?.method_note}
-      />
+      {fallbackMessage ? (
+        <div className="rounded-xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-800">
+          {fallbackMessage}
+        </div>
+      ) : null}
       {snapshot ? (
-        <p className="text-xs text-gray-500">
-          {t('news.generatedAt', { date: snapshot.date })}
-        </p>
+        <>
+          <NewsList
+            assets={snapshot.assets}
+            reportDate={snapshot.date}
+            generatedAt={snapshot.generatedAt}
+            methodNote={snapshot.method_note}
+          />
+          <p className="text-xs text-gray-500">
+            {t('news.generatedAt', { date: snapshot.generatedAt })}
+          </p>
+        </>
       ) : (
-        <p className="text-xs text-gray-500">{t('news.emptySnapshot')}</p>
+        <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center space-y-3 text-sm text-gray-700">
+          {snapshotResult.status === 'error' ? (
+            <p>{t('news.errorLoading', { error: snapshotResult.reason ?? 'unknown' })}</p>
+          ) : (
+            <p>{t('news.emptySnapshot')}</p>
+          )}
+          <div className="flex flex-wrap justify-center gap-3">
+            <a
+              href="/de/news"
+              className="text-gray-700 hover:text-black"
+            >
+              {t('nav.backHome')}
+            </a>
+            {process.env.NODE_ENV !== 'production' ? (
+              <a
+                href={regenUrl}
+                className="rounded-md bg-indigo-600 px-3 py-1 text-white hover:bg-indigo-500"
+              >
+                {t('news.rebuildButton')}
+              </a>
+            ) : null}
+          </div>
+        </div>
       )}
       <div className="text-sm">
-        <a href={buildLocalePath(params.locale)} className="text-gray-700 hover:text-black">
+        <a href="/de/news" className="text-gray-700 hover:text-black">
           {t('nav.backHome')}
         </a>
       </div>

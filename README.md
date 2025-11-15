@@ -35,6 +35,7 @@ npx vitest run tests/news-page.test.tsx
 
 - `data/reports/` enthält die täglichen Sentiment-Berichte (Format `YYYY-MM-DD.json`) für Backfills und Admin-Checks.
 - `data/news/` speichert locale-spezifische News-Snapshots `YYYY-MM-DD.{locale}.json`, aus denen die News-Startseite und andere statische Seiten lesen. Fehlt eine Datei, zeigt die Seite einen sanften Empty-State ("Kein Report gespeichert").
+- Die Snapshot-Dateien orientieren sich am Europe/Berlin-Datum; vor 06:00 Uhr fällt die Seite auf den letzten verfügbaren Stand zurück und zeigt ein Hinweis-Banner. Jeder Snapshot-Zugriff loggt Pfad, Größe, Deduplizierung und Adapter-Warnungen.
 
 ## Daily APIs & Cron
 
@@ -44,7 +45,7 @@ npx vitest run tests/news-page.test.tsx
 
 ## Redirects & SEO
 
-- `next.config.mjs` verweist `/reports/*`, `/daily/*`, `/[locale]/reports/*`, `/[locale]/daily/*` und die Listen auf `/[locale]/news` (bzw. `/[locale]`), damit alte Daily-Pfade permanent (301/308) auf den News-Home umgestellt werden.
+- `next.config.mjs` verweist `/reports/*`, `/daily/*`, `/[locale]/reports/*`, `/[locale]/daily/*` sowie `/`, `/en` auf `/de/news`, damit der globale Home-Pfad immer die deutsche News-Startseite bleibt.
 - `app/sitemap.ts` exportiert nur noch `/de`, `/en`, `/de/news`, `/en/news` und die Methodik-Slugs; Daily-Detail-URLs tauchen nicht mehr auf.
 - `app/[locale]/page.tsx` und `app/[locale]/(pages)/news/page.tsx` teilen sich metadata-basierte Canonicals und hreflang-Alternates, daher ist `/de` (resp. `/en`) die eindeutige kanonische URL und die OpenGraph-Texte beschreiben den aktuellen Snapshot des jeweiligen Locale.
 
@@ -59,6 +60,7 @@ npx vitest run tests/news-page.test.tsx
 2. `curl -I http://localhost:3000/de/reports/2025-11-12` oder `/en/daily/2025-11-12`: permanente Redirect-Antwort (301/308) zur jeweils passenden News-Startseite, die Locale bleibt erhalten.
 3. Sitemap prüfen (`http://localhost:3000/sitemap.xml`): nur `/de`, `/en`, `/de/news`, `/en/news` und Methodik-Links enthalten; keine Daily-Details.
 4. DevTools Network während `/de/news`: max. ein schneller Server-Load (Snapshot-Read), keine wiederholten Fetches beim Reload oder Tab-Fokus.
+5. In Entwicklung erscheint auf der News-Seite der Button „News neu generieren“, der `GET /api/news/generate` aufruft und das Cache-Tag `news-daily` revalidiert.
 
 ## Environment (`.env.local`)
 

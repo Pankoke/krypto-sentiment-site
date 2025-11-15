@@ -60,7 +60,10 @@ export async function GET(req: Request) {
     const durationMs = Date.now() - start;
     const unique = new Set(report.assets.map((asset) => asset.symbol)).size;
     const dedupeRatio = report.assets.length ? unique / report.assets.length : 0;
-    const warnings: string[] = report.method_note ? [report.method_note] : [];
+    const warnings: string[] = [
+      ...(report.method_note ? [report.method_note] : []),
+      ...(report.adapterWarnings ?? []),
+    ];
     await saveNewsMetrics({
       timestamp: new Date().toISOString(),
       durationMs,
@@ -71,6 +74,9 @@ export async function GET(req: Request) {
     console.info('News-Generate Duration', durationMs);
     console.info('Items total', report.assets.length);
     console.info('Dedupe Ratio', dedupeRatio);
+    if (report.adapterWarnings?.length) {
+      console.warn('Adapter warnings', report.adapterWarnings);
+    }
     if (warnings.length) {
       console.warn('News warnings', warnings);
     }

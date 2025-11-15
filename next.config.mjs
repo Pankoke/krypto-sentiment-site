@@ -31,6 +31,16 @@ const nextConfig = createNextIntlPlugin({
     ]);
 
     return [
+      {
+        source: '/',
+        destination: '/de/news',
+        permanent: true,
+      },
+      {
+        source: '/en',
+        destination: '/de/news',
+        permanent: true,
+      },
       ...detailRedirects,
       {
         source: '/reports/:path*',

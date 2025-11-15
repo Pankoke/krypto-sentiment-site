@@ -70,6 +70,8 @@
     "hint": "Hinweis: {note}",
     "emptySnapshot": "Noch keine News vorhanden.",
     "generatedAt": "Stand: {date}",
+    "fallbackBanner": "Letzter Snapshot vom {date} um {time} Uhr (Europe/Berlin).",
+    "rebuildButton": "News neu generieren",
     "noSignals": "Keine Signale in dieser Kategorie."
   },
   "tooltip": {

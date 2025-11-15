@@ -1,6 +1,7 @@
 import type { NormalizedSourceEntry } from '../types';
-import { fetchAllSources } from '../sources';
+import { fetchAllSources, getSourceWarnings } from '../sources';
 import { getAllowedTickerOrder, isTickerAllowed } from '../assets';
+import { berlinDateString } from '../timezone';
 
 const DEFAULT_UNIVERSE = getAllowedTickerOrder();
 const TOP_SIGNALS_COUNT = 5;
@@ -43,6 +44,9 @@ export type AggregatedReport = {
   universe: string[];
   assets: AssetReport[];
   method_note: string;
+  adapterWarnings?: string[];
+  uniqueAssets?: number;
+  dedupeCount?: number;
 };
 
 const positiveKeywords = ['pump', 'bull', 'rally', 'surge', 'auf', 'steig', 'ankünd', 'positiv', 'stark', 'erholt'];
@@ -229,7 +233,7 @@ export async function aggregateNews(options?: {
 }): Promise<AggregatedReport> {
   const universe = normalizeUniverse(options);
   const sinceTimestamp = parseSinceTimestamp(options?.since);
-  const reportDate = new Date().toISOString().slice(0, 10);
+  const reportDate = berlinDateString(new Date());
   const allPosts = await fetchAllSources();
   const allowedPosts = allPosts.filter((post) => isTickerAllowed(post.asset));
   const filtered = allowedPosts.filter((post) => {
@@ -327,10 +331,20 @@ if (fallbackAssets.length) {
   );
 }
 
+  const adapterWarnings = getSourceWarnings();
+  if (adapterWarnings.length) {
+    methodNoteParts.push(`Adapter-Ausfall: ${adapterWarnings.join('; ')}`);
+  }
+  const uniqueAssets = new Set(allowedReports.map((report) => report.symbol)).size;
+  const dedupeCount = Math.max(0, allowedReports.length - uniqueAssets);
+
   return {
     date: reportDate,
     universe,
     assets: allowedReports.sort((a, b) => b.score - a.score),
     method_note: methodNoteParts.join(' '),
+    adapterWarnings,
+    uniqueAssets,
+    dedupeCount,
   };
 }

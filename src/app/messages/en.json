@@ -66,7 +66,9 @@
     "topSignals": "Top signals",
     "hint": "Note: {note}",
     "emptySnapshot": "No news yet.",
-    "generatedAt": "As of {date}"
+    "generatedAt": "As of {date}",
+    "fallbackBanner": "Last snapshot from {date} at {time} (Europe/Berlin).",
+    "rebuildButton": "Regenerate news"
   },
   "tooltip": {
     "definitionTitle": "Definition",
