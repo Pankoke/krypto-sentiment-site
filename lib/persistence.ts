@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile, readdir } from 'fs/promises';
 import { join } from 'path';
-import { locales } from '../i18n';
+const DATA_DIR = process.env.GENERATE_DATA_DIR ?? join(process.cwd(), 'data');
 import type { DailyCryptoSentiment } from './types';
 import type { AssetReport } from './news/aggregator';
 import {
@@ -25,7 +25,7 @@ export interface DailySnapshot {
   generatedAt: string;
 }
 
-const REPORT_DIR = join(process.cwd(), 'data', 'reports');
+const REPORT_DIR = join(DATA_DIR, 'reports');
 
 function snapshotPath(date: string, locale: string) {
   return join(REPORT_DIR, `${date}.${locale}.json`);

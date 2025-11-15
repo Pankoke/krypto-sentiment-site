@@ -9,10 +9,12 @@ export interface NewsMetrics {
   warnings: string[];
 }
 
-const METRICS_FILE = join(process.cwd(), 'data', 'news', 'metrics.json');
+const DATA_DIR = process.env.GENERATE_DATA_DIR ?? join(process.cwd(), 'data');
+const METRICS_DIR = join(DATA_DIR, 'news');
+const METRICS_FILE = join(METRICS_DIR, 'metrics.json');
 
 export async function saveNewsMetrics(metrics: NewsMetrics): Promise<void> {
-  await mkdir(join(process.cwd(), 'data', 'news'), {
+  await mkdir(METRICS_DIR, {
     recursive: true,
   });
   await writeFile(METRICS_FILE, JSON.stringify(metrics, null, 2) + '\n', 'utf8');

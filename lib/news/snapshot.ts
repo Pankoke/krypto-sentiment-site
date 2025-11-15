@@ -3,13 +3,14 @@ import { join } from 'path';
 import { locales } from '../../i18n';
 import type { AggregatedReport } from './aggregator';
 import { addDays, berlinDateString, berlinHour } from '../timezone';
+const DATA_DIR = process.env.GENERATE_DATA_DIR ?? join(process.cwd(), 'data');
 
 export interface NewsSnapshot extends AggregatedReport {
   locale: string;
   generatedAt: string;
 }
 
-const NEWS_DIR = join(process.cwd(), 'data', 'news');
+const NEWS_DIR = join(DATA_DIR, 'news');
 
 function snapshotPath(date: string, locale: string) {
   return join(NEWS_DIR, `${date}.${locale}.json`);
