@@ -1,5 +1,6 @@
 import { access, constants, mkdir, writeFile } from 'fs/promises';
 import { join } from 'path';
+import os from 'os';
 import { fetchAllSources } from '../sources';
 import { aggregateNews } from '../news/aggregator';
 import { persistDailyNewsSnapshots } from '../news/snapshot';
@@ -7,7 +8,9 @@ import { runDailySentiment } from '../sentiment';
 import { persistDailySnapshots } from '../persistence';
 import type { DailyCryptoSentiment } from '../types';
 
-const REPORT_DIR = join(process.cwd(), 'data', 'reports');
+const DATA_DIR = process.env.GENERATE_DATA_DIR ?? join(process.cwd(), 'data');
+const FALLBACK_REPORT_DIR = join(os.tmpdir(), 'krypto-data', 'reports');
+const REPORT_DIR = join(DATA_DIR, 'reports');
 
 export type DailyGenerateMode = 'overwrite' | 'skip';
 
@@ -43,8 +46,20 @@ export async function generateDailyReport(
     return { report, path, skipped: true };
   }
 
-  await mkdir(REPORT_DIR, { recursive: true });
-  await writeFile(path, JSON.stringify(report, null, 2) + '\n', 'utf8');
+  try {
+    await mkdir(REPORT_DIR, { recursive: true });
+  } catch {
+    // ignore
+  }
+  let writtenPath = filePath;
+  try {
+    await writeFile(filePath, JSON.stringify(report, null, 2) + '\n', 'utf8');
+  } catch {
+    await mkdir(FALLBACK_REPORT_DIR, { recursive: true });
+    const fallbackPath = join(FALLBACK_REPORT_DIR, `${dateForFile}.json`);
+    await writeFile(fallbackPath, JSON.stringify(report, null, 2) + '\n', 'utf8');
+    writtenPath = fallbackPath;
+  }
   await persistDailySnapshots(report);
   try {
     const newsReport = await aggregateNews();
@@ -54,5 +69,5 @@ export async function generateDailyReport(
     console.warn('news snapshot failed', error);
   }
 
-  return { report, path, skipped: false };
+  return { report, path: writtenPath, skipped: false };
 }
