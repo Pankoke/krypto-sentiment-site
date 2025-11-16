@@ -44,10 +44,14 @@
     "detailsFor": "Details for {date}"
   },
   "nav": {
-    "newsHome": "News",
-    "archive": "Archive",
-    "backHome": "Back home",
-    "methodik": "Methodology"
+    "home": "Home",
+    "news": "News & Signals",
+    "methodik": "Methodology",
+    "coins": "Cryptos",
+    "data": "Data & Charts",
+    "learn": "Learn",
+    "about": "About",
+    "contact": "Contact"
   },
   "news": {
     "title": "News & Signals",

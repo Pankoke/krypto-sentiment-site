@@ -5,7 +5,6 @@ import './globals.css';
 import { NextIntlClientProvider } from 'next-intl';
 import { cookies } from 'next/headers';
 import { defaultLocale } from '../i18n';
-import { LanguageSwitcher } from '../src/components/LanguageSwitcher';
 import { LocaleNav } from '../src/components/LocaleNav';
 
 export const metadata: Metadata = {
@@ -44,7 +43,6 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
               </Link>
               <div className="text-sm flex items-center gap-4">
                 <LocaleNav />
-                <LanguageSwitcher />
               </div>
             </div>
           </header>

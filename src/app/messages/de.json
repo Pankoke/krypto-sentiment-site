@@ -47,10 +47,14 @@
     "detailsFor": "Details für {date}"
   },
   "nav": {
-    "newsHome": "News",
-    "archive": "Archiv",
-    "backHome": "Zur Startseite",
-    "methodik": "Methodik"
+    "home": "Home",
+    "news": "News & Signale",
+    "methodik": "Methodik",
+    "coins": "Kryptos",
+    "data": "Daten & Charts",
+    "learn": "Bildung",
+    "about": "Über uns",
+    "contact": "Kontakt"
   },
   "news": {
     "title": "Nachrichten & Signale",
