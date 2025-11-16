@@ -54,7 +54,8 @@
     "data": "Daten & Charts",
     "learn": "Lernen",
     "about": "Über uns",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "backHome": "Zur Startseite"
   },
   "news": {
     "title": "News & Signale",
@@ -76,7 +77,8 @@
     "generatedAt": "Stand: {date}",
     "fallbackBanner": "Letzter Snapshot vom {date} um {time} Uhr (Europe/Berlin).",
     "rebuildButton": "News neu generieren",
-    "noSignals": "Keine Signale in dieser Kategorie."
+    "noSignals": "Keine Signale in dieser Kategorie.",
+    "label": { "score": "Score", "confidence": "Vertrauen" }
   },
   "tooltip": {
     "definitionTitle": "Definition",

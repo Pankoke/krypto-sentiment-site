@@ -1,0 +1,92 @@
+{
+  "date": "2025-11-15",
+  "universe": ["ETH", "BTC", "SOL", "XRP"],
+  "assets": [
+    {
+      "symbol": "ETH",
+      "sentiment": "bullish",
+      "score": 0.85,
+      "confidence": 0.9,
+      "rationale": "Positive Stimmung durch erhöhte Layer-2-Aktivität und anhaltend niedrige Gebühren. Analysten sehen die Infrastruktur stabil.",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "Community diskutiert neue Finanzierungsrunden und niedrige Gebühren."
+        },
+        {
+          "source": "news",
+          "evidence": "Dencun-Upgrade verringert L2-Gebühren mit erhöhter Rollup-Aktivität."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Erhöhte Layer-2-Transaktionen seit Dencun."
+        }
+      ]
+    },
+    {
+      "symbol": "BTC",
+      "sentiment": "bullish",
+      "score": 0.8,
+      "confidence": 0.85,
+      "rationale": "Starke Akkumulation und Zuflüsse institutioneller Investoren sorgen für breiten Optimismus.",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "Whale-Muster zeigen Anhäufung."
+        },
+        {
+          "source": "news",
+          "evidence": "Miner melden steigende Erträge und Analysten sehen BTC als sicheren Hafen."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Aktivität großer UTXOs gewinnt an Fahrt."
+        }
+      ]
+    },
+    {
+      "symbol": "SOL",
+      "sentiment": "bullish",
+      "score": 0.75,
+      "confidence": 0.8,
+      "rationale": "DeFi-Wachstum und Governance-Ankündigungen unterstützen den Optimismus.",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "Token-Entwickler planen Governance-Bump."
+        },
+        {
+          "source": "news",
+          "evidence": "DeFi-TVL erreicht neues Jahreshoch, steigende Ökosystem-Aktivitäten."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Neue Adressen, hohe TPS, DEX-Volumen steigt."
+        }
+      ]
+    },
+    {
+      "symbol": "XRP",
+      "sentiment": "bullish",
+      "score": 0.7,
+      "confidence": 0.75,
+      "rationale": "Neue Partnerschaften und aktive Validator-Community fördern positive Grundstimmung.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Neue Partnerschaften mit Zahlungsdienstleistern."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Aktive Brücken und Validatoren mit Mittelzuflüssen."
+        }
+      ]
+    }
+  ],
+  "method_note": "Aggregierte Signale aus Social, News und Onchain. OpenAI-Fallback für XRP; heuristische Rationale verwendet.",
+  "adapterWarnings": [],
+  "uniqueAssets": 4,
+  "dedupeCount": 0,
+  "locale": "de",
+  "generatedAt": "2025-11-15T06:00:00.000Z"
+}
