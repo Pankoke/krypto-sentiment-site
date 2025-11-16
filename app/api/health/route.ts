@@ -30,6 +30,9 @@ async function findLatestSnapshot(dir: string, locale: 'de' | 'en'): Promise<Sna
   }
   snapshots.sort((a, b) => b.date.localeCompare(a.date));
   const latest = snapshots[0];
+  if (!latest) {
+    return null;
+  }
   const path = join(dir, latest.file);
   const raw = await readFile(path, 'utf8');
   const payload = JSON.parse(raw) as { assets?: unknown[] };
