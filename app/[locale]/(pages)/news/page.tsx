@@ -90,7 +90,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
           {banner}
         </div>
       ) : null}
-      {hasContent ? (
+      {snapshot && hasContent ? (
         <>
           <NewsList
             assets={snapshot.assets}
