@@ -6,7 +6,7 @@ import { ScorePill } from './ScorePill';
 import { ConfidencePill } from './ConfidencePill';
 import { TrendBadge } from './TrendBadge';
 import { Sparkline } from './Sparkline';
-import type { SentimentBullet, SentimentItem } from '@/core/sentiment/types';
+import type { SentimentBullet, SentimentItem } from 'lib/sentiment/types';
 
 interface SentimentDetailDialogProps {
   open: boolean;

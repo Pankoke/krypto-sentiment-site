@@ -1,6 +1,6 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import type { SentimentTrend } from '@/core/sentiment/types';
+import type { SentimentTrend } from 'lib/sentiment/types';
 import { useTranslations } from 'next-intl';
 
 interface TrendBadgeProps { trend: SentimentTrend; }

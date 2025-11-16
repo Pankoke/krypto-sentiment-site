@@ -2,7 +2,7 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import useSWR from 'swr';
-import type { SentimentResponse, SentimentItem } from '@/core/sentiment/types';
+import type { SentimentResponse, SentimentItem } from 'lib/sentiment/types';
 import { SentimentHeader } from '@/components/sentiment/SentimentHeader';
 import { SentimentCard } from '@/components/sentiment/SentimentCard';
 import { SentimentDetailDialog } from '@/components/sentiment/SentimentDetailDialog';

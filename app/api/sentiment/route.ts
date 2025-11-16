@@ -1,6 +1,6 @@
 import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
-import type { SentimentResponse, SentimentItem, SentimentTrend, SentimentBullet } from '../../../src/core/sentiment/types';
+import type { SentimentResponse, SentimentItem, SentimentTrend, SentimentBullet } from 'lib/sentiment/types';
 import { isDailyCryptoSentiment, type AssetSentiment, type TopSignal } from '../../../lib/types';
 import { filterAssetsByWhitelist, sortAssetsByWhitelistOrder } from '../../../lib/assets';
 

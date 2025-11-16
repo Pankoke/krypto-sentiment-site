@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import type { SentimentItem } from '@/core/sentiment/types';
+import type { SentimentItem } from 'lib/sentiment/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScorePill } from './ScorePill';
 import { ConfidencePill } from './ConfidencePill';

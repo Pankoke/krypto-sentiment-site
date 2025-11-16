@@ -3,7 +3,7 @@ import { join } from 'path';
 import { locales } from '../../i18n';
 import type { AggregatedReport } from './aggregator';
 import { addDays, berlinDateString, berlinHour } from '../timezone';
-import { ensurePersistenceAllowed } from '../persistenceGuard';
+import { ensurePersistenceAllowed, isPersistenceAllowed } from '../persistenceGuard';
 const DATA_DIR = process.env.GENERATE_DATA_DIR ?? join(process.cwd(), 'data');
 
 export interface NewsSnapshot extends AggregatedReport {
@@ -143,6 +143,10 @@ export async function persistDailyNewsSnapshots(
   report: AggregatedReport,
   options?: { locales?: Array<'de' | 'en'>; force?: boolean }
 ): Promise<void> {
+  if (!isPersistenceAllowed()) {
+    console.warn('News snapshot persistence skipped (production/git-locked environment).');
+    return;
+  }
   ensurePersistenceAllowed();
   await mkdir(NEWS_DIR, { recursive: true }).catch(() => undefined);
   const timestamp = new Date().toISOString();

@@ -230,11 +230,12 @@ function parseSinceTimestamp(since?: string): number | undefined {
 export async function aggregateNews(options?: {
   universe?: string[];
   since?: string;
+  sourceEntries?: NormalizedSourceEntry[];
 }): Promise<AggregatedReport> {
   const universe = normalizeUniverse(options);
   const sinceTimestamp = parseSinceTimestamp(options?.since);
   const reportDate = berlinDateString(new Date());
-  const allPosts = await fetchAllSources();
+  const allPosts = options?.sourceEntries ?? (await fetchAllSources());
   const allowedPosts = allPosts.filter((post) => isTickerAllowed(post.asset));
   const filtered = allowedPosts.filter((post) => {
     const symbol = post.asset.toUpperCase();

@@ -4,6 +4,7 @@ import { aggregateNews } from '../../../../lib/news/aggregator';
 import { fetchAllSources } from '../../../../lib/sources';
 import { runDailySentiment } from '../../../../lib/sentiment';
 import { berlinDateString } from '../../../../lib/timezone';
+import type { NormalizedSourceEntry } from '../../../../lib/types';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' } as const;
 const LOCALES: Array<'de' | 'en'> = ['de', 'en'];
@@ -47,11 +48,11 @@ function buildResult(
   };
 }
 
-async function runNewsPart() {
+async function runNewsPart(posts: NormalizedSourceEntry[]) {
   const start = Date.now();
   const payload: Partial<NewsResult> = { ok: false, items: 0, warnings: [] };
   try {
-    const report = await aggregateNews();
+    const report = await aggregateNews({ sourceEntries: posts, universe: undefined });
     const warnings = [
       ...(report.method_note ? [report.method_note] : []),
       ...(report.adapterWarnings ?? []),
@@ -66,11 +67,10 @@ async function runNewsPart() {
   return buildResult('news', Date.now() - start, payload);
 }
 
-async function runReportsPart() {
+async function runReportsPart(posts: NormalizedSourceEntry[]) {
   const start = Date.now();
   const payload: Partial<ReportsResult> = { ok: false, assets: 0, warnings: [] };
   try {
-    const posts = await fetchAllSources();
     const sentiment = await runDailySentiment(posts);
     payload.ok = true;
     payload.assets = sentiment.assets.length;
@@ -95,8 +95,9 @@ export async function GET(req: Request) {
   const start = Date.now();
   const dateBerlin = berlinDateString(new Date());
 
-  const newsResult = await runNewsPart();
-  const reportsResult = await runReportsPart();
+  const posts = await fetchAllSources();
+  const newsResult = await runNewsPart(posts);
+  const reportsResult = await runReportsPart(posts);
 
   const partial = !(newsResult.ok && reportsResult.ok);
   const allFailed = !newsResult.ok && !reportsResult.ok;
