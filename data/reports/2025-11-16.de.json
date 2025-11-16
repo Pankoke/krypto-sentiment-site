@@ -1,82 +1,82 @@
 {
   "date": "2025-11-16",
   "universe": [
-    "ETH",
     "BTC",
-    "SOL",
-    "XRP"
+    "ETH",
+    "XRP",
+    "SOL"
   ],
   "assets": [
     {
-      "symbol": "ETH",
-      "sentiment": "bullish",
-      "score": 0.78,
-      "confidence": 0.9,
-      "rationale": "Positive Nachrichten um Ethereum Layer-2-Entwicklung und steigende On-Chain-Aktivität nach Dencun-Upgrade; Community-Engagement bezüglich Layer-1-Infrastruktur ist ebenfalls hoch.",
-      "top_signals": [
-        {
-          "source": "news",
-          "evidence": "Dencun-Upgrade reduziert L2-Gebühren, Rollups melden steigende Aktivität."
-        },
-        {
-          "source": "social",
-          "evidence": "Community diskutiert frische Finanzierungsrunden für Layer-1-Infrastruktur."
-        }
-      ]
-    },
-    {
       "symbol": "BTC",
       "sentiment": "bullish",
-      "score": 0.82,
+      "score": 0.8,
       "confidence": 0.9,
-      "rationale": "Starke ETF-Zuflüsse und positive Social-Media-Trends zu Whale-Aktivitäten und traditionellen Börsenflüssen.",
+      "rationale": "Rising miner revenues and shrinking exchange reserves indicate positive sentiment; ETF flows suggest institutional interest.",
       "top_signals": [
         {
           "source": "news",
-          "evidence": "Bitcoin-ETF-Zuflüsse steigen über 250 Mio. USD."
+          "evidence": "ETF-Flüsse und Miner-Erlöse im Blick"
         },
         {
-          "source": "social",
-          "evidence": "Whale-Muster zeigen Anhäufung, traditionelle Börsen verzeichnen Zuflüsse."
+          "source": "onchain",
+          "evidence": "Netto-Abflüsse von Exchanges lassen Reserven schrumpfen."
         }
       ]
     },
     {
-      "symbol": "SOL",
-      "sentiment": "neutral",
-      "score": 0.55,
-      "confidence": 0.8,
-      "rationale": "Aktivität bei Memecoins und On-Chain-Aktivität wird durch Nachrichten über wachsende Solana-Infrastruktur ausgeglichen.",
+      "symbol": "ETH",
+      "sentiment": "bullish",
+      "score": 0.75,
+      "confidence": 0.85,
+      "rationale": "Increased Layer-2 activity post-Dencun upgrade and reduced fees are increasing user engagement.",
       "top_signals": [
         {
-          "source": "news",
-          "evidence": "Infrastrukturfirmen berichten von erhöhtem Validator-Engagement."
+          "source": "onchain",
+          "evidence": "Ethereum On-Chain-Activity klettert"
         },
         {
-          "source": "social",
-          "evidence": "SOL-Memecoins bringen wieder Volumen."
+          "source": "news",
+          "evidence": "Ethereum Layer-2-Ökosystem gewinnt Tempo"
         }
       ]
     },
     {
       "symbol": "XRP",
       "sentiment": "bullish",
-      "score": 0.65,
-      "confidence": 0.85,
-      "rationale": "Partnerschaften mit Zahlungsdienstleistern und positive On-Chain-Signale.",
+      "score": 0.7,
+      "confidence": 0.8,
+      "rationale": "Partnerships with payment providers and increased on-chain security boost confidence.",
       "top_signals": [
         {
           "source": "news",
-          "evidence": "Ripple kündigt neue Partnerschaften mit Zahlungsdienstleistern an."
+          "evidence": "Ripple kooperiert mit Zahlungsdienstleistern"
         },
         {
           "source": "onchain",
           "evidence": "Brücken melden Mittelzuflüsse in Smart-Contracts."
         }
       ]
+    },
+    {
+      "symbol": "SOL",
+      "sentiment": "bullish",
+      "score": 0.75,
+      "confidence": 0.85,
+      "rationale": "Growth in infrastructure and on-chain metrics support positive outlook.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Solana-Infrastruktur verzeichnet Wachstum"
+        },
+        {
+          "source": "onchain",
+          "evidence": "Solana On-Chain-Kennzahlen bleiben stark"
+        }
+      ]
     }
   ],
-  "macro_summary": "Kryptomärkte zeigen insgesamt positive Aktivität mit signifikanten Zuflüssen in Bitcoin-ETFs und starker Entwicklung im Ethereum-Ökosystem. Solana bleibt durchwachsen, während XRP sich positive Partnereffekte zunutze macht.",
-  "method_note": "Analyse basiert auf einer gewichteten Aggregation aus Social-Media-Trends, Nachrichtenwirkung und On-Chain-Daten. Scores leiten sich von Wichtigkeit und Engagement der Quellen ab.",
+  "macro_summary": "Overall market sentiment is positive, driven by strong on-chain and partnership activities across key assets.",
+  "method_note": "Sentiment analysis based on social engagement, news coverage, and on-chain activity indicators.",
   "locale": "de"
 }
