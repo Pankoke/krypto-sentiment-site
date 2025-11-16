@@ -32,3 +32,5 @@ export async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
     url: new URL(path, base).toString()
   }));
 }
+
+export default generateSitemap;
