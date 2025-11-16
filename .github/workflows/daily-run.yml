@@ -159,7 +159,7 @@ jobs:
             const waitTime = 75_000;
             console.info(`Waiting ${waitTime}ms for deployment propagation`);
             await delay(waitTime);
-            const targetHealth = env.HEALTH_URL || env.TARGET_URL?.replace(/\\/api\\/generate\\/.*$/, '/api/health');
+            const targetHealth = env.HEALTH_URL || env.TARGET_URL?.replace(/\/api\/generate\/.*$/, '/api/health');
             const headers = env.CRON_SECRET ? { 'x-cron-secret': env.CRON_SECRET } : {};
             let healthPayload = null;
             if (targetHealth) {
