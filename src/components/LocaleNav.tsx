@@ -1,4 +1,5 @@
 "use client";
+"use client";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -7,16 +8,30 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 
 type NavKey = 'home' | 'news' | 'methodik' | 'coins' | 'data' | 'learn' | 'about' | 'contact';
 
-const navLinks: { key: NavKey; getHref: (locale: 'de' | 'en') => string }[] = [
-  { key: 'home', getHref: (locale) => `/${locale}` },
-  { key: 'news', getHref: (locale) => `/${locale}/news` },
-  { key: 'methodik', getHref: (locale) => `/${locale}/${methodPageSlug[locale]}` },
-  { key: 'coins', getHref: (locale) => `/${locale}/coins` },
-  { key: 'data', getHref: (locale) => `/${locale}/data` },
-  { key: 'learn', getHref: (locale) => `/${locale}/learn` },
-  { key: 'about', getHref: (locale) => `/${locale}/about` },
-  { key: 'contact', getHref: (locale) => `/${locale}/contact` }
-];
+const localePaths: Record<'de' | 'en', Record<NavKey, string>> = {
+  de: {
+    home: '/de',
+    news: '/de/news',
+    methodik: '/de/methodik',
+    coins: '/de/coins',
+    data: '/de/daten',
+    learn: '/de/lernen',
+    about: '/de/ueber-uns',
+    contact: '/de/kontakt'
+  },
+  en: {
+    home: '/en',
+    news: '/en/news',
+    methodik: `/en/${methodPageSlug.en}`,
+    coins: '/en/coins',
+    data: '/en/data',
+    learn: '/en/learn',
+    about: '/en/about',
+    contact: '/en/contact'
+  }
+};
+
+const keys: NavKey[] = ['home', 'news', 'methodik', 'coins', 'data', 'learn', 'about', 'contact'];
 
 export function LocaleNav() {
   const pathname = usePathname();
@@ -27,8 +42,8 @@ export function LocaleNav() {
 
   return (
     <nav className="text-sm flex items-center gap-4">
-      {navLinks.map(({ key, getHref }) => (
-        <Link key={key} href={getHref(locale)} className="text-gray-700 hover:text-black">
+      {keys.map((key) => (
+        <Link key={key} href={localePaths[locale][key]} className="text-gray-700 hover:text-black">
           {t(key)}
         </Link>
       ))}

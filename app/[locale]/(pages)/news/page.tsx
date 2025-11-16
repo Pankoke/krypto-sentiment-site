@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import NewsList from '../../../../src/components/news/NewsList';
+import { RefreshButton } from '../../../../src/components/news/RefreshButton';
 import { loadLatestAvailableSnapshot, loadSnapshotForLocale } from '../../../../lib/news/snapshot';
 import { formatBerlinSnapshotLabel } from '../../../../lib/timezone';
 
@@ -73,6 +74,11 @@ export default async function NewsPage({ params }: NewsPageProps) {
   const regenUrl = '/api/news/generate?mode=overwrite';
   const assetsCount = snapshot?.assets.length ?? 0;
   const hasContent = Boolean(snapshot && assetsCount > 0);
+  const noNewsMessage =
+    params.locale === 'de'
+      ? 'Derzeit sind keine News verfügbar. Bitte später erneut versuchen.'
+      : t('news.emptySnapshot');
+  const refreshLabel = params.locale === 'de' ? 'Aktualisieren' : 'Refresh';
   return (
     <main className="container mx-auto px-4 py-8 space-y-6">
       <header>
@@ -97,7 +103,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
           </p>
         </>
       ) : (
-        <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center space-y-3 text-sm text-gray-700">
+        <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center space-y-4 text-sm text-gray-700">
           {snapshotResult.status === 'error' ? (
             <>
               <p>{t('news.errorLoading', { error: snapshotResult.reason ?? 'unknown' })}</p>
@@ -109,7 +115,12 @@ export default async function NewsPage({ params }: NewsPageProps) {
               </a>
             </>
           ) : (
-            <p>{t('news.emptySnapshot')}</p>
+            <>
+              <p>{noNewsMessage}</p>
+              <div className="flex justify-center">
+                <RefreshButton label={refreshLabel} />
+              </div>
+            </>
           )}
           <div className="flex flex-wrap justify-center gap-3">
             <a href="/de/news" className="text-gray-700 hover:text-black">

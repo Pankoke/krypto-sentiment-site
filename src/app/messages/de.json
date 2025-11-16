@@ -47,17 +47,17 @@
     "detailsFor": "Details für {date}"
   },
   "nav": {
-    "home": "Home",
+    "home": "Startseite",
     "news": "News & Signale",
     "methodik": "Methodik",
-    "coins": "Kryptos",
+    "coins": "Kryptowährungen",
     "data": "Daten & Charts",
-    "learn": "Bildung",
+    "learn": "Lernen",
     "about": "Über uns",
     "contact": "Kontakt"
   },
   "news": {
-    "title": "Nachrichten & Signale",
+    "title": "News & Signale",
     "description": "Aggregierte Signale und kurze Begründungen pro Asset.",
     "filterLabel": "Asset",
     "filterAll": "Alle Assets",

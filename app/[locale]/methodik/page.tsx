@@ -1,63 +1,66 @@
 import type { Metadata } from 'next';
-import { methodikContent } from 'lib/methodik';
-import { methodPageSlug } from 'lib/methodPages';
 
 const BASE_URL = process.env.APP_BASE_URL ?? 'https://krypto-sentiment-site.com';
 
-export function generateStaticParams() {
-  return [{ locale: 'de' }];
-}
-
-function createMetadata(locale: 'de' | 'en', slug: string, content: { title: string; description: string }) {
-  const canonical = `${BASE_URL}/${locale}/${slug}`;
-  return {
-    title: content.title,
-    description: content.description,
-    openGraph: {
-      title: content.title,
-      description: content.description,
-      url: canonical,
-    },
-    alternates: {
-      canonical,
-      languages: {
-        de: `${BASE_URL}/de/${methodPageSlug.de}`,
-        en: `${BASE_URL}/en/${methodPageSlug.en}`,
-      },
-    },
-  } satisfies Metadata;
-}
-
 export async function generateMetadata(): Promise<Metadata> {
-  const content = methodikContent.de;
-  return createMetadata('de', methodPageSlug.de, content);
+  const canonical = `${BASE_URL}/de/methodik`;
+  return {
+    title: 'Unsere Methodik – Krypto Sentiment',
+    description:
+      'Erfahren Sie, welche Datenquellen wir kombinieren, um einen transparenten Sentiment-Score für Kryptowährungen zu berechnen.',
+    alternates: { canonical }
+  };
 }
+
+const sections = [
+  {
+    title: 'Unsere Methodik',
+    description:
+      'Wir kombinieren mehrere Datenquellen, um die Marktstimmung zu bestimmen:',
+    bullets: [
+      'Analyse von Nachrichten und Schlagzeilen',
+      'Social-Media-Sentiment (Erwähnungen, Stimmung)',
+      'On-Chain-Daten wie aktive Adressen und Nettoflüsse',
+      'Derivate-Daten, z. B. Funding Rates'
+    ]
+  },
+  {
+    title: 'Sentiment-Score & Vertrauen',
+    description:
+      'Der resultierende Sentiment-Score bewegt sich zwischen 0 und 1 und wird durch einen Vertrauenswert ergänzt.',
+    bullets: [
+      'Scores nahe 0 zeigen bearishe Stimmung, Scores nahe 1 bullishe Stimmung.',
+      'Der Vertrauenswert hilft, Schwankungen und Rauschen einzuschätzen.',
+      'Wir veröffentlichen die Daten transparent und nachvollziehbar für Trader und Analysten.'
+    ]
+  }
+];
 
 export default function MethodikPage() {
-  const content = methodikContent.de;
   return (
-    <section className="space-y-6 py-10 px-4">
-      <header>
-        <h1 className="text-3xl font-semibold">{content.title}</h1>
-        <p className="mt-2 text-gray-600">{content.description}</p>
-      </header>
-      {content.sections.map((section) => (
-        <article key={section.title} className="space-y-2 rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-          <h2 className="text-xl font-semibold">{section.title}</h2>
-          <p className="text-sm text-gray-600">{section.description}</p>
-          <ul className="list-disc space-y-1 pl-5 text-sm text-gray-700">
-            {section.bullets.map((bullet) => (
-              <li key={bullet}>{bullet}</li>
-            ))}
-          </ul>
-        </article>
-      ))}
-      <section className="space-y-2 rounded-xl border border-dashed border-gray-300 bg-gray-50 p-4">
-        <h3 className="text-lg font-semibold">Disclaimer</h3>
-        <p className="text-sm text-gray-600">{content.disclaimer}</p>
-        <h3 className="text-lg font-semibold">Weiterentwicklung</h3>
-        <p className="text-sm text-gray-600">{content.expansion}</p>
+    <main className="min-h-screen bg-gray-50 px-6 py-16">
+      <section className="mx-auto max-w-4xl space-y-8 rounded-2xl border border-gray-200 bg-white/80 p-8 shadow-sm">
+        <header className="space-y-3">
+          <p className="text-sm uppercase tracking-[0.3em] text-gray-400">Methodik</p>
+          <h1 className="text-4xl font-semibold text-gray-900">Unsere Methodik</h1>
+        </header>
+        <div className="space-y-6">
+          {sections.map((section) => (
+            <article key={section.title} className="space-y-3 rounded-xl border border-gray-100 bg-gray-50/60 p-5 shadow-sm">
+              <div className="space-y-2">
+                <h2 className="text-2xl font-semibold text-gray-900">{section.title}</h2>
+                <p className="text-sm text-gray-700">{section.description}</p>
+              </div>
+              <ul className="list-disc space-y-2 pl-5 text-sm text-gray-700">
+                {section.bullets.map((bullet) => (
+                  <li key={bullet}>{bullet}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+        <p className="text-sm text-gray-500">Diese Seite dient ausschließlich Informationszwecken.</p>
       </section>
-    </section>
+    </main>
   );
 }

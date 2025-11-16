@@ -1,16 +1,34 @@
 import type { MetadataRoute } from 'next';
-import { methodPageSlug } from 'lib/methodPages';
 
 const BASE_URL = process.env.APP_BASE_URL ?? 'https://krypto-sentiment-site.com';
-const LOCALES: Array<'de' | 'en'> = ['de', 'en'];
+const ENTRIES = [
+  '/en',
+  '/en/news',
+  '/en/methodology',
+  '/en/coins',
+  '/en/coins/btc',
+  '/en/coins/eth',
+  '/en/coins/sol',
+  '/en/data',
+  '/en/learn',
+  '/en/about',
+  '/en/contact',
+  '/de',
+  '/de/news',
+  '/de/methodik',
+  '/de/coins',
+  '/de/coins/btc',
+  '/de/coins/eth',
+  '/de/coins/sol',
+  '/de/daten',
+  '/de/lernen',
+  '/de/ueber-uns',
+  '/de/kontakt'
+];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
   const base = new URL(BASE_URL);
-  const entries: string[] = [];
-  LOCALES.forEach((locale) => {
-    entries.push(`/${locale}/news`);
-    entries.push(`/${locale}/news`);
-    entries.push(`/${locale}/${methodPageSlug[locale]}`);
-  });
-  return entries.map((path) => ({ url: new URL(path, base).toString() }));
+  return ENTRIES.map((path) => ({
+    url: new URL(path, base).toString()
+  }));
 }
