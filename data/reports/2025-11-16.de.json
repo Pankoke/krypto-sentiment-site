@@ -1,0 +1,82 @@
+{
+  "date": "2025-11-16",
+  "universe": [
+    "ETH",
+    "BTC",
+    "SOL",
+    "XRP"
+  ],
+  "assets": [
+    {
+      "symbol": "ETH",
+      "sentiment": "bullish",
+      "score": 0.78,
+      "confidence": 0.9,
+      "rationale": "Positive Nachrichten um Ethereum Layer-2-Entwicklung und steigende On-Chain-Aktivität nach Dencun-Upgrade; Community-Engagement bezüglich Layer-1-Infrastruktur ist ebenfalls hoch.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Dencun-Upgrade reduziert L2-Gebühren, Rollups melden steigende Aktivität."
+        },
+        {
+          "source": "social",
+          "evidence": "Community diskutiert frische Finanzierungsrunden für Layer-1-Infrastruktur."
+        }
+      ]
+    },
+    {
+      "symbol": "BTC",
+      "sentiment": "bullish",
+      "score": 0.82,
+      "confidence": 0.9,
+      "rationale": "Starke ETF-Zuflüsse und positive Social-Media-Trends zu Whale-Aktivitäten und traditionellen Börsenflüssen.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Bitcoin-ETF-Zuflüsse steigen über 250 Mio. USD."
+        },
+        {
+          "source": "social",
+          "evidence": "Whale-Muster zeigen Anhäufung, traditionelle Börsen verzeichnen Zuflüsse."
+        }
+      ]
+    },
+    {
+      "symbol": "SOL",
+      "sentiment": "neutral",
+      "score": 0.55,
+      "confidence": 0.8,
+      "rationale": "Aktivität bei Memecoins und On-Chain-Aktivität wird durch Nachrichten über wachsende Solana-Infrastruktur ausgeglichen.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Infrastrukturfirmen berichten von erhöhtem Validator-Engagement."
+        },
+        {
+          "source": "social",
+          "evidence": "SOL-Memecoins bringen wieder Volumen."
+        }
+      ]
+    },
+    {
+      "symbol": "XRP",
+      "sentiment": "bullish",
+      "score": 0.65,
+      "confidence": 0.85,
+      "rationale": "Partnerschaften mit Zahlungsdienstleistern und positive On-Chain-Signale.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Ripple kündigt neue Partnerschaften mit Zahlungsdienstleistern an."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Brücken melden Mittelzuflüsse in Smart-Contracts."
+        }
+      ]
+    }
+  ],
+  "macro_summary": "Kryptomärkte zeigen insgesamt positive Aktivität mit signifikanten Zuflüssen in Bitcoin-ETFs und starker Entwicklung im Ethereum-Ökosystem. Solana bleibt durchwachsen, während XRP sich positive Partnereffekte zunutze macht.",
+  "method_note": "Analyse basiert auf einer gewichteten Aggregation aus Social-Media-Trends, Nachrichtenwirkung und On-Chain-Daten. Scores leiten sich von Wichtigkeit und Engagement der Quellen ab.",
+  "locale": "de"
+}
