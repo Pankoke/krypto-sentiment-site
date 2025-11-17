@@ -1,94 +1,70 @@
 {
   "date": "2025-11-17",
   "universe": [
-    "ETH",
     "BTC",
+    "ETH",
     "SOL",
     "XRP"
   ],
   "assets": [
     {
-      "symbol": "ETH",
+      "symbol": "BTC",
       "sentiment": "bullish",
-      "score": 0.7,
-      "confidence": 0.85,
-      "rationale": "Positive Signale durch Layer-2-Wachstum und steigende On-Chain-Aktivität. Finanzierungsdiskussionen für Layer 1 und Engagement bei Stablecoin-Balances unterstützen optimistische Stimmung.",
+      "score": 0.8,
+      "confidence": 0.9,
+      "rationale": "Starke institutionelle und Miner-Aktivitäten sowie positive ETF-Flüsse deuten auf bullishes Momentum hin.",
       "top_signals": [
         {
           "source": "news",
-          "evidence": "Ethereum Layer-2-Ökosystem gewinnt Tempo durch Dencun-Upgrade."
-        },
-        {
-          "source": "onchain",
-          "evidence": "Aktive Adressen steigen, Staking-Quote stabil."
+          "evidence": "ETF-Flüsse und Miner-Erlöse im Blick"
         },
         {
           "source": "social",
-          "evidence": "Community diskutiert frische Finanzierungsrunden für Layer-1-Infrastruktur."
+          "evidence": "ETF-Narrativ lebt weiter, institutionelle Käufer bleiben aktiv"
         }
       ]
     },
     {
-      "symbol": "BTC",
-      "sentiment": "bullish",
-      "score": 0.75,
-      "confidence": 0.9,
-      "rationale": "Starke ETF-Zuflüsse und positive Wahrnehmung als sicherer Hafen bei gleichzeitiger Reduktion der Exchange-Reserven sind positiv zu werten.",
+      "symbol": "ETH",
+      "sentiment": "neutral",
+      "score": 0.5,
+      "confidence": 0.7,
+      "rationale": "Zuwachs bei Layer-2-Adoption, aber gemischte Performance bezüglich Transaktionsdurchsatz.",
       "top_signals": [
         {
           "source": "news",
-          "evidence": "Bitcoin-ETF-Zuflüsse steigen über 250 Mio. USD."
-        },
-        {
-          "source": "onchain",
-          "evidence": "Netto-Abflüsse von Exchanges lassen Reserven schrumpfen."
-        },
-        {
-          "source": "social",
-          "evidence": "ETF-Narrativ lebt weiter, institutionelle Käufer bleiben aktiv."
+          "evidence": "Ethereum Layer-2-Ökosystem gewinnt Tempo"
         }
       ]
     },
     {
       "symbol": "SOL",
       "sentiment": "bullish",
-      "score": 0.72,
-      "confidence": 0.87,
-      "rationale": "Wachsendes Interesse an Infrastruktur und starke On-Chain-Kennzahlen wie steigende Adressanzahl und DEX-Volumen.",
+      "score": 0.7,
+      "confidence": 0.85,
+      "rationale": "Erhöhtes Validator-Engagement und starke On-Chain-Kennzahlen.",
       "top_signals": [
         {
           "source": "news",
-          "evidence": "Solana-Infrastruktur verzeichnet Wachstum."
-        },
-        {
-          "source": "onchain",
-          "evidence": "Neue Adressen und hohe TPS, DEX-Volumen plus 7% d/d."
-        },
-        {
-          "source": "social",
-          "evidence": "Dezentrale Projekte setzen auf Solana für Releases in Q4."
+          "evidence": "Solana-Infrastruktur verzeichnet Wachstum"
         }
       ]
     },
     {
       "symbol": "XRP",
-      "sentiment": "neutral",
-      "score": 0.5,
-      "confidence": 0.75,
-      "rationale": "Kooperation mit Zahlungsdienstleistern positiv, jedoch fehlen bedeutende On-Chain- oder Social-Signale für eine bullische Einschätzung.",
+      "sentiment": "bullish",
+      "score": 0.75,
+      "confidence": 0.8,
+      "rationale": "Kooperationen mit Zahlungsdienstleistern und hohe On-Chain-Sicherheit stärken das Vertrauen.",
       "top_signals": [
         {
           "source": "news",
-          "evidence": "Ripple kooperiert mit Zahlungsdienstleistern."
-        },
-        {
-          "source": "onchain",
-          "evidence": "Brücken und Validatoren aktiv mit Mittelzuflüssen."
+          "evidence": "Ripple kooperiert mit Zahlungsdienstleistern"
         }
       ]
     }
   ],
-  "macro_summary": "Mehrere bullische Signale am Krypto-Markt, geprägt durch positive On-Chain-Daten und institutionelles Interesse, besonders im ETF-Bereich.",
-  "method_note": "Die Analyse basiert auf aggregierten Daten zu Nachrichten, Social-Media-Interaktionen und On-Chain-Aktivitäten. Jede Datenquelle wird hinsichtlich ihrer Relevanz und ihres Einflusses auf die Marktstimmung bewertet.",
+  "macro_summary": "Der Kryptomarkt zeigt sich robust, mit Bitcoin als sicherem Hafen und steigender Institutionenbeteiligung. Ethereum und Solana erfahren zunehmendes Interesse im Bereich Layer-2 und Infrastruktur, während Ripple von neuen Kooperationen profitiert.",
+  "method_note": "Der Bericht basiert auf aggregierten Signalen aus sozialen Medien, Nachrichten und On-Chain-Daten und berücksichtigt Engagement, Wichtigkeit und aktuelle Trends.",
   "locale": "de"
 }
