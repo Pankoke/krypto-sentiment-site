@@ -11,33 +11,29 @@
       "symbol": "BTC",
       "sentiment": "bullish",
       "score": 0.8,
-      "confidence": 0.85,
-      "rationale": "Positive Nachrichten, insbesondere über steigende Miner-Erlöse und ETFs, gepaart mit on-chain Aktivitäten wie der Bewegung großer UTXOs. Social-Media-Posts betonen Whale-Anhäufung und Austauschzuflüsse.",
+      "confidence": 0.9,
+      "rationale": "Starke institutionelle und Miner-Aktivitäten sowie positive ETF-Flüsse deuten auf bullishes Momentum hin.",
       "top_signals": [
         {
           "source": "news",
-          "evidence": "Steigende Miner-Erlöse und ETFs laut News-Impact."
+          "evidence": "ETF-Flüsse und Miner-Erlöse im Blick"
         },
         {
-          "source": "onchain",
-          "evidence": "Aktivierung großer UTXOs und Whale-Pattern laut On-Chain-Daten."
+          "source": "social",
+          "evidence": "ETF-Narrativ lebt weiter, institutionelle Käufer bleiben aktiv"
         }
       ]
     },
     {
       "symbol": "ETH",
-      "sentiment": "bullish",
-      "score": 0.75,
-      "confidence": 0.8,
-      "rationale": "Steigende aktive Adressen und ein stabiler Staking-Anteil werden durch positive News über Finanzierungsrunden für das Layer-2-Ökosystem unterstützt. Social-Media-Diskussionen über Stablecoin-Balances wirken sich zusätzlich aus.",
+      "sentiment": "neutral",
+      "score": 0.5,
+      "confidence": 0.7,
+      "rationale": "Zuwachs bei Layer-2-Adoption, aber gemischte Performance bezüglich Transaktionsdurchsatz.",
       "top_signals": [
         {
-          "source": "onchain",
-          "evidence": "Zunahme aktiver Adressen laut On-Chain-Statistiken."
-        },
-        {
           "source": "news",
-          "evidence": "Finanzierungsrunden für L2-Ökosystem laut News."
+          "evidence": "Ethereum Layer-2-Ökosystem gewinnt Tempo"
         }
       ]
     },
@@ -45,38 +41,30 @@
       "symbol": "SOL",
       "sentiment": "bullish",
       "score": 0.7,
-      "confidence": 0.75,
-      "rationale": "Anhaltendes Interesse an Memecoins und geplanten Governance-Updates. Wachstum der Infrastruktureinheiten mit erhöhter On-Chain-Aktivität stärken die bullische Stimmung weiter.",
+      "confidence": 0.85,
+      "rationale": "Erhöhtes Validator-Engagement und starke On-Chain-Kennzahlen.",
       "top_signals": [
         {
           "source": "news",
-          "evidence": "Wachstum von Infrastruktur und Validatoren laut News-Feed."
-        },
-        {
-          "source": "social",
-          "evidence": "Memecoin-Aktivität und Governance-Planungen laut Social-Media."
+          "evidence": "Solana-Infrastruktur verzeichnet Wachstum"
         }
       ]
     },
     {
       "symbol": "XRP",
-      "sentiment": "neutral",
-      "score": 0.5,
-      "confidence": 0.7,
-      "rationale": "Steigendes On-Chain-Volumen und Sicherheitsmaßnahmen im Vordergrund. Ripple-Kooperationen beeinflussen das Sentiment neutral mit leicht positiven Tendenzen.",
+      "sentiment": "bullish",
+      "score": 0.75,
+      "confidence": 0.8,
+      "rationale": "Kooperationen mit Zahlungsdienstleistern und hohe On-Chain-Sicherheit stärken das Vertrauen.",
       "top_signals": [
         {
           "source": "news",
-          "evidence": "Ripple-Kooperation und erhöhte Sicherheit laut News."
-        },
-        {
-          "source": "onchain",
-          "evidence": "Zufluss in Smart-Contracts und Brücken-Aktivität laut On-Chain-Daten."
+          "evidence": "Ripple kooperiert mit Zahlungsdienstleistern"
         }
       ]
     }
   ],
-  "macro_summary": "Krypto-Markt zeigt starke on-chain Resilienz und Wachstum der Infrastrukturen, insbesondere bei BTC und ETH, während traditionelle Märkte Unsicherheiten verzeichnen.",
-  "method_note": "Daten aus Social Media, News und On-Chain-Analysen kombiniert, um sentimentbasiertes Profiling für die wichtigsten Krypto-Assets zu entwickeln.",
+  "macro_summary": "Der Kryptomarkt zeigt sich robust, mit Bitcoin als sicherem Hafen und steigender Institutionenbeteiligung. Ethereum und Solana erfahren zunehmendes Interesse im Bereich Layer-2 und Infrastruktur, während Ripple von neuen Kooperationen profitiert.",
+  "method_note": "Der Bericht basiert auf aggregierten Signalen aus sozialen Medien, Nachrichten und On-Chain-Daten und berücksichtigt Engagement, Wichtigkeit und aktuelle Trends.",
   "locale": "en"
 }
