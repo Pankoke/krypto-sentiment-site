@@ -1,0 +1,82 @@
+{
+  "date": "2025-11-17",
+  "universe": [
+    "BTC",
+    "ETH",
+    "SOL",
+    "XRP"
+  ],
+  "assets": [
+    {
+      "symbol": "BTC",
+      "sentiment": "bullish",
+      "score": 0.8,
+      "confidence": 0.9,
+      "rationale": "Positive Berichte über ETF-Zuflüsse sowie gesteigerte On-Chain-Aktivität und institutionelle Käufe sind treibende Faktoren.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Bitcoin-ETF-Zuflüsse steigen über 250 Mio. USD."
+        },
+        {
+          "source": "social",
+          "evidence": "ETF-Narrativ lebt weiter, institutionelle Käufer bleiben aktiv."
+        }
+      ]
+    },
+    {
+      "symbol": "ETH",
+      "sentiment": "bullish",
+      "score": 0.75,
+      "confidence": 0.85,
+      "rationale": "Ethereum zeigt nach dem Dencun-Upgrade signifikante On-Chain-Aktivität, was zu steigender Relevanz im Layer-2-Bereich führt.",
+      "top_signals": [
+        {
+          "source": "onchain",
+          "evidence": "Layer-2-Transaktionen zeigen höhere Durchsätze seit dem Dencun-Upgrade."
+        },
+        {
+          "source": "news",
+          "evidence": "Dencun-Upgrade reduziert L2-Gebühren, Rollups melden steigende Aktivität."
+        }
+      ]
+    },
+    {
+      "symbol": "SOL",
+      "sentiment": "bullish",
+      "score": 0.7,
+      "confidence": 0.8,
+      "rationale": "Solana erfährt großes Interesse durch DeFi- und Infrastrukturentwicklung, unterstützt durch robustes On-Chain-Wachstum.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Solana-DeFi-TVL erreicht neues Jahreshoch."
+        },
+        {
+          "source": "social",
+          "evidence": "SOL-Memecoins bringen wieder Volumen, Token-Entwickler planen Governance-Bump."
+        }
+      ]
+    },
+    {
+      "symbol": "XRP",
+      "sentiment": "neutral",
+      "score": 0.6,
+      "confidence": 0.7,
+      "rationale": "Neue Partnerschaften in Zahlungsdiensten und stabile On-Chain-Operationen sind positiv, aber nicht signifikant genug für einen bullischen Ausblick.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Ripple kündigt neue Partnerschaften mit Zahlungsdienstleistern an."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Validatoren sichern hohe TPS bei stabilem Belohnungsfluss."
+        }
+      ]
+    }
+  ],
+  "macro_summary": "Der Krypto-Markt zeigt heute allgemein positive Signale, mit besonderem Fokus auf Bitcoin-ETF-Flüsse und Layer-2-Upgrades bei Ethereum.",
+  "method_note": "Die Sentiment-Analyse basiert auf der Gewichtung und Kombination von Social Media Insights, News-Events und On-Chain-Daten.",
+  "locale": "en"
+}

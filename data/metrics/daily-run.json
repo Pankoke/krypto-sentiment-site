@@ -1,5 +1,5 @@
 {
-  "date": "2025-11-16",
+  "date": "2025-11-17",
   "locales": [
     "de",
     "en"
@@ -8,6 +8,6 @@
   "newsItemsEN": 4,
   "assetsCount": 4,
   "partial": false,
-  "durationMs": 24506,
-  "commitSha": "7da83a7b4ec8cf5d2a1df56537ab27b1559876dc"
+  "durationMs": 26154,
+  "commitSha": "cd3e1a8f098af4537cad72b541b9b1dc8f1214c7"
 }
