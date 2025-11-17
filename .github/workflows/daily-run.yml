@@ -283,6 +283,8 @@ jobs:
             const exec = require('child_process').execSync;
             exec('git config user.name "github-actions[bot]"');
             exec('git config user.email "41898282+github-actions[bot]@users.noreply.github.com"');
+            exec('git fetch origin main');
+            exec('git reset --hard origin/main');
             exec('git add data/news data/reports data/metrics');
             const message = `chore(snapshot): daily-run ${date} de/en`;
             try {
