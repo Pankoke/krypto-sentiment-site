@@ -1,0 +1,112 @@
+{
+  "date": "2025-11-17",
+  "universe": [
+    "BTC",
+    "ETH",
+    "SOL",
+    "XRP"
+  ],
+  "assets": [
+    {
+      "symbol": "ETH",
+      "sentiment": "neutral",
+      "score": 0.58,
+      "confidence": 0.8627666666666667,
+      "rationale": "{\n  \"asset\": {\n    \"symbol\": \"ETH\",\n    \"sentiment\": \"bullish\",\n    \"score\": 0.75,\n    \"confidence\": 0.8,\n    \"rationale\": \"Das Dencun-Upgrade hat die Gebühren für Layer-2-Transaktionen gesenkt, was zu einer erhöhten Aktivität in diesem Bereich führt. Trotz der Berichte über niedrigere Durchsätze pro Transaktion zeigen die onchain-Daten eine positive Entwicklung in den Transaktionszahlen.\",\n    \"top_signals\": [\n      {\n        \"source\": \"social\",\n        \"evidence\": \"L2s berichten von deutlich niedrigeren Durchsätzen pro Transaktion.\"\n      },\n      {\n        \"source\": \"news-wire\",\n        \"evidence\": \"Dencun-Upgrade reduziert L2-Gebühren, Rollups melden steigende Aktivität.\"\n      },\n      {\n        \"source\": \"onchain\",\n        \"evidence\": \"Layer-2-Transaktionen zeigen höhere Durchsätze seit dem Dencun-Upgrade",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "L2s berichten von deutlich niedrigeren Durchsätzen pro Transaktion."
+        },
+        {
+          "source": "news-wire",
+          "evidence": "Dencun-Upgrade reduziert L2-Gebühren, Rollups melden steigende Aktivität."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Layer-2-Transaktionen zeigen höhere Durchsätze seit dem Dencun-Upgrade."
+        }
+      ]
+    },
+    {
+      "symbol": "SOL",
+      "sentiment": "neutral",
+      "score": 0.58,
+      "confidence": 1,
+      "rationale": "{\n  \"asset\": {\n    \"symbol\": \"SOL\",\n    \"sentiment\": \"bullish\",\n    \"score\": 0.8,\n    \"confidence\": 0.75,\n    \"rationale\": \"Die aktuellen Entwicklungen im Bereich der Memecoins und die Pläne der Token-Entwickler für Governance-Verbesserungen deuten auf ein wachsendes Interesse und Engagement in der Community hin. Zudem berichten Infrastrukturfirmen von einem Anstieg des Validator-Engagements, was auf eine positive On-Chain-Aktivität hindeutet.\",\n    \"top_signals\": [\n      {\n        \"source\": \"social\",\n        \"evidence\": \"SOL-Memecoins bringen wieder Volumen, Token-Entwickler planen Governance-Bump.\"\n      },\n      {\n        \"source\": \"social\",\n        \"evidence\": \"Community diskutiert frische Finanzierungsrunden für Layer-1-Infrastruktur.\"\n      },\n      {\n        \"source\": \"news-wire\",\n        \"evidence\": \"Infrastrukturfir",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "SOL-Memecoins bringen wieder Volumen, Token-Entwickler planen Governance-Bump."
+        },
+        {
+          "source": "social",
+          "evidence": "Community diskutiert frische Finanzierungsrunden für Layer-1-Infrastruktur."
+        },
+        {
+          "source": "news-wire",
+          "evidence": "Infrastrukturfirmen berichten von erhöhtem Validator-Engagement."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Validatoren sehen steigende Votes und On-Chain-Aktivität."
+        }
+      ]
+    },
+    {
+      "symbol": "XRP",
+      "sentiment": "neutral",
+      "score": 0.58,
+      "confidence": 0.8107,
+      "rationale": "{\n  \"asset\": [\n    {\n      \"symbol\": \"BTC\",\n      \"sentiment\": \"bullish\",\n      \"score\": 0.8,\n      \"confidence\": 0.75,\n      \"rationale\": \"Die Beobachtungen von Stablecoin-Balances in Verbindung mit BTC-Zuflüssen deuten auf ein wachsendes Interesse und potenzielle Käufe hin. Zudem gibt es positive Hinweise auf bevorstehende Scaling-Updates, die die Effizienz des Netzwerks verbessern könnten.\",\n      \"top_signals\": [\n        { \"source\": \"social\", \"evidence\": \"Council Minutes geben Hinweise auf Zeitpläne für Scaling-Updates.\" },\n        { \"source\": \"social\", \"evidence\": \"Trader beobachten Stablecoin-Balances parallel zu BTC-Zuflüssen.\" }\n      ]\n    },\n    {\n      \"symbol\": \"XRP\",\n      \"sentiment\": \"bullish\",\n      \"score\": 0.7,\n      \"confidence\": 0.8,\n      \"rationale\": \"Die An",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "Council Minutes geben Hinweise auf Zeitpläne für Scaling-Updates."
+        },
+        {
+          "source": "social",
+          "evidence": "Trader beobachten Stablecoin-Balances parallel zu BTC-Zuflüssen."
+        },
+        {
+          "source": "news-wire",
+          "evidence": "Ripple kündigt neue Partnerschaften mit Zahlungsdienstleistern an."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Validatoren sichern hohe TPS bei stabilem Belohnungsfluss."
+        }
+      ]
+    },
+    {
+      "symbol": "BTC",
+      "sentiment": "neutral",
+      "score": 0.5,
+      "confidence": 0.8840333333333333,
+      "rationale": "{\n  \"asset\": {\n    \"symbol\": \"BTC\",\n    \"sentiment\": \"bullish\",\n    \"score\": 0.8,\n    \"confidence\": 0.85,\n    \"rationale\": \"Das ETF-Narrativ und die aktive Teilnahme institutioneller Käufer stärken das Vertrauen in Bitcoin. Zudem berichten Miner von steigenden Erlösen, was auf eine gesunde Netzwerkaktivität hinweist. Netto-Abflüsse von Exchanges deuten darauf hin, dass Anleger Bitcoin halten, während die makroökonomischen Bedingungen Bitcoin als sicheren Hafen positionieren.\",\n    \"top_signals\": [\n      { \"source\": \"social\", \"evidence\": \"ETF-Narrativ lebt weiter, institutionelle Käufer bleiben aktiv.\" },\n      { \"source\": \"news-wire\", \"evidence\": \"Miner melden steigende Erlöse bei stabiler Hashrate.\" },\n      { \"source\": \"onchain\", \"evidence\": \"Netto-Abflüsse von Exchanges lassen Reserven schrumpfen.\" },\n      { \"source\": \"news-wire\", \"evidence",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "ETF-Narrativ lebt weiter, institutionelle Käufer bleiben aktiv."
+        },
+        {
+          "source": "news-wire",
+          "evidence": "Miner melden steigende Erlöse bei stabiler Hashrate."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Netto-Abflüsse von Exchanges lassen Reserven schrumpfen."
+        },
+        {
+          "source": "news-wire",
+          "evidence": "Makro-Analysten sehen Bitcoin als sicheren Hafen während traditioneller Märkte schwächeln."
+        }
+      ]
+    }
+  ],
+  "method_note": "Aggregierte Signale aus Social, News und Onchain.",
+  "adapterWarnings": [],
+  "uniqueAssets": 4,
+  "dedupeCount": 0,
+  "locale": "de"
+}

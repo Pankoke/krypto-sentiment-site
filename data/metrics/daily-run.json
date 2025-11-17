@@ -1,10 +1,13 @@
 {
-  "date": "2025-11-15",
-  "locales": ["de", "en"],
+  "date": "2025-11-17",
+  "locales": [
+    "de",
+    "en"
+  ],
   "newsItemsDE": 4,
   "newsItemsEN": 4,
   "assetsCount": 4,
   "partial": false,
-  "durationMs": 52428,
-  "commitSha": "836449283c67a499e6f65304d36db8f6f858abb0"
+  "durationMs": 27086,
+  "commitSha": "f5830accb68fd246c2166f1416dd142b42844c3b"
 }

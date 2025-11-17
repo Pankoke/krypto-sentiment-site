@@ -1,0 +1,82 @@
+{
+  "date": "2025-11-16",
+  "universe": [
+    "BTC",
+    "ETH",
+    "XRP",
+    "SOL"
+  ],
+  "assets": [
+    {
+      "symbol": "BTC",
+      "sentiment": "bullish",
+      "score": 0.8,
+      "confidence": 0.9,
+      "rationale": "Rising miner revenues and shrinking exchange reserves indicate positive sentiment; ETF flows suggest institutional interest.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "ETF-Flüsse und Miner-Erlöse im Blick"
+        },
+        {
+          "source": "onchain",
+          "evidence": "Netto-Abflüsse von Exchanges lassen Reserven schrumpfen."
+        }
+      ]
+    },
+    {
+      "symbol": "ETH",
+      "sentiment": "bullish",
+      "score": 0.75,
+      "confidence": 0.85,
+      "rationale": "Increased Layer-2 activity post-Dencun upgrade and reduced fees are increasing user engagement.",
+      "top_signals": [
+        {
+          "source": "onchain",
+          "evidence": "Ethereum On-Chain-Activity klettert"
+        },
+        {
+          "source": "news",
+          "evidence": "Ethereum Layer-2-Ökosystem gewinnt Tempo"
+        }
+      ]
+    },
+    {
+      "symbol": "XRP",
+      "sentiment": "bullish",
+      "score": 0.7,
+      "confidence": 0.8,
+      "rationale": "Partnerships with payment providers and increased on-chain security boost confidence.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Ripple kooperiert mit Zahlungsdienstleistern"
+        },
+        {
+          "source": "onchain",
+          "evidence": "Brücken melden Mittelzuflüsse in Smart-Contracts."
+        }
+      ]
+    },
+    {
+      "symbol": "SOL",
+      "sentiment": "bullish",
+      "score": 0.75,
+      "confidence": 0.85,
+      "rationale": "Growth in infrastructure and on-chain metrics support positive outlook.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Solana-Infrastruktur verzeichnet Wachstum"
+        },
+        {
+          "source": "onchain",
+          "evidence": "Solana On-Chain-Kennzahlen bleiben stark"
+        }
+      ]
+    }
+  ],
+  "macro_summary": "Overall market sentiment is positive, driven by strong on-chain and partnership activities across key assets.",
+  "method_note": "Sentiment analysis based on social engagement, news coverage, and on-chain activity indicators.",
+  "locale": "en"
+}

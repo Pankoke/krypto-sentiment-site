@@ -1,92 +1,108 @@
 {
-  "date": "2025-11-15",
-  "universe": ["ETH", "BTC", "SOL", "XRP"],
+  "date": "2025-11-16",
+  "universe": [
+    "BTC",
+    "ETH",
+    "SOL",
+    "XRP"
+  ],
   "assets": [
     {
-      "symbol": "ETH",
+      "symbol": "BTC",
       "sentiment": "bullish",
-      "score": 0.85,
-      "confidence": 0.9,
-      "rationale": "Positive momentum from higher Layer-2 activity and sustainably low fees. Analysts praise the infrastructure stabilization.",
+      "score": 0.66,
+      "confidence": 1,
+      "rationale": "{\n  \"asset\": [\n    {\n      \"symbol\": \"BTC\",\n      \"sentiment\": \"bullish\",\n      \"score\": 0.8,\n      \"confidence\": 0.75,\n      \"rationale\": \"Das ETF-Narrativ bleibt stark, was auf ein wachsendes institutionelles Interesse hinweist. Zudem berichten Miner von steigenden Erlösen, was die Marktstimmung positiv beeinflusst.\",\n      \"top_signals\": [\n        { \"source\": \"social\", \"evidence\": \"ETF-Narrativ lebt weiter, institutionelle Käufer bleiben aktiv.\" },\n        { \"source\": \"news-wire\", \"evidence\": \"Miner melden steigende Erlöse bei stabiler Hashrate.\" },\n        { \"source\": \"onchain\", \"evidence\": \"Netto-Abflüsse von Exchanges lassen Reserven schrumpfen.\" }\n      ]\n    },\n    {\n      \"symbol\": \"ETH\",\n      \"sentiment\": \"bullish\",\n      \"score\": 0.7,\n      \"confidence\": 0.7,",
       "top_signals": [
         {
           "source": "social",
-          "evidence": "Community discusses fresh funding rounds and celebrated low fees."
+          "evidence": "ETF-Narrativ lebt weiter, institutionelle Käufer bleiben aktiv."
         },
         {
-          "source": "news",
-          "evidence": "Dencun upgrade cuts L2 fees and boosts rollup engagement."
+          "source": "social",
+          "evidence": "Community diskutiert frische Finanzierungsrunden für Layer-1-Infrastruktur."
+        },
+        {
+          "source": "social",
+          "evidence": "Council Minutes geben Hinweise auf Zeitpläne für Scaling-Updates."
+        },
+        {
+          "source": "news-wire",
+          "evidence": "Miner melden steigende Erlöse bei stabiler Hashrate."
         },
         {
           "source": "onchain",
-          "evidence": "Layer-2 transaction counts climb since Dencun."
+          "evidence": "Netto-Abflüsse von Exchanges lassen Reserven schrumpfen."
         }
       ]
     },
     {
-      "symbol": "BTC",
-      "sentiment": "bullish",
-      "score": 0.8,
-      "confidence": 0.85,
-      "rationale": "Strong accumulation patterns and inflows from traditional exchanges underline a resilient safe-haven narrative.",
+      "symbol": "ETH",
+      "sentiment": "neutral",
+      "score": 0.58,
+      "confidence": 0.7879666666666667,
+      "rationale": "{\n  \"asset\": {\n    \"symbol\": \"ETH\",\n    \"sentiment\": \"bullish\",\n    \"score\": 0.7,\n    \"confidence\": 0.8,\n    \"rationale\": \"Das Dencun-Upgrade hat zu einer Reduzierung der L2-Gebühren geführt, was die Nutzung von Layer-2-Lösungen fördert. Gleichzeitig zeigen die Onchain-Daten eine steigende Aktivität bei Rollups, was auf ein wachsendes Interesse und höhere Durchsätze hinweist.\",\n    \"top_signals\": [\n      {\n        \"source\": \"social\",\n        \"evidence\": \"L2s berichten von deutlich niedrigeren Durchsätzen pro Transaktion.\"\n      },\n      {\n        \"source\": \"onchain\",\n        \"evidence\": \"Layer-2-Transaktionen zeigen höhere Durchsätze seit dem Dencun-Upgrade.\"\n      },\n      {\n        \"source\": \"news-wire\",\n        \"evidence\": \"Dencun-Upgrade reduziert L2-Gebühren, Rollups melden",
       "top_signals": [
         {
           "source": "social",
-          "evidence": "Whale implications show steady accumulation."
-        },
-        {
-          "source": "news",
-          "evidence": "Miners report rising yields while analysts call BTC a shelter asset."
+          "evidence": "L2s berichten von deutlich niedrigeren Durchsätzen pro Transaktion."
         },
         {
           "source": "onchain",
-          "evidence": "Large UTXO activity reactivates."
+          "evidence": "Layer-2-Transaktionen zeigen höhere Durchsätze seit dem Dencun-Upgrade."
+        },
+        {
+          "source": "news-wire",
+          "evidence": "Dencun-Upgrade reduziert L2-Gebühren, Rollups melden steigende Aktivität."
         }
       ]
     },
     {
       "symbol": "SOL",
-      "sentiment": "bullish",
-      "score": 0.75,
-      "confidence": 0.8,
-      "rationale": "DeFi growth and governance updates fuel optimism across the Solana ecosystem.",
+      "sentiment": "neutral",
+      "score": 0.5,
+      "confidence": 0.8121666666666667,
+      "rationale": "{\n  \"asset\": {\n    \"symbol\": \"SOL\",\n    \"sentiment\": \"bullish\",\n    \"score\": 0.8,\n    \"confidence\": 0.75,\n    \"rationale\": \"Die steigende Aktivität im Bereich der Memecoins und die Pläne der Token-Entwickler für Governance-Verbesserungen deuten auf ein wachsendes Interesse hin. Zudem berichten Infrastrukturfirmen von einem erhöhten Validator-Engagement, was die Netzwerksicherheit und -stabilität stärkt.\",\n    \"top_signals\": [\n      {\n        \"source\": \"social\",\n        \"evidence\": \"SOL-Memecoins bringen wieder Volumen, Token-Entwickler planen Governance-Bump.\"\n      },\n      {\n        \"source\": \"news-wire\",\n        \"evidence\": \"Infrastrukturfirmen berichten von erhöhtem Validator-Engagement.\"\n      },\n      {\n        \"source\": \"onchain\",\n        \"evidence\": \"Neue Adressen und hohe TPS, DEX-Vol",
       "top_signals": [
         {
           "source": "social",
-          "evidence": "Developers plan a governance bump."
+          "evidence": "SOL-Memecoins bringen wieder Volumen, Token-Entwickler planen Governance-Bump."
         },
         {
-          "source": "news",
-          "evidence": "DeFi TVL sets a new yearly high, ecosystem volume rising."
+          "source": "news-wire",
+          "evidence": "Infrastrukturfirmen berichten von erhöhtem Validator-Engagement."
         },
         {
           "source": "onchain",
-          "evidence": "Fresh addresses, high TPS, increasing DEX volume."
+          "evidence": "Neue Adressen und hohe TPS, DEX-Volumen plus 7% d/d."
         }
       ]
     },
     {
       "symbol": "XRP",
-      "sentiment": "bullish",
-      "score": 0.7,
-      "confidence": 0.75,
-      "rationale": "Partner announcements and an active validator network keep the narrative constructive.",
+      "sentiment": "neutral",
+      "score": 0.5,
+      "confidence": 0.715,
+      "rationale": "{\n  \"assets\": [\n    {\n      \"symbol\": \"BTC\",\n      \"sentiment\": \"bullish\",\n      \"score\": 0.75,\n      \"confidence\": 0.8,\n      \"rationale\": \"Die Beobachtung von Stablecoin-Balances, die parallel zu BTC-Zuflüssen steigen, deutet auf ein wachsendes Interesse und potenzielle Käufe hin. Dies könnte auf eine positive Marktstimmung für Bitcoin hindeuten.\",\n      \"top_signals\": [\n        {\n          \"source\": \"social\",\n          \"evidence\": \"Trader beobachten Stablecoin-Balances parallel zu BTC-Zuflüssen.\"\n        }\n      ]\n    },\n    {\n      \"symbol\": \"XRP\",\n      \"sentiment\": \"bullish\",\n      \"score\": 0.7,\n      \"confidence\": 0.75,\n      \"rationale\": \"Das erhöhte Volumen bei XRP-Transaktionen zeigt, dass es eine steigende Aktivität und möglicherweise ein wachsendes Vertrauen in die On-Chain-Sicherheit",
       "top_signals": [
         {
-          "source": "news",
-          "evidence": "New partnerships with payment providers."
+          "source": "social",
+          "evidence": "Trader beobachten Stablecoin-Balances parallel zu BTC-Zuflüssen."
+        },
+        {
+          "source": "news-wire",
+          "evidence": "XRP-Transactions zeigen erhöhtes Volumen bei On-Chain-Sicherheit."
         },
         {
           "source": "onchain",
-          "evidence": "Active bridges and validators showing inflows."
+          "evidence": "Brücken melden Mittelzuflüsse in Smart-Contracts."
         }
       ]
     }
   ],
-  "method_note": "Aggregated signals from social, news and onchain sources. OpenAI fallback for XRP with heuristic rationale.",
+  "method_note": "Aggregierte Signale aus Social, News und Onchain.",
   "adapterWarnings": [],
   "uniqueAssets": 4,
   "dedupeCount": 0,
-  "locale": "en",
-  "generatedAt": "2025-11-15T06:00:00.000Z"
+  "locale": "en"
 }
