@@ -1,69 +1,69 @@
 {
   "date": "2025-11-17",
   "universe": [
+    "SOL",
     "BTC",
     "ETH",
-    "SOL",
     "XRP"
   ],
   "assets": [
     {
-      "symbol": "BTC",
+      "symbol": "SOL",
       "sentiment": "bullish",
-      "score": 0.8,
-      "confidence": 0.9,
-      "rationale": "Positive Berichte über ETF-Zuflüsse sowie gesteigerte On-Chain-Aktivität und institutionelle Käufe sind treibende Faktoren.",
+      "score": 0.75,
+      "confidence": 0.7,
+      "rationale": "Positive Nachrichten über Infrastrukturwachstum und erhöhtes Validator-Engagement. On-Chain-Daten unterstützen die gestiegene Aktivität.",
       "top_signals": [
         {
           "source": "news",
-          "evidence": "Bitcoin-ETF-Zuflüsse steigen über 250 Mio. USD."
+          "evidence": "Solana-Infrastruktur verzeichnet Wachstum"
         },
         {
-          "source": "social",
-          "evidence": "ETF-Narrativ lebt weiter, institutionelle Käufer bleiben aktiv."
+          "source": "onchain",
+          "evidence": "Solana On-Chain-Kennzahlen bleiben stark"
+        }
+      ]
+    },
+    {
+      "symbol": "BTC",
+      "sentiment": "bullish",
+      "score": 0.8,
+      "confidence": 0.75,
+      "rationale": "Positive Nachrichten zur Rolle von BTC als sicherem Hafen und institutionelle ETF-Interessen. On-Chain-Reduzierung von Exchange-Reserven deutet auf Halteverhalten hin.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Makro-Analysten sehen Bitcoin als sicheren Hafen."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Netto-Abflüsse von Exchanges lassen Reserven schrumpfen."
         }
       ]
     },
     {
       "symbol": "ETH",
       "sentiment": "bullish",
-      "score": 0.75,
-      "confidence": 0.85,
-      "rationale": "Ethereum zeigt nach dem Dencun-Upgrade signifikante On-Chain-Aktivität, was zu steigender Relevanz im Layer-2-Bereich führt.",
+      "score": 0.7,
+      "confidence": 0.7,
+      "rationale": "Dencun-Upgrade führt zu reduzierten Gebühren und erhöhter Layer-2-Aktivität. Soziale Medien berichten von erhöhten Transaktionen.",
       "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Dencun-Upgrade reduziert L2-Gebühren"
+        },
         {
           "source": "onchain",
-          "evidence": "Layer-2-Transaktionen zeigen höhere Durchsätze seit dem Dencun-Upgrade."
-        },
-        {
-          "source": "news",
-          "evidence": "Dencun-Upgrade reduziert L2-Gebühren, Rollups melden steigende Aktivität."
-        }
-      ]
-    },
-    {
-      "symbol": "SOL",
-      "sentiment": "bullish",
-      "score": 0.7,
-      "confidence": 0.8,
-      "rationale": "Solana erfährt großes Interesse durch DeFi- und Infrastrukturentwicklung, unterstützt durch robustes On-Chain-Wachstum.",
-      "top_signals": [
-        {
-          "source": "news",
-          "evidence": "Solana-DeFi-TVL erreicht neues Jahreshoch."
-        },
-        {
-          "source": "social",
-          "evidence": "SOL-Memecoins bringen wieder Volumen, Token-Entwickler planen Governance-Bump."
+          "evidence": "Layer-2-Transaktionen zeigen höhere Durchsätze seit dem Dencun-Upgrade"
         }
       ]
     },
     {
       "symbol": "XRP",
       "sentiment": "neutral",
-      "score": 0.6,
-      "confidence": 0.7,
-      "rationale": "Neue Partnerschaften in Zahlungsdiensten und stabile On-Chain-Operationen sind positiv, aber nicht signifikant genug für einen bullischen Ausblick.",
+      "score": 0.55,
+      "confidence": 0.6,
+      "rationale": "XRP zeigt einerseits starke On-Chain-Aktivität und Partnerschaften, jedoch weniger soziales Engagement im Vergleich zu anderen Assets.",
       "top_signals": [
         {
           "source": "news",
@@ -71,12 +71,12 @@
         },
         {
           "source": "onchain",
-          "evidence": "Validatoren sichern hohe TPS bei stabilem Belohnungsfluss."
+          "evidence": "Ripple Brücken und Validatoren aktiv"
         }
       ]
     }
   ],
-  "macro_summary": "Der Krypto-Markt zeigt heute allgemein positive Signale, mit besonderem Fokus auf Bitcoin-ETF-Flüsse und Layer-2-Upgrades bei Ethereum.",
-  "method_note": "Die Sentiment-Analyse basiert auf der Gewichtung und Kombination von Social Media Insights, News-Events und On-Chain-Daten.",
+  "macro_summary": "Der Kryptomarkt zeigt insgesamt in letzter Zeit positive Tendenzen, unterstützt durch Makrotrends und technologischen Fortschritt bei Layer-1- und Layer-2-Protokollen.",
+  "method_note": "Der Bericht basiert auf aggregierten Daten aus sozialen Medien, Nachrichtenquellen und On-Chain-Analysen, um umfassende Einblicke in die Marktdynamik zu bieten.",
   "locale": "de"
 }
