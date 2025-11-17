@@ -227,6 +227,9 @@ jobs:
           const TARGET_URL = env.TARGET_URL;
           const CRON_SECRET = env.CRON_SECRET;
           const GITHUB_TOKEN = env.GITHUB_TOKEN;
+          const exec = require('child_process').execSync;
+          exec('git fetch origin main');
+          exec('git reset --hard origin/main');
           if (!TARGET_URL || !CRON_SECRET || !GITHUB_TOKEN) {
             console.error('Missing TARGET_URL, CRON_SECRET or GITHUB_TOKEN');
             exit(1);
@@ -280,11 +283,8 @@ jobs:
               partial: metrics.partial,
             });
 
-            const exec = require('child_process').execSync;
             exec('git config user.name "github-actions[bot]"');
             exec('git config user.email "41898282+github-actions[bot]@users.noreply.github.com"');
-            exec('git fetch origin main');
-            exec('git reset --hard origin/main');
             exec('git add data/news data/reports data/metrics');
             const message = `chore(snapshot): daily-run ${date} de/en`;
             const status = exec('git status --porcelain').toString().trim();
