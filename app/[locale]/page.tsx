@@ -158,9 +158,20 @@ const copy = {
   }
 } as const;
 
-export const generateMetadata = ({ params }: { params: { locale: 'de' | 'en' } }): Metadata => {
-  const localeCopy = copy[params.locale];
-  const canonical = `${BASE_URL}/${params.locale}`;
+const supportedLocales = ['de', 'en'] as const;
+type LocaleKey = typeof supportedLocales[number];
+
+function resolveLocale(locale?: string): LocaleKey {
+  return supportedLocales.includes(locale as LocaleKey) ? (locale as LocaleKey) : 'de';
+}
+
+function getLocaleCopy(locale?: string) {
+  return copy[resolveLocale(locale)];
+}
+
+export const generateMetadata = ({ params }: { params: { locale: string } }): Metadata => {
+  const localeCopy = getLocaleCopy(params.locale);
+  const canonical = `${BASE_URL}/${resolveLocale(params.locale)}`;
   return {
     title: localeCopy.metaTitle,
     description: localeCopy.metaDescription,
@@ -168,8 +179,8 @@ export const generateMetadata = ({ params }: { params: { locale: 'de' | 'en' } }
   };
 };
 
-export default function LocaleRootPage({ params }: { params: { locale: 'de' | 'en' } }) {
-  const localeCopy = copy[params.locale];
+export default function LocaleRootPage({ params }: { params: { locale: string } }) {
+  const localeCopy = getLocaleCopy(params.locale);
 
   return (
     <main className="min-h-screen bg-gray-50 py-16">
