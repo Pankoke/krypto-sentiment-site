@@ -1,60 +1,72 @@
 {
   "date": "2025-11-17",
   "universe": [
-    "BTC",
     "ETH",
+    "BTC",
     "SOL",
     "XRP"
   ],
   "assets": [
     {
-      "symbol": "BTC",
+      "symbol": "ETH",
       "sentiment": "bullish",
-      "score": 0.8,
+      "score": 0.7,
       "confidence": 0.85,
-      "rationale": "Positive Nachrichten, insbesondere über steigende Miner-Erlöse und ETFs, gepaart mit on-chain Aktivitäten wie der Bewegung großer UTXOs. Social-Media-Posts betonen Whale-Anhäufung und Austauschzuflüsse.",
+      "rationale": "Positive Signale durch Layer-2-Wachstum und steigende On-Chain-Aktivität. Finanzierungsdiskussionen für Layer 1 und Engagement bei Stablecoin-Balances unterstützen optimistische Stimmung.",
       "top_signals": [
         {
           "source": "news",
-          "evidence": "Steigende Miner-Erlöse und ETFs laut News-Impact."
+          "evidence": "Ethereum Layer-2-Ökosystem gewinnt Tempo durch Dencun-Upgrade."
         },
         {
           "source": "onchain",
-          "evidence": "Aktivierung großer UTXOs und Whale-Pattern laut On-Chain-Daten."
+          "evidence": "Aktive Adressen steigen, Staking-Quote stabil."
+        },
+        {
+          "source": "social",
+          "evidence": "Community diskutiert frische Finanzierungsrunden für Layer-1-Infrastruktur."
         }
       ]
     },
     {
-      "symbol": "ETH",
+      "symbol": "BTC",
       "sentiment": "bullish",
       "score": 0.75,
-      "confidence": 0.8,
-      "rationale": "Steigende aktive Adressen und ein stabiler Staking-Anteil werden durch positive News über Finanzierungsrunden für das Layer-2-Ökosystem unterstützt. Social-Media-Diskussionen über Stablecoin-Balances wirken sich zusätzlich aus.",
+      "confidence": 0.9,
+      "rationale": "Starke ETF-Zuflüsse und positive Wahrnehmung als sicherer Hafen bei gleichzeitiger Reduktion der Exchange-Reserven sind positiv zu werten.",
       "top_signals": [
         {
-          "source": "onchain",
-          "evidence": "Zunahme aktiver Adressen laut On-Chain-Statistiken."
+          "source": "news",
+          "evidence": "Bitcoin-ETF-Zuflüsse steigen über 250 Mio. USD."
         },
         {
-          "source": "news",
-          "evidence": "Finanzierungsrunden für L2-Ökosystem laut News."
+          "source": "onchain",
+          "evidence": "Netto-Abflüsse von Exchanges lassen Reserven schrumpfen."
+        },
+        {
+          "source": "social",
+          "evidence": "ETF-Narrativ lebt weiter, institutionelle Käufer bleiben aktiv."
         }
       ]
     },
     {
       "symbol": "SOL",
       "sentiment": "bullish",
-      "score": 0.7,
-      "confidence": 0.75,
-      "rationale": "Anhaltendes Interesse an Memecoins und geplanten Governance-Updates. Wachstum der Infrastruktureinheiten mit erhöhter On-Chain-Aktivität stärken die bullische Stimmung weiter.",
+      "score": 0.72,
+      "confidence": 0.87,
+      "rationale": "Wachsendes Interesse an Infrastruktur und starke On-Chain-Kennzahlen wie steigende Adressanzahl und DEX-Volumen.",
       "top_signals": [
         {
           "source": "news",
-          "evidence": "Wachstum von Infrastruktur und Validatoren laut News-Feed."
+          "evidence": "Solana-Infrastruktur verzeichnet Wachstum."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Neue Adressen und hohe TPS, DEX-Volumen plus 7% d/d."
         },
         {
           "source": "social",
-          "evidence": "Memecoin-Aktivität und Governance-Planungen laut Social-Media."
+          "evidence": "Dezentrale Projekte setzen auf Solana für Releases in Q4."
         }
       ]
     },
@@ -62,21 +74,21 @@
       "symbol": "XRP",
       "sentiment": "neutral",
       "score": 0.5,
-      "confidence": 0.7,
-      "rationale": "Steigendes On-Chain-Volumen und Sicherheitsmaßnahmen im Vordergrund. Ripple-Kooperationen beeinflussen das Sentiment neutral mit leicht positiven Tendenzen.",
+      "confidence": 0.75,
+      "rationale": "Kooperation mit Zahlungsdienstleistern positiv, jedoch fehlen bedeutende On-Chain- oder Social-Signale für eine bullische Einschätzung.",
       "top_signals": [
         {
           "source": "news",
-          "evidence": "Ripple-Kooperation und erhöhte Sicherheit laut News."
+          "evidence": "Ripple kooperiert mit Zahlungsdienstleistern."
         },
         {
           "source": "onchain",
-          "evidence": "Zufluss in Smart-Contracts und Brücken-Aktivität laut On-Chain-Daten."
+          "evidence": "Brücken und Validatoren aktiv mit Mittelzuflüssen."
         }
       ]
     }
   ],
-  "macro_summary": "Krypto-Markt zeigt starke on-chain Resilienz und Wachstum der Infrastrukturen, insbesondere bei BTC und ETH, während traditionelle Märkte Unsicherheiten verzeichnen.",
-  "method_note": "Daten aus Social Media, News und On-Chain-Analysen kombiniert, um sentimentbasiertes Profiling für die wichtigsten Krypto-Assets zu entwickeln.",
+  "macro_summary": "Mehrere bullische Signale am Krypto-Markt, geprägt durch positive On-Chain-Daten und institutionelles Interesse, besonders im ETF-Bereich.",
+  "method_note": "Die Analyse basiert auf aggregierten Daten zu Nachrichten, Social-Media-Interaktionen und On-Chain-Aktivitäten. Jede Datenquelle wird hinsichtlich ihrer Relevanz und ihres Einflusses auf die Marktstimmung bewertet.",
   "locale": "de"
 }
