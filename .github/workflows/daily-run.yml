@@ -287,6 +287,11 @@ jobs:
             exec('git reset --hard origin/main');
             exec('git add data/news data/reports data/metrics');
             const message = `chore(snapshot): daily-run ${date} de/en`;
+            const status = exec('git status --porcelain').toString().trim();
+            if (!status) {
+              console.info('No snapshot changes to commit (already up to date).');
+              return;
+            }
             try {
               exec(`git commit -m "${message}"`);
             } catch (error) {
