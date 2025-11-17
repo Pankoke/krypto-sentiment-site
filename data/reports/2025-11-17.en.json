@@ -10,43 +10,51 @@
     {
       "symbol": "BTC",
       "sentiment": "bullish",
-      "score": 0.8,
+      "score": 0.85,
       "confidence": 0.9,
-      "rationale": "Starke institutionelle und Miner-Aktivitäten sowie positive ETF-Flüsse deuten auf bullishes Momentum hin.",
+      "rationale": "Steigende ETF-Zuflüsse und Netto-Abflüsse von Exchanges deuten auf verstärktes institutionelles Interesse hin. Whale-Muster deuten auf Anhäufung.",
       "top_signals": [
         {
           "source": "news",
-          "evidence": "ETF-Flüsse und Miner-Erlöse im Blick"
+          "evidence": "Bitcoin-ETF-Zuflüsse steigen über 250 Mio. USD, der Kurs bleibt über 70k."
         },
         {
-          "source": "social",
-          "evidence": "ETF-Narrativ lebt weiter, institutionelle Käufer bleiben aktiv"
+          "source": "onchain",
+          "evidence": "Netto-Abflüsse von Exchanges lassen Reserven schrumpfen."
         }
       ]
     },
     {
       "symbol": "ETH",
-      "sentiment": "neutral",
-      "score": 0.5,
-      "confidence": 0.7,
-      "rationale": "Zuwachs bei Layer-2-Adoption, aber gemischte Performance bezüglich Transaktionsdurchsatz.",
+      "sentiment": "bullish",
+      "score": 0.8,
+      "confidence": 0.85,
+      "rationale": "Starker Anstieg der Layer-2-Transaktionen und neue Finanzierung für Interoperabilität verbessern die Netzwerkkapazitäten.",
       "top_signals": [
         {
           "source": "news",
-          "evidence": "Ethereum Layer-2-Ökosystem gewinnt Tempo"
+          "evidence": "Layer-2-Ökosystem erhält neue Kapitalkraft für Asset-Interoperabilität."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Layer-2-Transaktionen zeigen höhere Durchsätze seit dem Dencun-Upgrade."
         }
       ]
     },
     {
       "symbol": "SOL",
       "sentiment": "bullish",
-      "score": 0.7,
-      "confidence": 0.85,
-      "rationale": "Erhöhtes Validator-Engagement und starke On-Chain-Kennzahlen.",
+      "score": 0.8,
+      "confidence": 0.8,
+      "rationale": "Zunahme der DeFi-TVL und stärkere On-Chain-Aktivität steigern das Vertrauen in die Plattform.",
       "top_signals": [
         {
           "source": "news",
-          "evidence": "Solana-Infrastruktur verzeichnet Wachstum"
+          "evidence": "Solana-DeFi-TVL erreicht neues Jahreshoch, Aktivitäten im Ökosystem nehmen zu."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Validatoren sehen steigende Votes und On-Chain-Aktivität."
         }
       ]
     },
@@ -55,16 +63,20 @@
       "sentiment": "bullish",
       "score": 0.75,
       "confidence": 0.8,
-      "rationale": "Kooperationen mit Zahlungsdienstleistern und hohe On-Chain-Sicherheit stärken das Vertrauen.",
+      "rationale": "Neue Partnerschaften und aktive Validatornetzwerke fördern die Netzwerkentwicklung und Nutzbarkeit.",
       "top_signals": [
         {
           "source": "news",
-          "evidence": "Ripple kooperiert mit Zahlungsdienstleistern"
+          "evidence": "Ripple kündigt neue Partnerschaften mit Zahlungsdienstleistern an."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Validatoren sichern hohe TPS bei stabilem Belohnungsfluss."
         }
       ]
     }
   ],
-  "macro_summary": "Der Kryptomarkt zeigt sich robust, mit Bitcoin als sicherem Hafen und steigender Institutionenbeteiligung. Ethereum und Solana erfahren zunehmendes Interesse im Bereich Layer-2 und Infrastruktur, während Ripple von neuen Kooperationen profitiert.",
-  "method_note": "Der Bericht basiert auf aggregierten Signalen aus sozialen Medien, Nachrichten und On-Chain-Daten und berücksichtigt Engagement, Wichtigkeit und aktuelle Trends.",
+  "macro_summary": "Positive Signale dominieren im Kryptomarkt, mit Schwerpunkt in verstärkten Investitionen und erhöhten Aktivitäten über wichtige Netzwerke wie Bitcoin, Ethereum, Solana und XRP.",
+  "method_note": "Analysierte Daten umfassen signifikante Posts aus sozialen Medien, Neuigkeiten und On-Chain-Statistiken, fokussiert auf hohe Engagement- und Importance-Werte.",
   "locale": "en"
 }
