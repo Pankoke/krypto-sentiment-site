@@ -30,8 +30,16 @@ async function main() {
     const snapshot = await redis.get<string>(key);
     console.log({ locale, key, hasSnapshot: !!snapshot });
     if (snapshot) {
-      const parsed = JSON.parse(snapshot);
-      console.log(`  assets: ${parsed.assets?.length ?? 'n/a'}`, `generatedAt: ${parsed.generatedAt}`);
+      let parsed: any = snapshot;
+      if (typeof snapshot === 'string') {
+        try {
+          parsed = JSON.parse(snapshot);
+        } catch {
+          console.warn('Snapshot payload is not valid JSON, showing raw value');
+        }
+      }
+      const assetCount = Array.isArray(parsed.assets) ? parsed.assets.length : 'n/a';
+      console.log(`  assets: ${assetCount}`, `generatedAt: ${parsed.generatedAt}`);
     }
   }
   console.log('Done.');
