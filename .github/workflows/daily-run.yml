@@ -217,6 +217,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Install Node dependencies
+        run: npm ci
       - name: Dump snapshots and commit
         env:
           TARGET_URL: ${{ secrets.TARGET_URL }}
