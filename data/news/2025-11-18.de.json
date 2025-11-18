@@ -1,0 +1,112 @@
+{
+  "date": "2025-11-18",
+  "universe": [
+    "BTC",
+    "ETH",
+    "SOL",
+    "XRP"
+  ],
+  "assets": [
+    {
+      "symbol": "ETH",
+      "sentiment": "bullish",
+      "score": 0.66,
+      "confidence": 0.7190333333333333,
+      "rationale": "{\n  \"asset\": {\n    \"symbol\": \"ETH\",\n    \"sentiment\": \"bullish\",\n    \"score\": 0.75,\n    \"confidence\": 0.8,\n    \"rationale\": \"Die steigende Aktivität bei Rollups und die Stabilität der Staking-Quote deuten auf ein gesundes Netzwerk hin. Das Dencun-Upgrade, das die L2-Gebühren senkt, könnte das Interesse an Transaktionen weiter steigern.\",\n    \"top_signals\": [\n      {\n        \"source\": \"social\",\n        \"evidence\": \"L2s berichten von deutlich niedrigeren Durchsätzen pro Transaktion.\"\n      },\n      {\n        \"source\": \"onchain\",\n        \"evidence\": \"Aktive Adressen steigen, Staking-Quote stabil.\"\n      },\n      {\n        \"source\": \"news-wire\",\n        \"evidence\": \"Dencun-Upgrade reduziert L2-Gebühren, Rollups melden steigende Aktivität.\"\n      }\n    ]\n  }\n}",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "L2s berichten von deutlich niedrigeren Durchsätzen pro Transaktion."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Aktive Adressen steigen, Staking-Quote stabil."
+        },
+        {
+          "source": "news-wire",
+          "evidence": "Dencun-Upgrade reduziert L2-Gebühren, Rollups melden steigende Aktivität."
+        }
+      ]
+    },
+    {
+      "symbol": "SOL",
+      "sentiment": "bullish",
+      "score": 0.66,
+      "confidence": 1,
+      "rationale": "{\n  \"asset\": {\n    \"symbol\": \"SOL\",\n    \"sentiment\": \"bullish\",\n    \"score\": 0.8,\n    \"confidence\": 0.85,\n    \"rationale\": \"Die dezentralen Projekte, die auf Solana setzen, zeigen ein starkes Interesse an der Plattform, was auf zukünftige Entwicklungen hinweist. Zudem berichten Infrastrukturfirmen von einem erhöhten Validator-Engagement, was die Stabilität und Sicherheit des Netzwerks stärkt. Die Zunahme neuer Adressen und das steigende DEX-Volumen deuten auf eine wachsende Nutzerbasis hin.\",\n    \"top_signals\": [\n      { \"source\": \"social\", \"evidence\": \"Dezentrale Projekte setzen auf Solana für Releases in Q4.\" },\n      { \"source\": \"social\", \"evidence\": \"Trader beobachten Stablecoin-Balances parallel zu BTC-Zuflüssen.\" },\n      { \"source\": \"news-wire\", \"evidence\": \"Infrastrukturfirmen berichten",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "Dezentrale Projekte setzen auf Solana für Releases in Q4."
+        },
+        {
+          "source": "social",
+          "evidence": "Trader beobachten Stablecoin-Balances parallel zu BTC-Zuflüssen."
+        },
+        {
+          "source": "social",
+          "evidence": "Council Minutes geben Hinweise auf Zeitpläne für Scaling-Updates."
+        },
+        {
+          "source": "news-wire",
+          "evidence": "Infrastrukturfirmen berichten von erhöhtem Validator-Engagement."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Neue Adressen und hohe TPS, DEX-Volumen plus 7% d/d."
+        }
+      ]
+    },
+    {
+      "symbol": "BTC",
+      "sentiment": "neutral",
+      "score": 0.5,
+      "confidence": 0.8077666666666667,
+      "rationale": "{\n  \"asset\": {\n    \"symbol\": \"BTC\",\n    \"sentiment\": \"bullish\",\n    \"score\": 0.85,\n    \"confidence\": 0.9,\n    \"rationale\": \"Die aktuellen Whale-Muster und Zuflüsse zu traditionellen Börsen deuten auf eine starke Nachfrage hin. Zudem zeigen Netto-Abflüsse von Exchanges, dass Investoren ihre Bestände erhöhen, was den Preis stützen könnte. Die steigenden Zuflüsse in Bitcoin-ETFs und die Wahrnehmung von Bitcoin als sicheren Hafen während Marktschwächen verstärken das positive Sentiment.\",\n    \"top_signals\": [\n      {\n        \"source\": \"social\",\n        \"evidence\": \"Whale-Muster zeigen Anhäufung, traditionelle Börsen verzeichnen Zuflüsse.\"\n      },\n      {\n        \"source\": \"onchain\",\n        \"evidence\": \"Netto-Abflüsse von Exchanges lassen Reserven schrumpfen.\"\n      },\n      {\n        \"source\": \"news-wire\",\n        \"evidence\": \"Bitcoin-ETF-Zuf",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "Whale-Muster zeigen Anhäufung, traditionelle Börsen verzeichnen Zuflüsse."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Netto-Abflüsse von Exchanges lassen Reserven schrumpfen."
+        },
+        {
+          "source": "news-wire",
+          "evidence": "Bitcoin-ETF-Zuflüsse steigen über 250 Mio. USD, der Kurs bleibt über 70k."
+        },
+        {
+          "source": "news-wire",
+          "evidence": "Makro-Analysten sehen Bitcoin als sicheren Hafen während traditioneller Märkte schwächeln."
+        }
+      ]
+    },
+    {
+      "symbol": "XRP",
+      "sentiment": "neutral",
+      "score": 0.5,
+      "confidence": 0.8055666666666667,
+      "rationale": "{\n  \"asset\": [\n    {\n      \"symbol\": \"ETH\",\n      \"sentiment\": \"bullish\",\n      \"score\": 0.8,\n      \"confidence\": 0.75,\n      \"rationale\": \"Die Diskussionen in der Community über neue Finanzierungsrunden für Layer-1-Infrastruktur deuten auf ein wachsendes Interesse und Investitionen in Ethereum hin. Die neuen Partnerschaften von Ripple mit Zahlungsdienstleistern könnten ebenfalls positive Auswirkungen auf die gesamte Branche haben.\",\n      \"top_signals\": [\n        { \"source\": \"social\", \"evidence\": \"Community diskutiert frische Finanzierungsrunden für Layer-1-Infrastruktur.\" },\n        { \"source\": \"news-wire\", \"evidence\": \"Ripple kündigt neue Partnerschaften mit Zahlungsdienstleistern an.\" },\n        { \"source\": \"onchain\", \"evidence\": \"Brücken melden Mittelzuflüsse in Smart-Contracts.\" }\n      ]\n    },\n    {\n      \"symbol\": \"XRP\",\n      \"sentiment\": \"bullish\",",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "Community diskutiert frische Finanzierungsrunden für Layer-1-Infrastruktur."
+        },
+        {
+          "source": "news-wire",
+          "evidence": "Ripple kündigt neue Partnerschaften mit Zahlungsdienstleistern an."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Brücken melden Mittelzuflüsse in Smart-Contracts."
+        }
+      ]
+    }
+  ],
+  "method_note": "Aggregierte Signale aus Social, News und Onchain.",
+  "adapterWarnings": [],
+  "uniqueAssets": 4,
+  "dedupeCount": 0,
+  "locale": "de"
+}

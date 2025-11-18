@@ -1,0 +1,94 @@
+{
+  "date": "2025-11-18",
+  "universe": [
+    "BTC",
+    "ETH",
+    "XRP",
+    "SOL"
+  ],
+  "assets": [
+    {
+      "symbol": "BTC",
+      "sentiment": "bullish",
+      "score": 0.8,
+      "confidence": 0.85,
+      "rationale": "Positive Nachrichten über ETF-Zuflüsse und Miner-Erlöse deuten auf starkes institutionelles Interesse hin. Netto-Abflüsse von Börsen stützen das bullische Sentiment.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Bitcoin-ETF-Zuflüsse steigen über 250 Mio. USD."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Netto-Abflüsse von Exchanges lassen Reserven schrumpfen."
+        },
+        {
+          "source": "social",
+          "evidence": "Whale-Muster zeigen Anhäufung."
+        }
+      ]
+    },
+    {
+      "symbol": "ETH",
+      "sentiment": "bullish",
+      "score": 0.7,
+      "confidence": 0.75,
+      "rationale": "Die Aktivität auf Layer-2 und Anstieg aktiver Adressen unterstützen ein positives Sentiment.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Dencun-Upgrade reduziert L2-Gebühren."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Aktive Adressen steigen, Staking-Quote stabil."
+        },
+        {
+          "source": "social",
+          "evidence": "L2s berichten von niedrigeren Durchsätzen pro Transaktion."
+        }
+      ]
+    },
+    {
+      "symbol": "XRP",
+      "sentiment": "neutral",
+      "score": 0.5,
+      "confidence": 0.65,
+      "rationale": "Gute Nachrichten über Partnerschaften und On-Chain-Aktivität, aber gemischtes Sentiment aus der Community.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Ripple kündigt neue Partnerschaften an."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Brücken melden Mittelzuflüsse in Smart-Contracts."
+        }
+      ]
+    },
+    {
+      "symbol": "SOL",
+      "sentiment": "bullish",
+      "score": 0.75,
+      "confidence": 0.8,
+      "rationale": "Steigende On-Chain-Kennzahlen und starke Infrastrukturentwicklung geben einen positiven Ausblick.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Infrastrukturfirmen berichten von erhöhtem Validator-Engagement."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Hohe TPS, DEX-Volumen plus 7% d/d."
+        },
+        {
+          "source": "social",
+          "evidence": "Dezentrale Projekte setzen auf Solana für Releases in Q4."
+        }
+      ]
+    }
+  ],
+  "macro_summary": "Institutionelle und technologische Entwicklungen stützen das bullische Sentiment über mehrere Krypto-Assets hinweg, insbesondere bei Bitcoin und Solana.",
+  "method_note": "Die Sentiment-Bewertungen basieren auf aggregierten Signalen aus Social Media, Nachrichten und On-Chain-Daten. Bewertet wurden die Relevanz und die Häufigkeit positiver vs. negativer Erwähnungen.",
+  "locale": "en"
+}
