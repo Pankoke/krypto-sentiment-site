@@ -1,0 +1,112 @@
+{
+  "date": "2025-11-18",
+  "universe": [
+    "BTC",
+    "ETH",
+    "SOL",
+    "XRP"
+  ],
+  "assets": [
+    {
+      "symbol": "ETH",
+      "sentiment": "bullish",
+      "score": 0.66,
+      "confidence": 0.8580000000000001,
+      "rationale": "{\n  \"symbol\": \"ETH\",\n  \"sentiment\": \"bullish\",\n  \"score\": 0.8,\n  \"confidence\": 0.85,\n  \"rationale\": \"Die niedrigen Gebühren und die positive Aktivität in Layer-2-Communities deuten auf ein wachsendes Interesse und Engagement hin. Das Dencun-Upgrade hat die Gebühren weiter gesenkt und die steigende Aktivität der Rollups unterstützt die bullishen Signale.\",\n  \"top_signals\": [\n    { \"source\": \"social\", \"evidence\": \"ETH-Gebühren bleiben niedrig, Layer-2-Communities feiern.\" },\n    { \"source\": \"social\", \"evidence\": \"Community diskutiert frische Finanzierungsrunden für Layer-1-Infrastruktur.\" },\n    { \"source\": \"news-wire\", \"evidence\": \"Dencun-Upgrade reduziert L2-Gebühren, Rollups melden steigende Aktivität.\" },\n    { \"source\": \"onchain\", \"evidence\": \"Aktive Adressen",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "ETH-Gebühren bleiben niedrig, Layer-2-Communities feiern."
+        },
+        {
+          "source": "social",
+          "evidence": "Community diskutiert frische Finanzierungsrunden für Layer-1-Infrastruktur."
+        },
+        {
+          "source": "news-wire",
+          "evidence": "Dencun-Upgrade reduziert L2-Gebühren, Rollups melden steigende Aktivität."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Aktive Adressen steigen, Staking-Quote stabil."
+        }
+      ]
+    },
+    {
+      "symbol": "SOL",
+      "sentiment": "neutral",
+      "score": 0.58,
+      "confidence": 0.9581,
+      "rationale": "{\n  \"symbol\": \"SOL\",\n  \"sentiment\": \"bullish\",\n  \"score\": 0.8,\n  \"confidence\": 0.85,\n  \"rationale\": \"Die aktuellen Entwicklungen im Solana-Ökosystem, einschließlich eines Anstiegs des DeFi-TVL und einer Zunahme der On-Chain-Aktivitäten, deuten auf ein wachsendes Interesse und Engagement hin. Zudem bringen Memecoins neues Volumen, was die Marktaktivität weiter anheizt.\",\n  \"top_signals\": [\n    {\n      \"source\": \"social\",\n      \"evidence\": \"SOL-Memecoins bringen wieder Volumen, Token-Entwickler planen Governance-Bump.\"\n    },\n    {\n      \"source\": \"news-wire\",\n      \"evidence\": \"Solana-DeFi-TVL erreicht neues Jahreshoch, Aktivitäten im Ökosystem nehmen zu.\"\n    },\n    {\n      \"source\": \"onchain\",\n      \"evidence\": \"Validatoren sehen steigende Votes und On-Chain-Aktivität",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "SOL-Memecoins bringen wieder Volumen, Token-Entwickler planen Governance-Bump."
+        },
+        {
+          "source": "news-wire",
+          "evidence": "Solana-DeFi-TVL erreicht neues Jahreshoch, Aktivitäten im Ökosystem nehmen zu."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Validatoren sehen steigende Votes und On-Chain-Aktivität."
+        }
+      ]
+    },
+    {
+      "symbol": "XRP",
+      "sentiment": "neutral",
+      "score": 0.58,
+      "confidence": 0.8836666666666667,
+      "rationale": "{\n  \"assets\": [\n    {\n      \"symbol\": \"BTC\",\n      \"sentiment\": \"bullish\",\n      \"score\": 0.8,\n      \"confidence\": 0.85,\n      \"rationale\": \"Die Beobachtungen der Stablecoin-Balances in Verbindung mit BTC-Zuflüssen deuten auf ein wachsendes Interesse und Vertrauen in Bitcoin hin. Zudem geben die Council Minutes Hinweise auf bevorstehende Scaling-Updates, was die Netzwerkleistung verbessern könnte.\",\n      \"top_signals\": [\n        { \"source\": \"social\", \"evidence\": \"Council Minutes geben Hinweise auf Zeitpläne für Scaling-Updates.\" },\n        { \"source\": \"social\", \"evidence\": \"Trader beobachten Stablecoin-Balances parallel zu BTC-Zuflüssen.\" }\n      ]\n    },\n    {\n      \"symbol\": \"XRP\",\n      \"sentiment\": \"bullish\",\n      \"score\": 0.75,\n      \"confidence\": 0.8,\n      \"rationale\": \"Die Ankündigung neuer Partners",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "Council Minutes geben Hinweise auf Zeitpläne für Scaling-Updates."
+        },
+        {
+          "source": "social",
+          "evidence": "Trader beobachten Stablecoin-Balances parallel zu BTC-Zuflüssen."
+        },
+        {
+          "source": "news-wire",
+          "evidence": "Ripple kündigt neue Partnerschaften mit Zahlungsdienstleistern an."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Validatoren sichern hohe TPS bei stabilem Belohnungsfluss."
+        }
+      ]
+    },
+    {
+      "symbol": "BTC",
+      "sentiment": "neutral",
+      "score": 0.5,
+      "confidence": 0.8866,
+      "rationale": "{\n  \"asset\": {\n    \"symbol\": \"BTC\",\n    \"sentiment\": \"bullish\",\n    \"score\": 0.85,\n    \"confidence\": 0.9,\n    \"rationale\": \"Die anhaltende Nachfrage nach Bitcoin-ETFs und die signifikanten Zuflüsse von über 250 Millionen USD zeigen das starke Interesse institutioneller Käufer. Zudem deuten Netto-Abflüsse von Exchanges darauf hin, dass Anleger Bitcoin halten, was die Knappheit erhöht. In einem schwächelnden traditionellen Markt wird Bitcoin zunehmend als sicherer Hafen betrachtet.\",\n    \"top_signals\": [\n      { \"source\": \"social\", \"evidence\": \"ETF-Narrativ lebt weiter, institutionelle Käufer bleiben aktiv.\" },\n      { \"source\": \"news-wire\", \"evidence\": \"Bitcoin-ETF-Zuflüsse steigen über 250 Mio. USD, der Kurs bleibt über 70k.\" },\n      { \"source\": \"onchain\", \"evidence\": \"Netto-Abflüsse von Exchanges lassen Reserven schrumpfen.\"",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "ETF-Narrativ lebt weiter, institutionelle Käufer bleiben aktiv."
+        },
+        {
+          "source": "news-wire",
+          "evidence": "Bitcoin-ETF-Zuflüsse steigen über 250 Mio. USD, der Kurs bleibt über 70k."
+        },
+        {
+          "source": "onchain",
+          "evidence": "Netto-Abflüsse von Exchanges lassen Reserven schrumpfen."
+        },
+        {
+          "source": "news-wire",
+          "evidence": "Makro-Analysten sehen Bitcoin als sicheren Hafen während traditioneller Märkte schwächeln."
+        }
+      ]
+    }
+  ],
+  "method_note": "Aggregierte Signale aus Social, News und Onchain.",
+  "adapterWarnings": [],
+  "uniqueAssets": 4,
+  "dedupeCount": 0,
+  "locale": "de"
+}

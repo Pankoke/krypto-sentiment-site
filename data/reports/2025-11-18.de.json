@@ -1,0 +1,82 @@
+{
+  "date": "2025-11-18",
+  "universe": [
+    "BTC",
+    "ETH",
+    "SOL",
+    "XRP"
+  ],
+  "assets": [
+    {
+      "symbol": "BTC",
+      "sentiment": "bullish",
+      "score": 0.85,
+      "confidence": 0.9,
+      "rationale": "Significant ETF inflows and shrinking exchange reserves create a bullish environment. Institutional interest remains high.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "ETF-Flüsse und Miner-Erlöse im Blick"
+        },
+        {
+          "source": "onchain",
+          "evidence": "Exchange-Reserven und UTXOs im Fokus"
+        }
+      ]
+    },
+    {
+      "symbol": "ETH",
+      "sentiment": "bullish",
+      "score": 0.8,
+      "confidence": 0.85,
+      "rationale": "Layer-2 and on-chain activity are increasing, coupled with community discussions around new funding rounds.",
+      "top_signals": [
+        {
+          "source": "social",
+          "evidence": "Community diskutiert frische Finanzierungsrunden für Layer-1-Infrastruktur."
+        },
+        {
+          "source": "news",
+          "evidence": "Ethereum Layer-2-Ökosystem gewinnt Tempo"
+        }
+      ]
+    },
+    {
+      "symbol": "SOL",
+      "sentiment": "bullish",
+      "score": 0.8,
+      "confidence": 0.85,
+      "rationale": "Rising DeFi TVL and active infrastructure growth with positive on-chain indicators.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Solana-Infrastruktur verzeichnet Wachstum"
+        },
+        {
+          "source": "social",
+          "evidence": "SOL-Memecoins bringen wieder Volumen"
+        }
+      ]
+    },
+    {
+      "symbol": "XRP",
+      "sentiment": "neutral",
+      "score": 0.6,
+      "confidence": 0.75,
+      "rationale": "New partnerships and high validator TPS but overshadowed by broader neutral market sentiment.",
+      "top_signals": [
+        {
+          "source": "news",
+          "evidence": "Ripple kooperiert mit Zahlungsdienstleistern"
+        },
+        {
+          "source": "onchain",
+          "evidence": "Ripple Brücken und Validatoren aktiv"
+        }
+      ]
+    }
+  ],
+  "macro_summary": "The crypto market shows strong activity levels primarily driven by institutional interest and technological advancements in Ethereum and Solana ecosystems.",
+  "method_note": "Sentiments derived from a combination of social media, news, and on-chain signals weighted by engagement and importance.",
+  "locale": "de"
+}
