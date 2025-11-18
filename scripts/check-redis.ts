@@ -30,7 +30,7 @@ async function main() {
     const snapshot = await redis.get<string>(key);
     console.log({ locale, key, hasSnapshot: !!snapshot });
     if (snapshot) {
-      let parsed: any = snapshot;
+      let parsed: unknown = snapshot;
       if (typeof snapshot === 'string') {
         try {
           parsed = JSON.parse(snapshot);
@@ -38,8 +38,19 @@ async function main() {
           console.warn('Snapshot payload is not valid JSON, showing raw value');
         }
       }
-      const assetCount = Array.isArray(parsed.assets) ? parsed.assets.length : 'n/a';
-      console.log(`  assets: ${assetCount}`, `generatedAt: ${parsed.generatedAt}`);
+      const parsedSnapshot =
+        typeof parsed === 'object' && parsed !== null
+          ? (parsed as { assets?: unknown[]; generatedAt?: string })
+          : {};
+      const assetCount = Array.isArray(parsedSnapshot.assets) ? parsedSnapshot.assets.length : 'n/a';
+      const generatedAt = typeof parsedSnapshot.generatedAt === 'string' ? parsedSnapshot.generatedAt : null;
+      if (!generatedAt) {
+        console.warn('  WARN: Snapshot ohne generatedAt');
+      }
+      console.log(
+        `  assets: ${assetCount}`,
+        `generatedAt: ${generatedAt ?? 'missing'}`
+      );
     }
   }
   console.log('Done.');

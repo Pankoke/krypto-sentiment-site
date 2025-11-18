@@ -129,7 +129,7 @@ export async function persistDailyNewsSnapshots(
   report: AggregatedReport,
   options?: { locales?: Array<'de' | 'en'>; force?: boolean }
 ): Promise<void> {
-  const timestamp = new Date().toISOString();
+  const timestamp = report.generatedAt ?? new Date().toISOString();
   const targetLocales = options?.locales ?? locales;
   for (const locale of targetLocales) {
     if (!options?.force) {

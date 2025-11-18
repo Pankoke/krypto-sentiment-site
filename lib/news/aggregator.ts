@@ -47,6 +47,7 @@ export type AggregatedReport = {
   adapterWarnings?: string[];
   uniqueAssets?: number;
   dedupeCount?: number;
+  generatedAt: string;
 };
 
 const positiveKeywords = ['pump', 'bull', 'rally', 'surge', 'auf', 'steig', 'ankünd', 'positiv', 'stark', 'erholt'];
@@ -235,6 +236,7 @@ export async function aggregateNews(options?: {
   const universe = normalizeUniverse(options);
   const sinceTimestamp = parseSinceTimestamp(options?.since);
   const reportDate = berlinDateString(new Date());
+  const generatedAt = new Date().toISOString();
   const allPosts = options?.sourceEntries ?? (await fetchAllSources());
   const allowedPosts = allPosts.filter((post) => isTickerAllowed(post.asset));
   const filtered = allowedPosts.filter((post) => {
@@ -254,6 +256,7 @@ export async function aggregateNews(options?: {
       universe,
       assets: [],
       method_note: 'no source data',
+      generatedAt,
     };
   }
 
@@ -322,6 +325,7 @@ export async function aggregateNews(options?: {
       universe,
       assets: [],
       method_note: 'no source data',
+      generatedAt,
     };
   }
 
@@ -347,5 +351,6 @@ if (fallbackAssets.length) {
     adapterWarnings: [...adapterWarnings],
     uniqueAssets,
     dedupeCount,
+    generatedAt,
   };
 }
