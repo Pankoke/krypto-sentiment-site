@@ -6,7 +6,7 @@ if (!redisUrl) {
   throw new Error('REDIS_URL is not configured');
 }
 
-const redisOptions: Parameters<typeof Redis>[1] = {
+const redisOptions: Redis.RedisOptions = {
   maxRetriesPerRequest: null,
   enableAutoPipelining: true,
 };
