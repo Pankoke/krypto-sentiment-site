@@ -1,7 +1,32 @@
 import Redis, { type RedisOptions } from 'ioredis';
 
-const redisUrl = process.env.REDIS_URL;
-const redisToken = process.env.REDIS_TOKEN;
+const redisUrl =
+  process.env.REDIS_URL?.trim() ||
+  process.env.KV_URL?.trim() ||
+  process.env.UPSTASH_REDIS_URL?.trim();
+
+let redisToken =
+  process.env.REDIS_TOKEN ??
+  process.env.KV_REDIS_TOKEN ??
+  process.env.KV_REST_API_TOKEN;
+
+const inferTokenFromUrl = (value?: string) => {
+  if (!value) {
+    return undefined;
+  }
+  const withoutProtocol = value.split('://')[1];
+  if (!withoutProtocol) {
+    return undefined;
+  }
+  const credentials = withoutProtocol.split('@')[0];
+  if (!credentials || !credentials.includes(':')) {
+    return undefined;
+  }
+  return credentials.split(':')[1];
+};
+
+redisToken = redisToken ?? inferTokenFromUrl(redisUrl);
+const redisUsername = process.env.REDIS_USERNAME ?? 'default';
 
 interface RedisClientInterface {
   set(key: string, value: string): Promise<'OK'>;
@@ -56,7 +81,7 @@ const redis =
           enableAutoPipelining: true,
         };
         if (redisToken) {
-          baseOpts.username = 'default';
+          baseOpts.username = redisUsername;
           baseOpts.password = redisToken;
         }
         return baseOpts;
