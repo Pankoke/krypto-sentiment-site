@@ -1,22 +1,67 @@
-import Redis from 'ioredis';
+import Redis, { type RedisOptions } from 'ioredis';
 
 const redisUrl = process.env.REDIS_URL;
 const redisToken = process.env.REDIS_TOKEN;
-if (!redisUrl) {
-  throw new Error('REDIS_URL is not configured');
+
+interface RedisClientInterface {
+  set(key: string, value: string): Promise<'OK'>;
+  get(key: string): Promise<string | null>;
+  del(key: string): Promise<number>;
+  zadd(key: string, score: number, member: string): Promise<number>;
+  zrevrange(key: string, start: number, stop: number): Promise<string[]>;
+  quit(): Promise<void>;
 }
 
-const redisOptions: Redis.RedisOptions = {
-  maxRetriesPerRequest: null,
-  enableAutoPipelining: true,
-};
-
-if (redisToken) {
-  redisOptions.username = 'default';
-  redisOptions.password = redisToken;
+class MemoryRedis implements RedisClientInterface {
+  private store = new Map<string, string>();
+  async set(key: string, value: string): Promise<'OK'> {
+    this.store.set(key, value);
+    return 'OK';
+  }
+  async get(key: string): Promise<string | null> {
+    return this.store.get(key) ?? null;
+  }
+  async del(key: string): Promise<number> {
+    return this.store.delete(key) ? 1 : 0;
+  }
+  async zadd(key: string, score: number, member: string): Promise<number> {
+    const setKey = `${key}:sorted`;
+    const existing = this.store.get(setKey);
+    const arr = existing ? JSON.parse(existing) : [];
+    const filtered = arr.filter((entry: [number, string]) => entry[1] !== member);
+    filtered.push([score, member]);
+    this.store.set(setKey, JSON.stringify(filtered));
+    return 1;
+  }
+  async zrevrange(key: string, start: number, stop: number): Promise<string[]> {
+    const setKey = `${key}:sorted`;
+    const existing = this.store.get(setKey);
+    if (!existing) return [];
+    const arr: [number, string][] = JSON.parse(existing);
+    return arr
+      .sort((a, b) => b[0] - a[0])
+      .slice(start, stop + 1)
+      .map((entry) => entry[1]);
+  }
+  async quit(): Promise<void> {
+    this.store.clear();
+  }
 }
 
-const redis = new Redis(redisUrl, redisOptions);
+const redis =
+  redisUrl && redisUrl.length
+    ? new Redis(redisUrl, (() => {
+        const baseOpts: RedisOptions = {
+          maxRetriesPerRequest: null,
+          enableAutoPipelining: true,
+        };
+        if (redisToken) {
+          baseOpts.username = 'default';
+          baseOpts.password = redisToken;
+        }
+        return baseOpts;
+      })())
+    : new MemoryRedis();
 
 export type SnapshotKey = string;
 
@@ -28,12 +73,8 @@ export function reportSnapshotKey(locale: string, date: string): SnapshotKey {
   return `reports:${locale}:${date}`;
 }
 
-export async function setSnapshot(key: SnapshotKey, payload: unknown, ttlSeconds?: number): Promise<void> {
+export async function setSnapshot(key: SnapshotKey, payload: unknown): Promise<void> {
   const value = JSON.stringify(payload);
-  if (typeof ttlSeconds === 'number') {
-    await redis.set(key, value, 'EX', ttlSeconds);
-    return;
-  }
   await redis.set(key, value);
 }
 
