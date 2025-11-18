@@ -27,7 +27,7 @@ const today = berlinDateString();
 async function main() {
   for (const locale of locales) {
     const key = `news:${locale}:${today}`;
-    const snapshot = await redis.get(key);
+    const snapshot = await redis.get<string>(key);
     console.log({ locale, key, hasSnapshot: !!snapshot });
     if (snapshot) {
       const parsed = JSON.parse(snapshot);
