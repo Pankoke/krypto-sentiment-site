@@ -13,6 +13,7 @@
     "cron:run": "curl -fsS http://localhost:3000/api/daily-report"
   },
   "dependencies": {
+    "ioredis": "^5.3.2",
     "dotenv": "^17.2.3",
     "lucide-react": "^0.552.0",
     "next-intl": "^4.4.0",

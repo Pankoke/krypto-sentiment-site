@@ -1,30 +1,17 @@
-import { mkdir, readFile, readdir, stat, writeFile } from 'fs/promises';
-import { join } from 'path';
 import { locales } from '../../i18n';
 import type { AggregatedReport } from './aggregator';
 import { addDays, berlinDateString, berlinHour } from '../timezone';
-import { ensurePersistenceAllowed, isPersistenceAllowed } from '../persistenceGuard';
-const DATA_DIR = process.env.GENERATE_DATA_DIR ?? join(process.cwd(), 'data');
+import {
+  setSnapshot,
+  getSnapshot,
+  newsSnapshotKey,
+  registerNewsDate,
+  listNewsDates,
+} from '../cache/redis';
 
 export interface NewsSnapshot extends AggregatedReport {
   locale: string;
   generatedAt: string;
-}
-
-const NEWS_DIR = join(DATA_DIR, 'news');
-
-function snapshotPath(date: string, locale: string) {
-  return join(NEWS_DIR, `${date}.${locale}.json`);
-}
-
-async function loadSnapshot(date: string, locale: string): Promise<NewsSnapshot | null> {
-  const filePath = snapshotPath(date, locale);
-  try {
-    const raw = await readFile(filePath, 'utf8');
-    return JSON.parse(raw) as NewsSnapshot;
-  } catch {
-    return null;
-  }
 }
 
 type SnapshotMeta = {
@@ -36,17 +23,16 @@ type SnapshotMeta = {
 };
 
 async function loadSnapshotMeta(date: string, locale: string): Promise<SnapshotMeta | null> {
-  const snapshot = await loadSnapshot(date, locale);
+  const snapshot = await getSnapshot<NewsSnapshot>(newsSnapshotKey(locale, date));
   if (!snapshot) {
     return null;
   }
-  const file = snapshotPath(date, locale);
-  const stats = await stat(file);
+  const payload = JSON.stringify(snapshot);
   return {
     snapshot,
-    path: file,
-    size: stats.size,
-    mtime: stats.mtime.toISOString(),
+    path: `redis://${newsSnapshotKey(locale, date)}`,
+    size: Buffer.byteLength(payload, 'utf-8'),
+    mtime: new Date().toISOString(),
     date,
   };
 }
@@ -143,17 +129,11 @@ export async function persistDailyNewsSnapshots(
   report: AggregatedReport,
   options?: { locales?: Array<'de' | 'en'>; force?: boolean }
 ): Promise<void> {
-  if (!isPersistenceAllowed()) {
-    console.warn('News snapshot persistence skipped (production/git-locked environment).');
-    return;
-  }
-  ensurePersistenceAllowed();
-  await mkdir(NEWS_DIR, { recursive: true }).catch(() => undefined);
   const timestamp = new Date().toISOString();
   const targetLocales = options?.locales ?? locales;
   for (const locale of targetLocales) {
     if (!options?.force) {
-      const existing = await loadSnapshot(report.date, locale);
+      const existing = await getSnapshot<NewsSnapshot>(newsSnapshotKey(locale, report.date));
       if (existing) {
         continue;
       }
@@ -163,36 +143,20 @@ export async function persistDailyNewsSnapshots(
       locale,
       generatedAt: timestamp,
     };
-    const filePath = join(NEWS_DIR, `${report.date}.${locale}.json`);
-    try {
-      await writeFile(filePath, JSON.stringify(snapshot, null, 2) + '\n', 'utf8');
-    } catch {
-      throw new Error('Persistenz erfolgt via GitHub Action Commit');
-    }
+    await setSnapshot(newsSnapshotKey(locale, report.date), snapshot);
+    await registerNewsDate(locale, report.date);
   }
 }
 
 export async function listNewsSnapshots(locale: string): Promise<NewsSnapshot[]> {
-  const directories = [NEWS_DIR];
-  const pattern = new RegExp(`^\\d{4}-\\d{2}-\\d{2}\\.${locale}\\.json$`);
+  const dates = await listNewsDates(locale);
   const snapshots: NewsSnapshot[] = [];
-  for (const dir of directories) {
-    try {
-      const files = await readdir(dir);
-      for (const file of files) {
-        if (!pattern.test(file)) continue;
-        try {
-          const raw = await readFile(join(dir, file), 'utf8');
-          snapshots.push(JSON.parse(raw) as NewsSnapshot);
-        } catch {
-          // ignore corrupt
-        }
-      }
-    } catch {
-      // ignore missing dir
+  for (const date of dates) {
+    const snapshot = await getSnapshot<NewsSnapshot>(newsSnapshotKey(locale, date));
+    if (snapshot) {
+      snapshots.push(snapshot);
     }
   }
-  snapshots.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
   return snapshots;
 }
 
@@ -202,7 +166,7 @@ export async function latestNewsSnapshot(locale: string): Promise<NewsSnapshot |
 }
 
 export async function readNewsSnapshot(date: string, locale: string): Promise<NewsSnapshot | null> {
-  return loadSnapshot(date, locale);
+  return getSnapshot<NewsSnapshot>(newsSnapshotKey(locale, date));
 }
 
 export type SnapshotMetadata = {
@@ -217,26 +181,23 @@ export type SnapshotMetadata = {
 };
 
 export async function listSnapshotMetadata(locale: string, limit = 7): Promise<SnapshotMetadata[]> {
-  const snapshots = await listNewsSnapshots(locale);
-  const selected = snapshots.slice(0, limit);
+  const dates = await listNewsDates(locale);
+  const selected = dates.slice(0, limit);
   const metadata: SnapshotMetadata[] = [];
-  for (const snapshot of selected) {
-    const file = snapshotPath(snapshot.date, locale);
-    try {
-      const stats = await stat(file);
+  for (const date of selected) {
+    const snapshot = await getSnapshot<NewsSnapshot>(newsSnapshotKey(locale, date));
+    if (!snapshot) continue;
+    const payload = JSON.stringify(snapshot);
     metadata.push({
-      date: snapshot.date,
+      date,
       locale,
-      path: file,
-      size: stats.size,
-      mtime: stats.mtime.toISOString(),
+      path: `redis://${newsSnapshotKey(locale, date)}`,
+      size: Buffer.byteLength(payload, 'utf-8'),
+      mtime: new Date().toISOString(),
       items: snapshot.assets.length,
       generatedAt: snapshot.generatedAt,
       snapshot,
     });
-    } catch {
-      // ignore missing stats
-    }
   }
   return metadata;
 }
