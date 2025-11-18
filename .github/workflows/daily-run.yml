@@ -218,8 +218,8 @@ jobs:
         env:
           TARGET_URL: ${{ secrets.TARGET_URL }}
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
-          REDIS_URL: ${{ secrets.KV_REST_API_URL ?? secrets.REDIS_URL }}
-          REDIS_TOKEN: ${{ secrets.KV_REST_API_TOKEN ?? secrets.REDIS_TOKEN }}
+          REDIS_URL: ${{ secrets.KV_REST_API_URL || secrets.REDIS_URL }}
+          REDIS_TOKEN: ${{ secrets.KV_REST_API_TOKEN || secrets.REDIS_TOKEN }}
         run: |
           node <<'NODE'
           const {env, exit} = process;
