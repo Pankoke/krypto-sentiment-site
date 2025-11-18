@@ -245,11 +245,21 @@ jobs:
               throw new Error('Invalid payload, missing report data');
             }
             const date = payload.date;
-            await redis.set(redisKey('news', 'de', date), JSON.stringify({...payload.news.report, locale: 'de'}));
-            await redis.set(redisKey('news', 'en', date), JSON.stringify({...payload.news.report, locale: 'en'}));
-            await redis.set(redisKey('reports', 'de', date), JSON.stringify({...payload.reports.report, locale: 'de'}));
-            await redis.set(redisKey('reports', 'en', date), JSON.stringify({...payload.reports.report, locale: 'en'}));
-            await redis.set(`metrics:${date}`, JSON.stringify(payload.metrics ?? { date }));
+            const newsDeKey = redisKey('news', 'de', date);
+            await redis.set(newsDeKey, JSON.stringify({...payload.news.report, locale: 'de'}));
+            console.info('Redis set', newsDeKey);
+            const newsEnKey = redisKey('news', 'en', date);
+            await redis.set(newsEnKey, JSON.stringify({...payload.news.report, locale: 'en'}));
+            console.info('Redis set', newsEnKey);
+            const reportsDeKey = redisKey('reports', 'de', date);
+            await redis.set(reportsDeKey, JSON.stringify({...payload.reports.report, locale: 'de'}));
+            console.info('Redis set', reportsDeKey);
+            const reportsEnKey = redisKey('reports', 'en', date);
+            await redis.set(reportsEnKey, JSON.stringify({...payload.reports.report, locale: 'en'}));
+            console.info('Redis set', reportsEnKey);
+            const metricsKey = `metrics:${date}`;
+            await redis.set(metricsKey, JSON.stringify(payload.metrics ?? { date }));
+            console.info('Redis set', metricsKey);
             await redis.zadd(`news:dates:de`, Date.parse(date) || 0, date);
             await redis.zadd(`news:dates:en`, Date.parse(date) || 0, date);
             console.info('Snapshot dump stored in Redis for', date);
