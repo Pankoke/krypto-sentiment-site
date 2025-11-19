@@ -6,7 +6,9 @@ import NewsList from '../src/components/news/NewsList';
 
 const translations: Record<string, string> = {
   generatedAt: 'Stand: {date}',
-  emptySnapshot: 'Noch keine News vorhanden.',
+  'newsStatus.empty': 'Noch keine News vorhanden.',
+  'newsStatus.error': 'Fehler: {error}',
+  'newsStatus.stale': 'Stand veraltet ({date}).',
   'label.score': 'Score',
   'label.confidence': 'Confidence',
   topSignals: 'Top signals',
@@ -42,6 +44,7 @@ describe('NewsList snapshot renderer', () => {
         reportDate="2025-11-14"
         generatedAt="2025-11-14T06:00:00.000Z"
         methodNote="Methodisch up to date"
+        status="ok"
       />
     );
     expect(screen.getByText('Stand: 2025-11-14T06:00:00.000Z')).toBeInTheDocument();
@@ -52,7 +55,7 @@ describe('NewsList snapshot renderer', () => {
   });
 
   it('renders empty snapshot message when no assets', () => {
-    render(<NewsList assets={[]} reportDate="2025-11-14" />);
+    render(<NewsList assets={[]} reportDate="2025-11-14" status="empty" />);
     expect(
       screen.getByText((content) => content.includes('Noch keine News vorhanden'))
     ).toBeInTheDocument();

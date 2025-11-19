@@ -13,10 +13,7 @@ export async function clearRedisTestData(): Promise<void> {
     if (!validKeys.length) {
       return;
     }
-    if (validKeys.length === 1) {
-      await redis.del(validKeys[0]);
-    } else {
-      await redis.del(validKeys[0], ...validKeys.slice(1));
-    }
+    const [first, ...rest] = validKeys as [string, ...string[]];
+    await redis.del(first, ...rest);
   }
 }
