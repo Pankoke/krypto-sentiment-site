@@ -38,12 +38,12 @@ function resolveLatestEntry(entries: Array<{ generatedAt: string }>): { generate
   if (!entries.length) {
     return null;
   }
-  return entries.reduce((latest, current) => {
+  return entries.reduce<{ generatedAt: string } | null>((latest, current) => {
     if (!latest) return current;
     if (!current.generatedAt) return latest;
     if (!latest.generatedAt) return current;
     return current.generatedAt > latest.generatedAt ? current : latest;
-  }, entries[0]);
+  }, null);
 }
 
 export async function GET() {
