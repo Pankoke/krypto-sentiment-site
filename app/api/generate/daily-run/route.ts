@@ -12,6 +12,7 @@ import {
 import { berlinDateString } from 'lib/timezone';
 import { persistDailySnapshots } from 'lib/persistence';
 import type { NormalizedSourceEntry } from '../../../../lib/types';
+import { writeLog } from 'lib/monitoring/logs';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' } as const;
 const LOCALES: Array<'de' | 'en'> = ['de', 'en'];
@@ -162,12 +163,23 @@ export async function GET(req: Request) {
       durationMs: response.durationMs,
     });
 
+    await writeLog({
+      level: 'info',
+      message: `Daily run ${runStatus}`,
+      context: 'api/generate-daily-run',
+    });
+
     return NextResponse.json(response, {
       headers: JSON_HEADERS,
       status: allFailed ? 500 : 200,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
+    await writeLog({
+      level: 'error',
+      message: `Daily run failed: ${message}`,
+      context: 'api/generate-daily-run',
+    });
     return NextResponse.json(
       {
         status: 'fail',

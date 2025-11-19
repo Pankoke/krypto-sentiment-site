@@ -278,4 +278,11 @@ jobs:
             console.error('Health check fatal:', error);
             process.exit(1);
           });
+
+      - name: Webhook alerts for health
+        if: ${{ always() }}
+        env:
+          ALERT_WEBHOOK_URL: ${{ secrets.ALERT_WEBHOOK_URL }}
+          HEALTH_URL: ${{ secrets.HEALTH_URL }}
+        run: npx tsx scripts/check-health-and-alert.ts
           NODE

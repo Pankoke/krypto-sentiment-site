@@ -220,24 +220,25 @@ export interface SnapshotOverview {
   assetCoverage: AssetCoverage[];
 }
 
-function buildSnapshotWindow(daysBack: number): Set<string> {
+function buildSnapshotWindow(daysBack: number): string[] {
   const normalizedDays = Math.max(1, Math.min(daysBack, 90));
   const now = new Date();
-  const window = new Set<string>();
-  for (let i = 0; i < normalizedDays; i += 1) {
-    window.add(berlinDateString(addDays(now, -i)));
+  const dates: string[] = [];
+  for (let i = normalizedDays - 1; i >= 0; i -= 1) {
+    dates.push(berlinDateString(addDays(now, -i)));
   }
-  return window;
+  return dates;
 }
 
 export async function getSnapshotOverview(daysBack = 30): Promise<SnapshotOverview> {
-  const window = buildSnapshotWindow(daysBack);
+  const windowDates = buildSnapshotWindow(daysBack);
+  const windowSet = new Set(windowDates);
   const snapshotsByLocale = await Promise.all(locales.map((locale) => listNewsSnapshots(locale)));
   const coverageByDate = new Map<string, Set<string>>();
 
   for (const snapshots of snapshotsByLocale) {
     for (const snapshot of snapshots) {
-      if (!window.has(snapshot.date)) {
+      if (!windowSet.has(snapshot.date)) {
         continue;
       }
       const assets = coverageByDate.get(snapshot.date) ?? new Set<string>();
@@ -269,6 +270,36 @@ export async function getSnapshotOverview(daysBack = 30): Promise<SnapshotOvervi
     totalDays,
     assetCoverage,
   };
+}
+
+export interface SnapshotHistoryPoint {
+  date: string;
+  assetsWithData: number;
+}
+
+export async function getSnapshotHistory(daysBack = 30): Promise<SnapshotHistoryPoint[]> {
+  const windowDates = buildSnapshotWindow(daysBack);
+  const windowSet = new Set(windowDates);
+  const snapshotsByLocale = await Promise.all(locales.map((locale) => listNewsSnapshots(locale)));
+  const coverageByDate = new Map<string, Set<string>>();
+
+  for (const snapshots of snapshotsByLocale) {
+    for (const snapshot of snapshots) {
+      if (!windowSet.has(snapshot.date)) {
+        continue;
+      }
+      const assets = coverageByDate.get(snapshot.date) ?? new Set<string>();
+      for (const asset of snapshot.assets) {
+        assets.add(asset.symbol.toUpperCase());
+      }
+      coverageByDate.set(snapshot.date, assets);
+    }
+  }
+
+  return windowDates.map((date) => ({
+    date,
+    assetsWithData: coverageByDate.get(date)?.size ?? 0,
+  }));
 }
 
 export async function listSnapshotMetadata(locale: string, limit = 7): Promise<SnapshotMetadata[]> {

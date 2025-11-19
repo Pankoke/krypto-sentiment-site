@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { listSnapshotMetadata } from '../../../lib/news/snapshot';
+import { writeLog } from 'lib/monitoring/logs';
 
 const LOCALES: Array<'de' | 'en'> = ['de', 'en'];
 const STALE_THRESHOLD_MS = Number(process.env.HEALTH_STALE_THRESHOLD_MS ?? 24 * 60 * 60 * 1000);
@@ -84,6 +85,14 @@ export async function GET() {
       status = 'ok';
     } else {
       status = 'partial';
+    }
+
+    if (status === 'stale' || status === 'fail') {
+      await writeLog({
+        level: status === 'fail' ? 'error' : 'warn',
+        message: `Health ${status}`,
+        context: 'api/health',
+      });
     }
 
     const warnings: string[] = [];

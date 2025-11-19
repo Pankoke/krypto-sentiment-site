@@ -35,11 +35,15 @@ interface RedisClientInterface {
   zadd(key: string, score: number, member: string): Promise<number>;
   zrevrange(key: string, start: number, stop: number): Promise<string[]>;
   keys(pattern: string): Promise<string[]>;
+  lpush(key: string, value: string): Promise<number>;
+  ltrim(key: string, start: number, stop: number): Promise<'OK'>;
+  lrange(key: string, start: number, stop: number): Promise<string[]>;
   quit(): Promise<void>;
 }
 
 class MemoryRedis implements RedisClientInterface {
   private store = new Map<string, string>();
+  private lists = new Map<string, string[]>();
   async set(key: string, value: string): Promise<'OK'> {
     this.store.set(key, value);
     return 'OK';
@@ -48,7 +52,9 @@ class MemoryRedis implements RedisClientInterface {
     return this.store.get(key) ?? null;
   }
   async del(key: string): Promise<number> {
-    return this.store.delete(key) ? 1 : 0;
+    const removed = this.store.delete(key);
+    this.lists.delete(key);
+    return removed ? 1 : 0;
   }
   async zadd(key: string, score: number, member: string): Promise<number> {
     const setKey = `${key}:sorted`;
@@ -71,12 +77,30 @@ class MemoryRedis implements RedisClientInterface {
   }
   async quit(): Promise<void> {
     this.store.clear();
+    this.lists.clear();
   }
   async keys(pattern: string): Promise<string[]> {
     const regex = new RegExp(
       `^${pattern.replace(/\*/g, '.*').replace(/\?/g, '.')}$`
     );
-    return Array.from(this.store.keys()).filter((key) => regex.test(key));
+    const candidates = [...this.store.keys(), ...this.lists.keys()];
+    return candidates.filter((key) => regex.test(key));
+  }
+  async lpush(key: string, value: string): Promise<number> {
+    const list = this.lists.get(key) ?? [];
+    list.unshift(value);
+    this.lists.set(key, list);
+    return list.length;
+  }
+  async ltrim(key: string, start: number, stop: number): Promise<'OK'> {
+    const list = this.lists.get(key) ?? [];
+    const normalized = list.slice(start, stop + 1);
+    this.lists.set(key, normalized);
+    return 'OK';
+  }
+  async lrange(key: string, start: number, stop: number): Promise<string[]> {
+    const list = this.lists.get(key) ?? [];
+    return list.slice(start, stop + 1);
   }
 }
 
