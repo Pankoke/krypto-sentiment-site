@@ -153,7 +153,7 @@ function isIoredisClient(client: RedisClientInterface | Redis): client is Redis 
 
 export async function acquireDailyRunLock(dateKey: string, ttlSeconds: number): Promise<boolean> {
   if (isIoredisClient(redis)) {
-    const result = await redis.set(dateKey, 'locked', { NX: true, EX: ttlSeconds });
+    const result = await redis.call('SET', dateKey, 'locked', 'NX', 'EX', ttlSeconds);
     return result === 'OK';
   }
   await redis.set(dateKey, 'locked');
