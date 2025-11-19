@@ -14,7 +14,7 @@ async function loadLatestSnapshot(locale: string) {
   return snapshots.length ? snapshots[0] : null;
 }
 
-function determineStatus(snapshot: DailySnapshot | null): SnapshotStatus {
+function determineStatus(snapshot?: DailySnapshot | null): SnapshotStatus {
   if (!snapshot) {
     return 'empty';
   }
