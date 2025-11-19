@@ -193,7 +193,7 @@ export async function getAssetHistory(asset: string, days = 7, locale = 'de'): P
     if (!candidate) continue;
     history.push({
       date: snapshot.date,
-      score: candidate.score,
+      score: candidate.score01,
     });
   }
   return history;
