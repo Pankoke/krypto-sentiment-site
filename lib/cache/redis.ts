@@ -140,13 +140,21 @@ export function dailyRunLockKey(date: string): string {
   return `${dailyRunLockPrefix}${date}`;
 }
 
+function isIoredisClient(client: RedisClientInterface | Redis): client is Redis {
+  return client instanceof Redis;
+}
+
 export async function acquireDailyRunLock(dateKey: string, ttlSeconds: number): Promise<boolean> {
-  const result = await redis.set(dateKey, 'locked', 'NX', 'EX', ttlSeconds);
-  return result === 'OK';
+  if (isIoredisClient(redis)) {
+    const result = await redis.set(dateKey, 'locked', 'NX', 'EX', ttlSeconds);
+    return result === 'OK';
+  }
+  await redis.set(dateKey, 'locked');
+  return true;
 }
 
 export async function releaseDailyRunLock(dateKey: string): Promise<void> {
   await redis.del(dateKey);
- }
+}
 
 export default redis;
