@@ -210,6 +210,67 @@ export type SnapshotMetadata = {
   snapshot: NewsSnapshot;
 };
 
+export interface AssetCoverage {
+  assetId: string;
+  daysWithData: number;
+}
+
+export interface SnapshotOverview {
+  totalDays: number;
+  assetCoverage: AssetCoverage[];
+}
+
+function buildSnapshotWindow(daysBack: number): Set<string> {
+  const normalizedDays = Math.max(1, Math.min(daysBack, 90));
+  const now = new Date();
+  const window = new Set<string>();
+  for (let i = 0; i < normalizedDays; i += 1) {
+    window.add(berlinDateString(addDays(now, -i)));
+  }
+  return window;
+}
+
+export async function getSnapshotOverview(daysBack = 30): Promise<SnapshotOverview> {
+  const window = buildSnapshotWindow(daysBack);
+  const snapshotsByLocale = await Promise.all(locales.map((locale) => listNewsSnapshots(locale)));
+  const coverageByDate = new Map<string, Set<string>>();
+
+  for (const snapshots of snapshotsByLocale) {
+    for (const snapshot of snapshots) {
+      if (!window.has(snapshot.date)) {
+        continue;
+      }
+      const assets = coverageByDate.get(snapshot.date) ?? new Set<string>();
+      for (const asset of snapshot.assets) {
+        assets.add(asset.symbol.toUpperCase());
+      }
+      coverageByDate.set(snapshot.date, assets);
+    }
+  }
+
+  const totalDays = coverageByDate.size;
+  const assetCoverageMap = new Map<string, Set<string>>();
+  for (const [date, assets] of coverageByDate.entries()) {
+    for (const assetId of assets) {
+      const days = assetCoverageMap.get(assetId) ?? new Set<string>();
+      days.add(date);
+      assetCoverageMap.set(assetId, days);
+    }
+  }
+
+  const assetCoverage: AssetCoverage[] = Array.from(assetCoverageMap.entries())
+    .map(([assetId, dates]) => ({
+      assetId,
+      daysWithData: dates.size,
+    }))
+    .sort((a, b) => b.daysWithData - a.daysWithData || a.assetId.localeCompare(b.assetId));
+
+  return {
+    totalDays,
+    assetCoverage,
+  };
+}
+
 export async function listSnapshotMetadata(locale: string, limit = 7): Promise<SnapshotMetadata[]> {
   const dates = await listNewsDates(locale);
   const selected = dates.slice(0, limit);

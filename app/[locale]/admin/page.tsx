@@ -5,6 +5,7 @@ import useSWR from "swr";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { SnapshotOverview } from "lib/news/snapshot";
 
 type HealthStatus = "ok" | "partial" | "stale" | "warming_up" | "fail";
 
@@ -53,6 +54,12 @@ export default function AdminStatusPage() {
   const { data, error, isValidating, mutate } = useSWR<HealthResponse>("/api/health", swrFetcher, {
     revalidateOnFocus: true,
   });
+  const {
+    data: overview,
+    error: overviewError,
+    isValidating: overviewValidating,
+    mutate: mutateOverview,
+  } = useSWR<SnapshotOverview>("/api/admin/snapshot-overview?days=30", swrFetcher);
   const [runMessage, setRunMessage] = useState<string | null>(null);
   const [runStatus, setRunStatus] = useState<DailyRunStatus | null>(null);
   const [isRunning, setIsRunning] = useState(false);
@@ -77,6 +84,7 @@ export default function AdminStatusPage() {
       setRunStatus(body.runStatus);
       setRunMessage(body.reason ?? body.message ?? "Daily run completed");
       await mutate();
+      await mutateOverview?.();
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to trigger daily run";
       setRunStatus("failed");
@@ -84,7 +92,7 @@ export default function AdminStatusPage() {
     } finally {
       setIsRunning(false);
     }
-  }, [mutate]);
+  }, [mutate, mutateOverview]);
 
   const healthStatusBadge = useMemo(
     () => ({
@@ -100,7 +108,7 @@ export default function AdminStatusPage() {
         <h1 className="text-2xl font-semibold">Admin / System Status</h1>
         <p className="text-sm text-gray-500">Monitor pipeline health and trigger daily snapshots manually.</p>
       </div>
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-3">
         <Card className="border">
           <CardHeader>
             <CardTitle>Health</CardTitle>
@@ -148,6 +156,59 @@ export default function AdminStatusPage() {
             )}
             {runMessage && (
               <p className="mt-1 text-xs text-gray-500">{runMessage}</p>
+            )}
+          </CardContent>
+        </Card>
+        <Card className="border">
+          <CardHeader>
+            <CardTitle>Snapshot overview</CardTitle>
+            <p className="text-sm text-gray-500">Last 30 days of persisted data</p>
+          </CardHeader>
+          <CardContent>
+            {overviewValidating && <p className="text-sm text-gray-500">Loading coverage…</p>}
+            {overviewError && (
+              <p className="text-sm text-rose-600">
+                Could not load snapshot overview: {overviewError instanceof Error ? overviewError.message : "Unknown error"}
+              </p>
+            )}
+            {overview && (
+              <>
+                <p className="text-sm font-medium text-gray-700">
+                  Snapshots available on {overview.totalDays} day{overview.totalDays === 1 ? "" : "s"} in the last 30 days.
+                </p>
+                {overview.totalDays === 0 ? (
+                  <p className="mt-3 text-xs text-gray-500">No snapshots stored yet on disk/Redis.</p>
+                ) : (
+                  <div className="mt-3 space-y-2 text-sm">
+                    {overview.assetCoverage.slice(0, 8).map((entry) => (
+                      <div key={entry.assetId} className="flex items-center justify-between gap-3">
+                        <span className="font-medium">{entry.assetId}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold">{entry.daysWithData}</span>
+                          {entry.daysWithData === overview.totalDays && (
+                            <Badge className="border bg-emerald-100 text-emerald-800 border-emerald-200">
+                              Full coverage
+                            </Badge>
+                          )}
+                          {entry.daysWithData === 1 && (
+                            <Badge className="border bg-blue-50 text-blue-800 border-blue-200">
+                              New asset
+                            </Badge>
+                          )}
+                          {entry.daysWithData > 0 && overview.totalDays > 0 && entry.daysWithData <= 3 && (
+                            <Badge className="border bg-amber-50 text-amber-900 border-amber-200">
+                              Low coverage
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                    {!overview.assetCoverage.length && (
+                      <p className="text-xs text-gray-500">No asset details available for the selected window.</p>
+                    )}
+                  </div>
+                )}
+              </>
             )}
           </CardContent>
         </Card>
