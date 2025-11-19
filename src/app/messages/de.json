@@ -115,5 +115,21 @@
     "eventWindow": "Event Window",
     "lowConfidence": "Geringes Vertrauen",
     "highVolRegime": "High-Vol Regime"
+  },
+  "snapshotStatus": {
+    "empty": "Noch kein täglicher Bericht verfügbar. Starte den Cron-Job oder generiere manuell einen Report.",
+    "stale": "Der letzte Bericht ist älter als 24 Stunden (Stand {date}).",
+    "error": "Fehler beim Laden der Snapshot-Daten."
+  },
+  "sentimentStatus": {
+    "ok": "Zuletzt aktualisiert: {time}",
+    "stale": "Daten veraltet (Stand {time}).",
+    "empty": "Noch keine Sentiment-Daten verfügbar.",
+    "error": "Fehler beim Laden der Sentiment-Daten."
+  },
+  "newsStatus": {
+    "empty": "Noch keine News vorhanden – der tägliche Snapshot wurde noch nicht erstellt.",
+    "stale": "News älter als 24 Stunden (Stand {date}).",
+    "error": "Fehler beim Laden der News: {error}"
   }
 }

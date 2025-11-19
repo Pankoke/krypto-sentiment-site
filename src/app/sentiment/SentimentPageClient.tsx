@@ -3,7 +3,7 @@ import React, { useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import useSWR from 'swr';
 import type { SentimentResponse, SentimentItem } from 'lib/sentiment/types';
-import { SentimentHeader } from '@/components/sentiment/SentimentHeader';
+import { SentimentHeader, type SentimentStatus } from '@/components/sentiment/SentimentHeader';
 import { SentimentCard } from '@/components/sentiment/SentimentCard';
 import { SentimentDetailDialog } from '@/components/sentiment/SentimentDetailDialog';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { filterAssetsByWhitelist, sortAssetsByWhitelistOrder } from '../../../lib/assets';
 
 const fetcher = (u: string) => fetch(u).then((r) => r.json() as Promise<SentimentResponse>);
+const STALE_THRESHOLD_MS = Number(process.env.SENTIMENT_STALE_THRESHOLD_MS ?? 24 * 60 * 60 * 1000);
 
 export default function SentimentPageClient() {
   const t = useTranslations();
@@ -30,6 +31,22 @@ export default function SentimentPageClient() {
     return arr;
   }, [data, filter]);
 
+  const generatedAt = data?.lastUpdatedISO;
+  const timestamp = generatedAt ? Date.parse(generatedAt) : NaN;
+  const isStale = !Number.isNaN(timestamp) && Date.now() - timestamp > STALE_THRESHOLD_MS;
+  let status: SentimentStatus = 'empty';
+  if (error) {
+    status = 'error';
+  } else if (!data || !data.items.length) {
+    status = 'empty';
+  } else if (isStale) {
+    status = 'stale';
+  } else {
+    status = 'ok';
+  }
+
+  const errorMessage = error instanceof Error ? error.message : typeof error === 'string' ? error : undefined;
+
   return (
     <div className="space-y-4">
       <SentimentHeader
@@ -38,6 +55,9 @@ export default function SentimentPageClient() {
         nextRefreshETASeconds={data?.nextRefreshETASeconds}
         filter={filter}
         onChangeFilter={setFilter}
+        status={status}
+        generatedAt={generatedAt}
+        errorMessage={errorMessage}
       />
 
       {error && (

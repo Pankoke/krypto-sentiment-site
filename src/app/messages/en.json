@@ -112,5 +112,21 @@
     "eventWindow": "Event Window",
     "lowConfidence": "Low Confidence",
     "highVolRegime": "High-Vol Regime"
+  },
+  "snapshotStatus": {
+    "empty": "No daily report yet. Start the cron job or generate one manually.",
+    "stale": "The latest report is older than 24 hours (as of {date}).",
+    "error": "Failed to load the snapshot data."
+  },
+  "sentimentStatus": {
+    "ok": "Last updated: {time}",
+    "stale": "Data is stale (as of {time}).",
+    "empty": "No sentiment data available yet.",
+    "error": "Failed to load sentiment data."
+  },
+  "newsStatus": {
+    "empty": "No news snapshot yet – waiting for the daily run.",
+    "stale": "News older than 24 hours (as of {date}).",
+    "error": "Error loading news: {error}"
   }
 }

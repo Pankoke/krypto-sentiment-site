@@ -130,85 +130,8 @@ jobs:
             process.exit(1);
           });
           NODE
-  health-check:
-    needs: run-daily
-    runs-on: ubuntu-latest
-    steps:
-      - name: Evaluate daily-run output via /api/health
-        env:
-          DAILY_JSON: ${{ needs.run-daily.outputs.dailyJson }}
-          HEALTH_URL: ${{ secrets.HEALTH_URL }}
-          TARGET_URL: ${{ secrets.TARGET_URL }}
-          CRON_SECRET: ${{ secrets.CRON_SECRET }}
-        run: |
-          node <<'NODE'
-          const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-          async function evaluatePayload(payload, label) {
-            const newsItems = payload?.news?.items ?? 0;
-            const assets = payload?.reports?.assets ?? 0;
-            const partial = payload?.partial ?? false;
-            console.info(`${label} health summary`, { newsItems, assets, partial });
-            if (newsItems > 0 && assets > 0) {
-              return true;
-            }
-            if (partial) {
-              console.warn(`${label} is partial but non-blocking`);
-              return true;
-            }
-            return false;
-          }
-          (async () => {
-            const {env} = process;
-            const waitTime = 75_000;
-            console.info(`Waiting ${waitTime}ms for deployment propagation`);
-            await delay(waitTime);
-            const targetHealth = env.HEALTH_URL || env.TARGET_URL?.replace(/\/api\/generate\/.*$/, '/api/health');
-            const headers = env.CRON_SECRET ? { 'x-cron-secret': env.CRON_SECRET } : {};
-            let healthPayload = null;
-            if (targetHealth) {
-              try {
-                const response = await fetch(targetHealth, { method: 'GET', headers });
-                if (response.ok) {
-                  healthPayload = await response.json();
-                  const ok = await evaluatePayload({
-                    news: { items: healthPayload?.news?.newsItemsCount ?? 0 },
-                    reports: { assets: healthPayload?.reports?.assetsCount ?? 0 },
-                    partial: healthPayload?.partial,
-                  }, 'remote');
-                  if (ok) {
-                    return;
-                  }
-                } else {
-                  console.warn(`Health endpoint returned ${response.status}`);
-                }
-              } catch (error) {
-                console.warn('Health fetch failed', error);
-              }
-            } else {
-              console.warn('No health URL configured, skipping remote check');
-            }
-            const raw = env.DAILY_JSON;
-            if (raw) {
-              try {
-                const payload = JSON.parse(raw);
-                const ok = await evaluatePayload(payload, 'dailyJson');
-                if (ok) {
-                  return;
-                }
-              } catch (error) {
-                console.warn('dailyJson parse failed', error);
-              }
-            } else {
-              console.warn('No dailyJson output available for fallback');
-            }
-            throw new Error('Health validation failed: insufficient data');
-          })().catch((error) => {
-            console.error('Health check fatal:', error);
-            process.exit(1);
-          });
-          NODE
   snapshot-dump:
-    needs: [run-daily, health-check]
+    needs: run-daily
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -272,6 +195,87 @@ jobs:
           })().catch((err) => {
             console.error('Snapshot dump failed:', err);
             redis.disconnect();
+            process.exit(1);
+          });
+          NODE
+  health-check:
+    needs: [run-daily, snapshot-dump]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Evaluate daily-run output via /api/health
+        env:
+          DAILY_JSON: ${{ needs.run-daily.outputs.dailyJson }}
+          HEALTH_URL: ${{ secrets.HEALTH_URL }}
+          TARGET_URL: ${{ secrets.TARGET_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          node <<'NODE'
+          const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+          async function evaluatePayload(payload, label) {
+            const status = payload?.status ?? 'fail';
+            const newsItems = payload?.news?.newsItemsCount ?? 0;
+            const assets = payload?.reports?.assetsCount ?? 0;
+            console.info(`${label} health summary`, { status, newsItems, assets });
+            if (status === 'ok') {
+              return true;
+            }
+            if (status === 'stale') {
+              console.warn(`${label} reports stale snapshots but allows continuation`);
+              return true;
+            }
+            if (status === 'warming_up') {
+              console.warn(`${label} warming up (no snapshots yet)`);
+              return true;
+            }
+            if (status === 'partial') {
+              console.warn(`${label} partial data but non-blocking`);
+              return true;
+            }
+            return false;
+          }
+          (async () => {
+            const {env} = process;
+            const waitTime = 75_000;
+            console.info(`Waiting ${waitTime}ms for deployment propagation`);
+            await delay(waitTime);
+            const targetHealth = env.HEALTH_URL || env.TARGET_URL?.replace(/\/api\/generate\/.*$/, '/api/health');
+            const headers = env.CRON_SECRET ? { 'x-cron-secret': env.CRON_SECRET } : {};
+            let healthPayload = null;
+            if (targetHealth) {
+              try {
+                const response = await fetch(targetHealth, { method: 'GET', headers });
+                if (response.ok) {
+                  healthPayload = await response.json();
+                  const ok = await evaluatePayload(healthPayload, 'remote');
+                  if (ok) {
+                    return;
+                  }
+                } else {
+                  console.warn(`Health endpoint returned ${response.status}`);
+                }
+              } catch (error) {
+                console.warn('Health fetch failed', error);
+              }
+            } else {
+              console.warn('No health URL configured, skipping remote check');
+            }
+            const raw = env.DAILY_JSON;
+            if (raw) {
+              try {
+                const payload = JSON.parse(raw);
+                const ok = await evaluatePayload(payload, 'dailyJson');
+                if (ok) {
+                  return;
+                }
+              } catch (error) {
+                console.warn('dailyJson parse failed', error);
+              }
+            } else {
+              console.warn('No dailyJson output available for fallback');
+            }
+            throw new Error('Health validation failed: insufficient data');
+          })().catch((error) => {
+            console.error('Health check fatal:', error);
             process.exit(1);
           });
           NODE

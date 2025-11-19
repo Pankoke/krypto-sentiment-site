@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
-import NewsList from '../../../../src/components/news/NewsList';
+import NewsList, { type NewsSnapshotStatus } from '../../../../src/components/news/NewsList';
 import { RefreshButton } from '../../../../src/components/news/RefreshButton';
 import { loadLatestAvailableSnapshot, loadSnapshotForLocale } from '../../../../lib/news/snapshot';
 import { formatBerlinSnapshotLabel } from '../../../../lib/timezone';
@@ -11,6 +11,37 @@ const OG_LOCALES: Record<'de' | 'en', string> = {
   de: 'de_DE',
   en: 'en_US',
 };
+
+const STALE_THRESHOLD_MS = Number(process.env.NEWS_STALE_THRESHOLD_MS ?? 24 * 60 * 60 * 1000);
+
+type SnapshotState = NewsSnapshotStatus;
+
+function determineStatus(
+  snapshot: Awaited<ReturnType<typeof loadSnapshotForLocale>>['snapshot'],
+  snapshotFlag: string | undefined
+): SnapshotState {
+  if (snapshotFlag === 'error') {
+    return 'error';
+  }
+  if (!snapshot) {
+    return snapshotFlag === 'missing' ? 'empty' : 'empty';
+  }
+  if (!snapshot.generatedAt) {
+    return 'empty';
+  }
+  const parsed = Date.parse(snapshot.generatedAt);
+  if (Number.isNaN(parsed)) {
+    return 'empty';
+  }
+  const age = Date.now() - parsed;
+  if (age > STALE_THRESHOLD_MS) {
+    return 'stale';
+  }
+  if (!snapshot.assets.length) {
+    return 'empty';
+  }
+  return 'ok';
+}
 
 type NewsSection = {
   title: string;
@@ -207,14 +238,24 @@ export default async function NewsPage({ params }: NewsPageProps) {
     });
   }
 
-  const regenUrl = '/api/news/generate?mode=overwrite';
-  const assetsCount = snapshot?.assets.length ?? 0;
-  const hasContent = Boolean(snapshot && assetsCount > 0);
-  const noNewsMessage =
+  const status = determineStatus(snapshot, snapshotResult.status);
+  const statusAction =
+    status === 'empty' || status === 'stale'
+      ? (
+          <div className="flex justify-center">
+            <RefreshButton label={t('news.retry')} />
+          </div>
+        )
+      : status === 'error'
+      ? (
+          <div className="flex justify-center">
+            <RefreshButton label={t('news.retry')} />
+          </div>
+        )
+      : null;
     params.locale === 'de'
       ? 'Derzeit sind keine News verfügbar. Bitte später erneut versuchen.'
       : t('news.emptySnapshot');
-  const refreshLabel = params.locale === 'de' ? 'Aktualisieren' : 'Refresh';
   const localeCopy = copy[params.locale];
   const navLinks = [
     { label: params.locale === 'de' ? 'Startseite' : 'Homepage', href: `/${params.locale}` },
@@ -302,53 +343,18 @@ export default async function NewsPage({ params }: NewsPageProps) {
           {banner}
         </div>
       ) : null}
-      {snapshot && hasContent ? (
-        <>
-          <NewsList
-            assets={snapshot.assets}
-            reportDate={snapshot.date}
-            generatedAt={snapshot.generatedAt}
-            methodNote={snapshot.method_note}
-          />
-          <p className="text-xs text-gray-500">
-            {t('news.generatedAt', { date: snapshot.generatedAt })}
-          </p>
-        </>
-      ) : (
-        <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center space-y-4 text-sm text-gray-700">
-          {snapshotResult.status === 'error' ? (
-            <>
-              <p>{t('news.errorLoading', { error: snapshotResult.reason ?? 'unknown' })}</p>
-              <a
-                href="/de/news?retry=1"
-                className="font-semibold text-indigo-600 hover:text-indigo-700"
-              >
-                {t('news.retry')}
-              </a>
-            </>
-          ) : (
-            <>
-              <p>{noNewsMessage}</p>
-              <div className="flex justify-center">
-                <RefreshButton label={refreshLabel} />
-              </div>
-            </>
-          )}
-          <div className="flex flex-wrap justify-center gap-3">
-            <a href="/de/news" className="text-gray-700 hover:text-black">
-              {t('nav.backHome')}
-            </a>
-            {process.env.NODE_ENV !== 'production' ? (
-              <a
-                href={regenUrl}
-                className="rounded-md bg-indigo-600 px-3 py-1 text-white hover:bg-indigo-500"
-              >
-                {t('news.rebuildButton')}
-              </a>
-            ) : null}
-          </div>
-        </div>
-      )}
+      <NewsList
+        assets={snapshot?.assets ?? []}
+        reportDate={snapshot?.date ?? new Date().toISOString()}
+        generatedAt={snapshot?.generatedAt}
+        methodNote={snapshot?.method_note}
+        status={status}
+        errorMessage={snapshotResult.reason ?? undefined}
+        action={statusAction ?? undefined}
+      />
+      {snapshot?.generatedAt ? (
+        <p className="text-xs text-gray-500">{t('news.generatedAt', { date: snapshot.generatedAt })}</p>
+      ) : null}
       <div className="text-sm">
         <a href="/de/news" className="text-gray-700 hover:text-black">
           {t('nav.backHome')}

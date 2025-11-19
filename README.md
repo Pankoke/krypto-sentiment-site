@@ -105,3 +105,46 @@ NEWS_GENERATE_SECRET=...
 ```
 
 Secrets bleiben auf dem Server und dürfen nie in den Client gebunden werden. Die News-Startseite, die Daily-API und Persistenz-Logik laufen ausschließlich auf dem Server.
+## Overview
+
+- **What it is:** Next.js 14 App Router frontend plus backend APIs that deliver daily crypto sentiment reports with snapshots stored in `data/{reports,news,metrics}` and Upstash Redis (`news:{locale}:{date}`, `reports:{locale}:{date}`).
+- **Data flow:** Social, news and on-chain adapters feed the aggregator ? daily run persists JSON + Redis snapshots and revalidates `news-daily`/`reports-daily`.
+
+## Local development
+
+1. `npm install`
+2. Copy `.env.example` ? `.env.local`
+3. `npm run dev` (http://localhost:3000/de/news).
+4. Optional: `npm run build`, `npm run lint`, `npm run test`.
+
+## Environment variables
+
+- `OPENAI_API_KEY`, `OPENAI_MODEL`
+- `CRON_SECRET`, `TARGET_URL`, `HEALTH_URL`, `DAILY_API_SECRET`, `NEWS_GENERATE_SECRET`
+- Redis: `REDIS_URL` + `REDIS_TOKEN` or Upstash `KV_URL`/`KV_REST_API_URL`/`KV_REST_API_TOKEN`/`KV_REST_API_READ_ONLY_TOKEN`.
+- Tunables: `GENERATE_DATA_DIR`, `ASSET_WHITELIST_PATH`, `SENTIMENT_STALE_THRESHOLD_MS`, `NEWS_STALE_THRESHOLD_MS`, `APP_BASE_URL`.
+
+Set the same keys as GitHub/Vercel secrets in production.
+
+## Cron & production run
+
+1. GitHub workflow `.github/workflows/daily-run.yml` at UTC 05:00/04:00 (� 06:00 CET/CEST) calls `/api/generate/daily-run`, dumps snapshots to Redis, and runs `/api/health` (tolerant statuses: `warming_up`, `stale`, `partial`, `ok`, `fail`).
+2. Manual trigger:
+
+```
+curl -L "https://krypto-sentiment-site.vercel.app/api/generate/daily-run?key=SuperLongSecret`&mode=overwrite`&locale=both"
+```
+
+3. Verify via `npx tsx scripts/check-redis.ts`.
+
+## Monitoring & debugging
+
+- `/api/health` reports `status`, `latestGeneratedAt`, `staleThresholdMs`, `warnings`, and per-topic counts.
+- `scripts/check-redis.ts` shows `generatedAt` plus warm/stale state.
+- `SentimentHeader` and `NewsList` expose the same badges and refresh buttons.
+
+## Tests
+
+- `npm run lint`
+- `npm run test`
+- `npx vitest run tests/news-page.test.tsx`

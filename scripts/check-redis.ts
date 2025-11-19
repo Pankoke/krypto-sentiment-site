@@ -23,6 +23,7 @@ const redis = new Redis({
 
 const locales: Array<'de' | 'en'> = ['de', 'en'];
 const today = berlinDateString();
+const STALE_THRESHOLD_MS = Number(process.env.HEALTH_STALE_THRESHOLD_MS ?? 24 * 60 * 60 * 1000);
 
 async function main() {
   for (const locale of locales) {
@@ -44,12 +45,33 @@ async function main() {
           : {};
       const assetCount = Array.isArray(parsedSnapshot.assets) ? parsedSnapshot.assets.length : 'n/a';
       const generatedAt = typeof parsedSnapshot.generatedAt === 'string' ? parsedSnapshot.generatedAt : null;
+      const now = Date.now();
+      let statusMessage = 'ok';
+      let ageLabel = 'n/a';
       if (!generatedAt) {
-        console.warn('  WARN: Snapshot ohne generatedAt');
+        statusMessage = 'warming_up';
+      } else {
+        const parsedTime = Date.parse(generatedAt);
+        if (Number.isNaN(parsedTime)) {
+          statusMessage = 'warming_up';
+        } else {
+          const age = now - parsedTime;
+          ageLabel = `${Math.round(age / 1000)}s`;
+          if (age > STALE_THRESHOLD_MS) {
+            statusMessage = 'stale';
+          }
+        }
+      }
+      if (statusMessage === 'warming_up') {
+        console.warn('  WARN: Snapshot ohne generatedAt, state=warming_up');
+      } else if (statusMessage === 'stale') {
+        console.warn('  WARN: Snapshot stale (older than threshold)');
       }
       console.log(
         `  assets: ${assetCount}`,
-        `generatedAt: ${generatedAt ?? 'missing'}`
+        `generatedAt: ${generatedAt ?? 'missing'}`,
+        `status: ${statusMessage}`,
+        `age: ${ageLabel}`
       );
     }
   }
