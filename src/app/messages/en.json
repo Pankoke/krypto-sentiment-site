@@ -6,7 +6,9 @@
     "score": "Score",
     "confidence": "Confidence",
     "updated": "Last updated",
-    "nextUpdate": "Next update in ~{mins} min."
+    "nextUpdate": "Next update in ~{mins} min.",
+    "topSignals": "Top signals",
+    "noSignals": "No signals yet."
   },
   "badge": {
     "bullish": "Bullish",
@@ -37,7 +39,11 @@
     "details": "Details",
     "retry": "Retry",
     "close": "Close",
-    "info": "Info"
+    "info": "Info",
+    "more": "Show more",
+    "less": "Show less",
+    "showJson": "Show raw JSON",
+    "hideJson": "Hide raw JSON"
   },
   "home": {
     "noReport": "No report found. You can generate one now.",

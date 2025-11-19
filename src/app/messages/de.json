@@ -6,7 +6,9 @@
     "score": "Score",
     "confidence": "Vertrauen",
     "updated": "Zuletzt aktualisiert",
-    "nextUpdate": "Nächste Aktualisierung in ~{mins} Min."
+    "nextUpdate": "Nächste Aktualisierung in ~{mins} Min.",
+    "topSignals": "Top-Signale",
+    "noSignals": "Noch keine ausformulierten Signale."
   },
   "badge": {
     "bullish": "Bullish",
@@ -40,7 +42,11 @@
     "details": "Details",
     "retry": "Erneut laden",
     "close": "Schließen",
-    "info": "Info"
+    "info": "Info",
+    "more": "Mehr anzeigen",
+    "less": "Weniger anzeigen",
+    "showJson": "Raw JSON anzeigen",
+    "hideJson": "Raw JSON verbergen"
   },
   "home": {
     "noReport": "Kein Bericht gefunden. Du kannst jetzt einen Tagesbericht erzeugen.",
@@ -78,7 +84,10 @@
     "fallbackBanner": "Letzter Snapshot vom {date} um {time} Uhr (Europe/Berlin).",
     "rebuildButton": "News neu generieren",
     "noSignals": "Keine Signale in dieser Kategorie.",
-    "label": { "score": "Score", "confidence": "Vertrauen" }
+    "label": {
+      "score": "Score",
+      "confidence": "Vertrauen"
+    }
   },
   "tooltip": {
     "definitionTitle": "Definition",
