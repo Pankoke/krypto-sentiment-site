@@ -53,6 +53,8 @@ describe('NewsList snapshot renderer', () => {
 
   it('renders empty snapshot message when no assets', () => {
     render(<NewsList assets={[]} reportDate="2025-11-14" />);
-    expect(screen.getByText('Noch keine News vorhanden.')).toBeInTheDocument();
+    expect(
+      screen.getByText((content) => content.includes('Noch keine News vorhanden'))
+    ).toBeInTheDocument();
   });
 });

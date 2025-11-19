@@ -34,6 +34,7 @@ interface RedisClientInterface {
   del(key: string): Promise<number>;
   zadd(key: string, score: number, member: string): Promise<number>;
   zrevrange(key: string, start: number, stop: number): Promise<string[]>;
+  keys(pattern: string): Promise<string[]>;
   quit(): Promise<void>;
 }
 
@@ -70,6 +71,12 @@ class MemoryRedis implements RedisClientInterface {
   }
   async quit(): Promise<void> {
     this.store.clear();
+  }
+  async keys(pattern: string): Promise<string[]> {
+    const regex = new RegExp(
+      `^${pattern.replace(/\*/g, '.*').replace(/\?/g, '.')}$`
+    );
+    return Array.from(this.store.keys()).filter((key) => regex.test(key));
   }
 }
 

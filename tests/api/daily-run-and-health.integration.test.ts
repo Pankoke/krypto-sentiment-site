@@ -12,7 +12,7 @@ vi.mock('next/cache', () => ({
   revalidateTag: vi.fn(async () => undefined),
 }));
 
-vi.mock('lib/news/aggregator', async () => {
+const aggregatorMock = async () => {
   const { berlinDateString } = await vi.importActual('lib/timezone');
   const date = berlinDateString(new Date());
   return {
@@ -36,9 +36,9 @@ vi.mock('lib/news/aggregator', async () => {
       generatedAt: new Date().toISOString(),
     })),
   };
-});
+};
 
-vi.mock('lib/sentiment', () => ({
+const sentimentMock = () => ({
   runDailySentiment: vi.fn(async () => ({
     date: new Date().toISOString().split('T')[0],
     universe: ['BTC', 'ETH'],
@@ -59,10 +59,9 @@ vi.mock('lib/sentiment', () => ({
     version: '1.0',
     generatedAt: new Date().toISOString(),
   })),
-}));
-
-import { GET as dailyRunHandler } from '../../app/api/generate/daily-run/route';
-import { GET as healthHandler } from '../../app/api/health/route';
+});
+let dailyRunHandler: typeof import('../../app/api/generate/daily-run/route').GET;
+let healthHandler: typeof import('../../app/api/health/route').GET;
 import { closeRedis } from '../../lib/cache/redis';
 import { clearRedisTestData } from '../utils/redisTestUtils';
 
@@ -75,6 +74,10 @@ async function cleanTestArtifacts() {
 describe('Daily run + health integration', () => {
   beforeEach(async () => {
     await cleanTestArtifacts();
+    vi.doMock('lib/news/aggregator', aggregatorMock);
+    vi.doMock('lib/sentiment', sentimentMock);
+    ({ GET: dailyRunHandler } = await import('../../app/api/generate/daily-run/route'));
+    ({ GET: healthHandler } = await import('../../app/api/health/route'));
   });
 
   it('reports warming up without snapshots', async () => {
