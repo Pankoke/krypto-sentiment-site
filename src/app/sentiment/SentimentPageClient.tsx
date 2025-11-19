@@ -81,7 +81,7 @@ export default function SentimentPageClient() {
 
       <div className="grid md:grid-cols-3 gap-6">
         {items.map((it) => (
-          <SentimentCard key={it.symbol} item={it} onOpenDetails={setSelected} />
+          <SentimentCard key={it.symbol} item={it} />
         ))}
       </div>
 
