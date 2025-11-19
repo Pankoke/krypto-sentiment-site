@@ -9,6 +9,10 @@ export async function clearRedisTestData(): Promise<void> {
     keysToDelete.push(...found);
   }
   if (keysToDelete.length) {
-    await redis.del(...keysToDelete);
+    if (keysToDelete.length === 1) {
+      await redis.del(keysToDelete[0]);
+    } else {
+      await redis.del(keysToDelete[0], ...keysToDelete.slice(1));
+    }
   }
 }
