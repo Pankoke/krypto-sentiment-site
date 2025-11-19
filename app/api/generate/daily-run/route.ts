@@ -1,15 +1,16 @@
 import { NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
-import { aggregateNews } from '../../../../lib/news/aggregator';
-import { hasNewsSnapshotForDate } from '../../../../lib/news/snapshot';
-import { fetchAllSources } from '../../../../lib/sources';
-import { runDailySentiment } from '../../../../lib/sentiment';
+import { aggregateNews } from 'lib/news/aggregator';
+import { hasNewsSnapshotForDate, persistDailyNewsSnapshots } from 'lib/news/snapshot';
+import { fetchAllSources } from 'lib/sources';
+import { runDailySentiment } from 'lib/sentiment';
 import {
   acquireDailyRunLock,
   dailyRunLockKey,
   releaseDailyRunLock,
-} from '../../../../lib/cache/redis';
-import { berlinDateString } from '../../../../lib/timezone';
+} from 'lib/cache/redis';
+import { berlinDateString } from 'lib/timezone';
+import { persistDailySnapshots } from 'lib/persistence';
 import type { NormalizedSourceEntry } from '../../../../lib/types';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' } as const;
@@ -134,6 +135,13 @@ export async function GET(req: Request) {
         ? 'updated'
         : 'created'
       : 'failed';
+
+    if (newsResult.report) {
+      await persistDailyNewsSnapshots(newsResult.report, { force: true });
+    }
+    if (reportsResult.report) {
+      await persistDailySnapshots(reportsResult.report);
+    }
 
     const response = {
       runStatus,
