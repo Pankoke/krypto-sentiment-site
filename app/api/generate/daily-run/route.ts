@@ -1,13 +1,20 @@
 import { NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
 import { aggregateNews } from '../../../../lib/news/aggregator';
+import { hasNewsSnapshotForDate } from '../../../../lib/news/snapshot';
 import { fetchAllSources } from '../../../../lib/sources';
 import { runDailySentiment } from '../../../../lib/sentiment';
+import {
+  acquireDailyRunLock,
+  dailyRunLockKey,
+  releaseDailyRunLock,
+} from '../../../../lib/cache/redis';
 import { berlinDateString } from '../../../../lib/timezone';
 import type { NormalizedSourceEntry } from '../../../../lib/types';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' } as const;
 const LOCALES: Array<'de' | 'en'> = ['de', 'en'];
+const LOCK_TTL_SECONDS = 60 * 60;
 
 type PartResultBase = {
   ok: boolean;
@@ -81,6 +88,8 @@ async function runReportsPart(posts: NormalizedSourceEntry[]) {
   return buildResult('reports', Date.now() - start, payload);
 }
 
+type DailyRunStatus = 'created' | 'updated' | 'skipped' | 'failed';
+
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const key = url.searchParams.get('key') ?? req.headers.get('x-cron-secret');
@@ -92,38 +101,77 @@ export async function GET(req: Request) {
     );
   }
 
-  const start = Date.now();
   const dateBerlin = berlinDateString(new Date());
+  const lockKey = dailyRunLockKey(dateBerlin);
+  let lockAcquired = false;
 
-  const posts = await fetchAllSources();
-  const newsResult = await runNewsPart(posts);
-  const reportsResult = await runReportsPart(posts);
+  try {
+    lockAcquired = await acquireDailyRunLock(lockKey, LOCK_TTL_SECONDS);
+    if (!lockAcquired) {
+      return NextResponse.json(
+        {
+          status: 'skipped',
+          runStatus: 'skipped',
+          reason: 'Daily run already in progress or recently completed for today',
+          date: dateBerlin,
+        },
+        { status: 409, headers: JSON_HEADERS }
+      );
+    }
 
-  const partial = !(newsResult.ok && reportsResult.ok);
-  const allFailed = !newsResult.ok && !reportsResult.ok;
-  const status: 'ok' | 'partial' | 'fail' =
-    newsResult.ok && reportsResult.ok ? 'ok' : partial ? 'partial' : 'fail';
+    const previousSnapshotExists = await hasNewsSnapshotForDate(dateBerlin);
+    const start = Date.now();
+    const posts = await fetchAllSources();
+    const newsResult = await runNewsPart(posts);
+    const reportsResult = await runReportsPart(posts);
 
-  const response = {
-    date: dateBerlin,
-    locales: LOCALES,
-    news: newsResult,
-    reports: reportsResult,
-    partial: partial && !allFailed,
-    durationMs: Date.now() - start,
-    status,
-  };
+    const partial = !(newsResult.ok && reportsResult.ok);
+    const allFailed = !newsResult.ok && !reportsResult.ok;
+    const status: 'ok' | 'partial' | 'fail' =
+      newsResult.ok && reportsResult.ok ? 'ok' : partial ? 'partial' : 'fail';
+    const runStatus: DailyRunStatus = newsResult.ok && reportsResult.ok
+      ? previousSnapshotExists
+        ? 'updated'
+        : 'created'
+      : 'failed';
 
-  await revalidateTag('news-daily');
-  await revalidateTag('reports-daily');
-  console.info('daily-run summary', {
-    dateBerlin,
-    partial: response.partial,
-    durationMs: response.durationMs,
-  });
+    const response = {
+      runStatus,
+      date: dateBerlin,
+      locales: LOCALES,
+      news: newsResult,
+      reports: reportsResult,
+      partial: partial && !allFailed,
+      durationMs: Date.now() - start,
+      status,
+    };
 
-  return NextResponse.json(response, {
-    headers: JSON_HEADERS,
-    status: allFailed ? 500 : 200,
-  });
+    await revalidateTag('news-daily');
+    await revalidateTag('reports-daily');
+    console.info('daily-run summary', {
+      dateBerlin,
+      partial: response.partial,
+      durationMs: response.durationMs,
+    });
+
+    return NextResponse.json(response, {
+      headers: JSON_HEADERS,
+      status: allFailed ? 500 : 200,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json(
+      {
+        status: 'fail',
+        runStatus: 'failed',
+        date: dateBerlin,
+        reason: message,
+      },
+      { status: 500, headers: JSON_HEADERS }
+    );
+  } finally {
+    if (lockAcquired) {
+      await releaseDailyRunLock(lockKey);
+    }
+  }
 }

@@ -1,6 +1,10 @@
+ 'use client';
+
 import React, { useMemo } from 'react';
+import useSWR from 'swr';
 import { useTranslations } from 'next-intl';
 import type { SentimentItem } from 'lib/sentiment/types';
+import type { AssetSentimentPoint } from 'lib/news/snapshot';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScorePill } from './ScorePill';
 import { ConfidencePill } from './ConfidencePill';
@@ -19,6 +23,17 @@ export function SentimentCard({ item, onOpenDetails }: SentimentCardProps) {
     for (const b of item.bullets) g[b.group].push(b.text);
     return g;
   }, [item.bullets]);
+  const fetcher = (url: string) => fetch(url).then((resp) => resp.json() as Promise<{ asset: string; points: AssetSentimentPoint[] }>);
+  const { data: historyData } = useSWR(
+    item.symbol ? `/api/sentiment/history?asset=${item.symbol}&days=30` : null,
+    fetcher
+  );
+  const sparklinePoints = historyData?.points.length
+    ? historyData.points.map((point) => ({
+        t: new Date(point.date).getTime(),
+        c: point.score,
+      }))
+    : item.sparkline;
 
   return (
     <Card className="relative">
@@ -27,7 +42,7 @@ export function SentimentCard({ item, onOpenDetails }: SentimentCardProps) {
           <CardTitle className="text-lg">{item.symbol}</CardTitle>
           <div className="flex items-center gap-2">
             <TrendBadge trend={item.trend} />
-            <Sparkline data={item.sparkline} />
+            <Sparkline data={sparklinePoints} />
           </div>
         </div>
       </CardHeader>

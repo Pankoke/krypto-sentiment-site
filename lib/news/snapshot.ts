@@ -1,6 +1,7 @@
 import { locales } from '../../i18n';
 import type { AggregatedReport } from './aggregator';
 import { addDays, berlinDateString, berlinHour } from '../timezone';
+import { listSnapshots } from '../persistence';
 import {
   setSnapshot,
   getSnapshot,
@@ -167,6 +168,37 @@ export async function latestNewsSnapshot(locale: string): Promise<NewsSnapshot |
 
 export async function readNewsSnapshot(date: string, locale: string): Promise<NewsSnapshot | null> {
   return getSnapshot<NewsSnapshot>(newsSnapshotKey(locale, date));
+}
+
+import { listSnapshots } from '../persistence';
+
+export async function hasNewsSnapshotForDate(date: string): Promise<boolean> {
+  const checks = await Promise.all(
+    locales.map((locale) => getSnapshot<NewsSnapshot>(newsSnapshotKey(locale, date)))
+  );
+  return checks.some((snapshot) => Boolean(snapshot));
+}
+
+export interface AssetSentimentPoint {
+  date: string;
+  score: number;
+}
+
+export async function getAssetHistory(asset: string, days = 7, locale = 'de'): Promise<AssetSentimentPoint[]> {
+  const snapshots = await listSnapshots(locale);
+  const limit = Math.min(Math.max(days, 1), 60);
+  const selected = snapshots.slice(0, limit);
+  const history: AssetSentimentPoint[] = [];
+  const normalized = asset.toUpperCase();
+  for (const snapshot of selected.reverse()) {
+    const candidate = snapshot.assets.find((entry) => entry.asset === normalized);
+    if (!candidate) continue;
+    history.push({
+      date: snapshot.date,
+      score: candidate.score,
+    });
+  }
+  return history;
 }
 
 export type SnapshotMetadata = {

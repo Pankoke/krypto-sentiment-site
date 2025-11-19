@@ -134,4 +134,19 @@ export async function closeRedis(): Promise<void> {
   await redis.quit();
 }
 
+const dailyRunLockPrefix = 'daily-run-lock:';
+
+export function dailyRunLockKey(date: string): string {
+  return `${dailyRunLockPrefix}${date}`;
+}
+
+export async function acquireDailyRunLock(dateKey: string, ttlSeconds: number): Promise<boolean> {
+  const result = await redis.set(dateKey, 'locked', 'NX', 'EX', ttlSeconds);
+  return result === 'OK';
+}
+
+export async function releaseDailyRunLock(dateKey: string): Promise<void> {
+  await redis.del(dateKey);
+ }
+
 export default redis;
