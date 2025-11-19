@@ -1,7 +1,7 @@
 import { locales } from '../../i18n';
 import type { AggregatedReport } from './aggregator';
 import { addDays, berlinDateString, berlinHour } from '../timezone';
-import { listSnapshots } from '../persistence';
+import { listSnapshots as listPersistenceSnapshots } from '../persistence';
 import {
   setSnapshot,
   getSnapshot,
@@ -170,8 +170,6 @@ export async function readNewsSnapshot(date: string, locale: string): Promise<Ne
   return getSnapshot<NewsSnapshot>(newsSnapshotKey(locale, date));
 }
 
-import { listSnapshots } from '../persistence';
-
 export async function hasNewsSnapshotForDate(date: string): Promise<boolean> {
   const checks = await Promise.all(
     locales.map((locale) => getSnapshot<NewsSnapshot>(newsSnapshotKey(locale, date)))
@@ -185,7 +183,7 @@ export interface AssetSentimentPoint {
 }
 
 export async function getAssetHistory(asset: string, days = 7, locale = 'de'): Promise<AssetSentimentPoint[]> {
-  const snapshots = await listSnapshots(locale);
+  const snapshots = await listPersistenceSnapshots(locale);
   const limit = Math.min(Math.max(days, 1), 60);
   const selected = snapshots.slice(0, limit);
   const history: AssetSentimentPoint[] = [];
