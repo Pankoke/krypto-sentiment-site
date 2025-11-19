@@ -87,9 +87,9 @@ export async function GET() {
       status = 'partial';
     }
 
-    if (status === 'stale' || status === 'fail') {
+    if (status === 'stale') {
       await writeLog({
-        level: status === 'fail' ? 'error' : 'warn',
+        level: 'warn',
         message: `Health ${status}`,
         context: 'api/health',
       });
@@ -114,6 +114,11 @@ export async function GET() {
     return NextResponse.json(response, { headers: JSON_HEADERS });
   } catch (error) {
     console.error('Health read failed', error);
+    await writeLog({
+      level: 'error',
+      message: 'Health read failed',
+      context: 'api/health',
+    });
     const fallback: HealthResponse = {
       status: 'fail',
       staleThresholdMs: STALE_THRESHOLD_MS,
