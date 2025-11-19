@@ -1,4 +1,4 @@
-import redis from '../../lib/cache/redis';
+import redis, { isIoredisClient } from '../../lib/cache/redis';
 
 const SNAPSHOT_PREFIXES = ['news:', 'reports:', 'metrics:', 'daily-run-lock:'];
 
@@ -13,7 +13,12 @@ export async function clearRedisTestData(): Promise<void> {
     if (!validKeys.length) {
       return;
     }
-    const keysTuple = validKeys as [string, ...string[]];
-    await redis.del(...keysTuple);
+    if (isIoredisClient(redis)) {
+      await redis.del(...validKeys);
+      return;
+    }
+    for (const key of validKeys) {
+      await redis.del(key);
+    }
   }
 }

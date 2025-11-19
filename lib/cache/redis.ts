@@ -147,7 +147,7 @@ export function dailyRunLockKey(date: string): string {
   return `${dailyRunLockPrefix}${date}`;
 }
 
-function isIoredisClient(client: RedisClientInterface | Redis): client is Redis {
+export function isIoredisClient(client: RedisClientInterface | Redis): client is Redis {
   return client instanceof Redis;
 }
 
