@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { listSnapshotMetadata } from '../../../lib/news/snapshot';
 import { writeLog } from 'lib/monitoring/logs';
+import { listReportMetadata, type ReportMetadata } from 'lib/persistence';
 
 const LOCALES: Array<'de' | 'en'> = ['de', 'en'];
 const STALE_THRESHOLD_MS = Number(process.env.HEALTH_STALE_THRESHOLD_MS ?? 24 * 60 * 60 * 1000);
@@ -26,7 +27,7 @@ interface HealthResponse {
 
 export const runtime = 'nodejs';
 
-function buildHealthTopic(entry: { date: string; generatedAt: string; items: number; path: string } | null): HealthTopic {
+function buildHealthTopic(entry: { date: string; generatedAt: string | null; items: number; path: string } | null): HealthTopic {
   return {
     lastSnapshotDate: entry?.date ?? null,
     generatedAt: entry?.generatedAt ?? null,
@@ -50,23 +51,22 @@ function resolveLatestEntry(entries: Array<{ generatedAt: string }>): { generate
 export async function GET() {
   try {
     const newsMetadata = await Promise.all(LOCALES.map((locale) => listSnapshotMetadata(locale, 1)));
-    const reportsMetadata = await Promise.all(LOCALES.map((locale) => listSnapshotMetadata(locale, 1)));
+    const reportMetadata: ReportMetadata[] = await listReportMetadata(1);
 
     const newsEntries = newsMetadata.flat().map((meta) => ({
       ...meta,
       locale: meta.locale as 'de' | 'en',
     }));
-    const reportsEntries = reportsMetadata.flat().map((meta) => ({
-      ...meta,
-      locale: meta.locale as 'de' | 'en',
-    }));
 
     const totalNewsItems = newsEntries.reduce((sum, entry) => sum + entry.items, 0);
-    const totalReportAssets = reportsEntries.reduce((sum, entry) => sum + entry.items, 0);
+    const totalReportAssets = reportMetadata.reduce((sum, entry) => sum + entry.items, 0);
 
     const latestNews = newsEntries.sort((a, b) => b.date.localeCompare(a.date))[0] ?? null;
-    const latestReport = reportsEntries.sort((a, b) => b.date.localeCompare(a.date))[0] ?? null;
-    const allEntries = [...newsEntries, ...reportsEntries];
+    const latestReport = reportMetadata.sort((a, b) => b.date.localeCompare(a.date))[0] ?? null;
+    const allEntries = [
+      ...newsEntries,
+      ...reportMetadata.filter((entry) => Boolean(entry.generatedAt)),
+    ] as Array<{ generatedAt: string }>;
     const latestGeneratedEntry = resolveLatestEntry(allEntries);
     const latestGeneratedAt = latestGeneratedEntry?.generatedAt ?? null;
 
@@ -74,7 +74,7 @@ export async function GET() {
     const generatedTimestamp = latestGeneratedAt ? Date.parse(latestGeneratedAt) : NaN;
     const ageMs = Number.isNaN(generatedTimestamp) ? Infinity : now - generatedTimestamp;
     const isStale = ageMs > STALE_THRESHOLD_MS;
-    const hasSnapshots = allEntries.length > 0;
+    const hasSnapshots = newsEntries.length > 0 || reportMetadata.length > 0;
 
     let status: HealthStatus = 'fail';
     if (!hasSnapshots) {

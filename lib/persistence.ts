@@ -29,9 +29,21 @@ export interface DailySnapshot {
   generatedAt: string;
 }
 
+// Report-Dateikonvention:
+// - Roh-Report: YYYY-MM-DD.json
+// - Snapshot pro Locale: YYYY-MM-DD.<locale>.json
+// Sentiment-API liest ausschließlich Roh-Reports.
 const REPORT_DIR = join(DATA_DIR, 'reports');
 const FALLBACK_REPORT_DIR = join(FALLBACK_DATA_DIR, 'reports');
 const REPORT_DIRS = [REPORT_DIR, FALLBACK_REPORT_DIR];
+
+export type ReportMetadata = {
+  date: string;
+  items: number;
+  generatedAt: string | null;
+  path: string;
+  size: number;
+};
 
 async function loadSnapshot(date: string, locale: string): Promise<DailySnapshot | null> {
   const pattern = `${date}.${locale}.json`;
@@ -157,4 +169,48 @@ export async function listSnapshots(locale: string): Promise<DailySnapshot[]> {
 
 export async function readSnapshot(date: string, locale: string): Promise<DailySnapshot | null> {
   return loadSnapshot(date, locale);
+}
+
+export async function listReportMetadata(limit = 7): Promise<ReportMetadata[]> {
+  const pattern = /^\d{4}-\d{2}-\d{2}\.json$/;
+  const metadata: ReportMetadata[] = [];
+
+  for (const dir of REPORT_DIRS) {
+    try {
+      const files = await readdir(dir);
+      const matches = files.filter((file) => pattern.test(file));
+      for (const file of matches) {
+        const filePath = join(dir, file);
+        try {
+          const raw = await readFile(filePath, 'utf8');
+          const parsed = JSON.parse(raw) as {
+            assets?: unknown;
+            generatedAt?: unknown;
+            date?: unknown;
+          };
+          const items =
+            Array.isArray(parsed.assets) && parsed.assets.every((asset) => typeof asset === 'object')
+              ? parsed.assets.length
+              : 0;
+          const generatedAt = typeof parsed.generatedAt === 'string' ? parsed.generatedAt : null;
+          const dateFromName = file.replace('.json', '');
+          const date = typeof parsed.date === 'string' ? parsed.date : dateFromName;
+          metadata.push({
+            date,
+            items,
+            generatedAt,
+            path: filePath,
+            size: Buffer.byteLength(raw, 'utf8'),
+          });
+        } catch {
+          // ignore malformed file
+        }
+      }
+    } catch {
+      // ignore missing or unreadable directory
+    }
+  }
+
+  const sorted = metadata.sort((a, b) => b.date.localeCompare(a.date));
+  return sorted.slice(0, Math.max(0, limit));
 }

@@ -8,12 +8,16 @@ const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' } as co
 
 async function loadLatestFile(): Promise<string | null> {
   const dir = join(process.cwd(), 'data', 'reports');
+  const pattern = /^\d{4}-\d{2}-\d{2}\.json$/;
   try {
     const files = await readdir(dir);
-    const jsonFiles = files.filter((f) => f.endsWith('.json'));
-    if (jsonFiles.length === 0) return null;
-    jsonFiles.sort();
-    return join(dir, jsonFiles[jsonFiles.length - 1]!);
+    const rawReports = files.filter((file) => pattern.test(file));
+    if (!rawReports.length) {
+      return null;
+    }
+    rawReports.sort();
+    const latest = rawReports[rawReports.length - 1];
+    return latest ? join(dir, latest) : null;
   } catch {
     return null;
   }
@@ -53,13 +57,8 @@ export async function GET(req: Request): Promise<Response> {
 
   const latestPath = await loadLatestFile();
   if (!latestPath) {
-    const empty: SentimentResponse = {
-      dateISO: new Date().toISOString().slice(0, 10),
-      lastUpdatedISO: new Date().toISOString(),
-      items: [],
-      dataWindowHours,
-    };
-    return Response.json(empty, { headers: JSON_HEADERS });
+    const message = 'No raw sentiment report found (expected pattern YYYY-MM-DD.json).';
+    return Response.json({ error: message }, { status: 404, headers: JSON_HEADERS });
   }
 
   const raw = await readFile(latestPath, 'utf8');
