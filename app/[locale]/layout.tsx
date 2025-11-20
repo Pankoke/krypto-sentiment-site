@@ -1,16 +1,13 @@
-import { notFound } from 'next/navigation';
+import type { ReactNode } from "react";
 
-export function generateStaticParams() {
-  return [{ locale: 'de' }, { locale: 'en' }];
-}
+type LocaleLayoutProps = {
+  children: ReactNode;
+  params: {
+    locale: string;
+  };
+};
 
-export default async function LocaleLayout({ children, params: { locale } }: { children: React.ReactNode; params: { locale: 'de' | 'en' } }) {
-  // Keep generateStaticParams for localized routing. Messages are now provided by the root layout.
-  // Validate messages exist for this locale to surface 404 early if missing.
-  try {
-    await import(`../../src/app/messages/${locale}.json`);
-  } catch {
-    notFound();
-  }
+export default function LocaleLayout({ children }: LocaleLayoutProps) {
+  // Falls später lokales Layout-Verhalten nötig ist, kann es hier ergänzt werden.
   return <>{children}</>;
 }

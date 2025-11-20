@@ -5,8 +5,21 @@ export const dynamic = 'force-dynamic';
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' } as const;
 
 export async function GET(req: Request): Promise<Response> {
+  const secret = process.env.DAILY_API_SECRET ?? null;
+  if (!secret) {
+    return Response.json(
+      { ok: false, error: 'Daily API secret is not configured.' },
+      { status: 500, headers: JSON_HEADERS }
+    );
+  }
+
+  const url = new URL(req.url);
+  const key = url.searchParams.get('key') ?? req.headers.get('x-daily-secret');
+  if (key !== secret) {
+    return Response.json({ error: 'Forbidden' }, { status: 403, headers: JSON_HEADERS });
+  }
+
   try {
-    const url = new URL(req.url);
     const modeParam = url.searchParams.get('mode');
     const mode: DailyGenerateMode = modeParam === 'skip' ? 'skip' : 'overwrite';
 

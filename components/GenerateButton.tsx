@@ -2,6 +2,16 @@
 
 import { useState } from 'react';
 
+type TriggerResponse = {
+  ok: boolean;
+  error?: string;
+  saved?: string;
+  date?: string;
+  assets?: number;
+  mode?: string;
+  skipped?: boolean;
+};
+
 export default function GenerateButton() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
@@ -12,12 +22,13 @@ export default function GenerateButton() {
     setResult(null);
     setError(null);
     try {
-      const res = await fetch('/api/daily-report');
-      const json = await res.json();
-      if (!res.ok || !json?.ok) {
-        throw new Error(json?.error || `HTTP ${res.status}`);
+      const res = await fetch('/api/admin/trigger-daily-run');
+      const json = (await res.json()) as TriggerResponse;
+      if (!res.ok || !json.ok) {
+        throw new Error(json.error || `HTTP ${res.status}`);
       }
-      setResult('Bericht erzeugt: ' + (json.saved ?? '')); 
+      const savedPath = json.saved ?? 'Datei gespeichert';
+      setResult(`Admin-Run erfolgreich: ${savedPath}`);
       // Optional: Seite neu laden, damit der Bericht sichtbar wird
       setTimeout(() => window.location.reload(), 500);
     } catch (e) {
@@ -34,18 +45,17 @@ export default function GenerateButton() {
         disabled={loading}
         className="inline-flex items-center justify-center rounded-md bg-black px-3 py-1.5 text-white text-sm hover:bg-gray-800 disabled:opacity-60"
       >
-        {loading ? 'Erzeuge…' : 'Jetzt Tagesbericht erzeugen'}
+        {loading ? 'Admin-Run läuft...' : 'Admin: Tagesbericht auslösen'}
       </button>
       {result && <div className="text-sm text-green-700">{result}</div>}
       {error && (
         <div className="text-sm text-red-700">
           Fehler: {error}
           <div className="text-xs text-gray-600">
-            Falls der Endpoint geschützt ist, bitte per Terminal mit `?key=CRON_SECRET` aufrufen.
+            Diese Aktion ist nur für Admins mit gültigem Secret erlaubt.
           </div>
         </div>
       )}
     </div>
   );
 }
-

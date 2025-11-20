@@ -1,42 +1,56 @@
-import { NextResponse } from 'next/server';
+import { generateDailyReport, type DailyGenerateMode } from '../../../../lib/daily/generator';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' } as const;
 
-function getCronSecret(): string | null {
-  return process.env.CRON_SECRET ?? process.env.NEWS_GENERATE_SECRET ?? null;
+type TriggerResponse =
+  | {
+      ok: true;
+      date: string;
+      assets: number;
+      saved: string;
+      mode: DailyGenerateMode;
+      skipped: boolean;
+    }
+  | { ok: false; error: string };
+
+function buildForbidden(): Response {
+  return Response.json({ error: 'Forbidden' }, { status: 403, headers: JSON_HEADERS });
 }
 
-export const runtime = 'nodejs';
-
-export async function POST(req: Request) {
-  const secret = getCronSecret();
+export async function GET(req: Request): Promise<Response> {
+  const secret = process.env.DAILY_API_SECRET ?? null;
   if (!secret) {
-    return NextResponse.json(
-      { status: 'fail', runStatus: 'failed', reason: 'Missing cron secret' },
-      { status: 500, headers: JSON_HEADERS }
-    );
+    const payload: TriggerResponse = { ok: false, error: 'Daily API secret is not configured.' };
+    return Response.json(payload, { status: 500, headers: JSON_HEADERS });
   }
 
-  const incomingUrl = new URL(req.url);
-  const targetUrl = new URL('/api/generate/daily-run', incomingUrl.origin);
-  targetUrl.searchParams.set('key', secret);
+  const url = new URL(req.url);
+  const key = url.searchParams.get('key') ?? req.headers.get('x-daily-secret');
+  if (key !== secret) {
+    return buildForbidden();
+  }
 
-  const response = await fetch(targetUrl.toString(), {
-    method: 'GET',
-    headers: {
-      'x-cron-secret': secret,
-    },
-  });
-
-  let payload: unknown = null;
   try {
-    payload = await response.json();
-  } catch (_) {
-    payload = null;
-  }
+    const modeParam = url.searchParams.get('mode');
+    const mode: DailyGenerateMode = modeParam === 'skip' ? 'skip' : 'overwrite';
+    const result = await generateDailyReport({ mode });
+    const saved = `/data/reports/${result.report.date}.json`;
 
-  return NextResponse.json(payload ?? { status: 'fail', runStatus: 'failed', reason: 'No response body' }, {
-    headers: JSON_HEADERS,
-    status: response.status,
-  });
+    const payload: TriggerResponse = {
+      ok: true,
+      date: result.report.date,
+      assets: result.report.assets.length,
+      saved,
+      mode,
+      skipped: result.skipped,
+    };
+    return Response.json(payload, { headers: JSON_HEADERS });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    const payload: TriggerResponse = { ok: false, error: message };
+    return Response.json(payload, { status: 500, headers: JSON_HEADERS });
+  }
 }
