@@ -19,6 +19,9 @@ type ActionState = {
   error: string | null;
 };
 
+type ActionKey = "dailyRun" | "clearSnapshots" | "revalidate";
+type ActionStateMap = Record<ActionKey, ActionState>;
+
 const swrFetcher = async <T,>(input: RequestInfo, init?: RequestInit): Promise<T> => {
   const response = await fetch(input, init);
   if (!response.ok) {
@@ -37,11 +40,13 @@ type SentimentApiResponse = {
 };
 
 export default function AdminDashboard() {
-  const [actionState, setActionState] = useState<Record<string, ActionState>>({
+  const initialActions: ActionStateMap = {
     dailyRun: { loading: false, message: null, error: null },
     clearSnapshots: { loading: false, message: null, error: null },
     revalidate: { loading: false, message: null, error: null },
-  });
+  };
+
+  const [actionState, setActionState] = useState<ActionStateMap>(initialActions);
   const [asset, setAsset] = useState<string>(allowedTickerOrder[0] ?? "BTC");
   const [assetHistory, setAssetHistory] = useState<AssetSentimentPoint[]>([]);
   const [isAssetLoading, setIsAssetLoading] = useState(false);
@@ -57,7 +62,7 @@ export default function AdminDashboard() {
 
   const historyByDate = useMemo(() => history ?? [], [history]);
 
-  async function runAction(key: keyof typeof actionState, path: string, init?: RequestInit) {
+  async function runAction(key: ActionKey, path: string, init?: RequestInit) {
     setActionState((prev) => ({
       ...prev,
       [key]: { loading: true, message: null, error: null },
