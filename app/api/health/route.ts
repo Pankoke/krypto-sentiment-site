@@ -131,12 +131,14 @@ export async function GET() {
         generatedAt: null,
         itemsCount: 0,
         resolvedFilePath: null,
+        status: 'missing',
       },
       reports: {
         lastSnapshotDate: null,
         generatedAt: null,
         itemsCount: 0,
         resolvedFilePath: null,
+        status: 'missing',
       },
     };
     return NextResponse.json(fallback, { headers: JSON_HEADERS });
