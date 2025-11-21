@@ -7,9 +7,9 @@ const copy = {
   de: {
     metaTitle: "Verstehen statt raten",
     metaDescription:
-      "Hier lernst du die Grundlagen von Sentiment, KI-Auswertung, Datenqualit‰t und Risiken. Einsteiger bekommen einen einfachen Einstieg, Fortgeschrittene vertiefen ihr Know-how.",
+      "Hier lernst du die Grundlagen von Sentiment, KI-Auswertung, Datenqualit√§t und Risiken. Einsteiger bekommen einen einfachen Einstieg, Fortgeschrittene vertiefen ihr Know-how.",
     short:
-      "Hier lernst du die Grundlagen von Sentiment, KI-Auswertung, Datenqualit‰t und Risiken. Einsteiger bekommen einen einfachen Einstieg, Fortgeschrittene vertiefen ihr Know-how.",
+      "Hier lernst du die Grundlagen von Sentiment, KI-Auswertung, Datenqualit√§t und Risiken. Einsteiger bekommen einen einfachen Einstieg, Fortgeschrittene vertiefen ihr Know-how.",
     sections: [
       {
         title: "Grundbegriffe",
@@ -18,15 +18,15 @@ const copy = {
           "Score: Eine Zahl zwischen 0 und 1, die zeigt, wie bullish oder bearish die Stimmung wirkt.",
           "Vertrauen: Wie sicher die KI ist, dass der Score stabil ist.",
           "Signal: Ein Ereignis oder eine Meldung, die die Stimmung messbar beeinflusst.",
-          "On-Chain-Daten: Messwerte direkt aus der Blockchain (Transaktionen, aktive Adressen, Zu-/Abfl¸sse)."
+          "On-Chain-Daten: Messwerte direkt aus der Blockchain (Transaktionen, aktive Adressen, Zu-/Abfl√ºsse)."
         ]
       }
     ],
     ecosystemLinks: [
       { label: "Startseite", href: "/de" },
-      { label: "Sentiment-‹bersicht", href: "/de/sentiment" },
+      { label: "Sentiment-√úbersicht", href: "/de/sentiment" },
       { label: "News & Signale", href: "/de/news" },
-      { label: "Kryptow‰hrungen", href: "/de/coins" },
+      { label: "Kryptow√§hrungen", href: "/de/coins" },
       { label: "Daten & Charts", href: "/de/daten" },
       { label: "Methodik", href: "/de/methodik" }
     ],
@@ -39,7 +39,7 @@ const copy = {
       "Krypto Sentiment Lernen",
       "Sentiment Grundlagen",
       "KI Auswertung Krypto",
-      "Datenqualit‰t Risiko Krypto",
+      "Datenqualit√§t Risiko Krypto",
       "On-Chain Glossar"
     ]
   },
@@ -70,8 +70,8 @@ const copy = {
       { label: "Methodology", href: "/en/methodology" }
     ],
     ctas: [
-      { label: "See todayís market mood", href: "/en/sentiment" },
-      { label: "Check todayís News & Signals", href: "/en/news" },
+      { label: "See today‚Äôs market mood", href: "/en/sentiment" },
+      { label: "Check today‚Äôs News & Signals", href: "/en/news" },
       { label: "Explore sentiment trends in charts", href: "/en/data" }
     ],
     seoKeywords: [
@@ -160,4 +160,4 @@ export default function LearnPage({ params }: { params: { locale: "de" | "en" } 
       </section>
     </main>
   );
-}
+}

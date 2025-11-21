@@ -7,58 +7,58 @@ const copy = {
   de: {
     metaTitle: "Wie unsere KI Sentiment erkennt",
     metaDescription:
-      "Wir analysieren t‰glich Nachrichten, Social Media und On-Chain-Daten. Daraus berechnen wir mithilfe von KI einen Sentiment-Score. Transparenz ist uns wichtig ñ deshalb erkl‰ren wir klar, wie der Score zustande kommt und wo seine Grenzen liegen.",
+      "Wir analysieren t√§glich Nachrichten, Social Media und On-Chain-Daten. Daraus berechnen wir mithilfe von KI einen Sentiment-Score. Transparenz ist uns wichtig ‚Äì deshalb erkl√§ren wir klar, wie der Score zustande kommt und wo seine Grenzen liegen.",
     short:
-      "Wir analysieren t‰glich Nachrichten, Social Media und On-Chain-Daten. Daraus berechnen wir mithilfe von KI einen Sentiment-Score. Transparenz ist uns wichtig ñ deshalb erkl‰ren wir klar, wie der Score zustande kommt und wo seine Grenzen liegen.",
+      "Wir analysieren t√§glich Nachrichten, Social Media und On-Chain-Daten. Daraus berechnen wir mithilfe von KI einen Sentiment-Score. Transparenz ist uns wichtig ‚Äì deshalb erkl√§ren wir klar, wie der Score zustande kommt und wo seine Grenzen liegen.",
     sections: [
       {
         title: "Wie der Score entsteht",
         paragraphs: [
-          "Wir werten t‰glich Nachrichten, Social Media und On-Chain-Daten aus und berechnen daraus einen Sentiment-Score.",
-          "Der Prozess bleibt transparent: Wir zeigen, welche Daten einflieﬂen und wie die KI Muster erkennt."
+          "Wir werten t√§glich Nachrichten, Social Media und On-Chain-Daten aus und berechnen daraus einen Sentiment-Score.",
+          "Der Prozess bleibt transparent: Wir zeigen, welche Daten einflie√üen und wie die KI Muster erkennt."
         ]
       },
       {
         title: "Grenzen und Risiken",
         paragraphs: [
-          "Wichtig: Unsere Modelle kˆnnen Muster in Daten erkennen, aber keine Zukunft vorhersagen.",
-          "Daten sind nie vollst‰ndig, kˆnnen Verzerrungen enthalten und ‰ndern sich schnell.",
-          "Alle Ergebnisse sind eine Momentaufnahme der Stimmung ñ keine Garantie und keine Finanzberatung."
+          "Wichtig: Unsere Modelle k√∂nnen Muster in Daten erkennen, aber keine Zukunft vorhersagen.",
+          "Daten sind nie vollst√§ndig, k√∂nnen Verzerrungen enthalten und √§ndern sich schnell.",
+          "Alle Ergebnisse sind eine Momentaufnahme der Stimmung ‚Äì keine Garantie und keine Finanzberatung."
         ]
       }
     ],
     ecosystemLinks: [
       { label: "Startseite", href: "/de" },
-      { label: "Sentiment-‹bersicht", href: "/de/sentiment" },
+      { label: "Sentiment-√úbersicht", href: "/de/sentiment" },
       { label: "News & Signale", href: "/de/news" },
-      { label: "Kryptow‰hrungen", href: "/de/coins" },
+      { label: "Kryptow√§hrungen", href: "/de/coins" },
       { label: "Daten & Charts", href: "/de/daten" },
       { label: "Lernen", href: "/de/lernen" }
     ],
     ctas: [
-      { label: "Zur Sentiment-‹bersicht wechseln", href: "/de/sentiment" },
+      { label: "Zur Sentiment-√úbersicht wechseln", href: "/de/sentiment" },
       { label: "Beispiele in Daten & Charts ansehen", href: "/de/daten" },
       { label: "Im Lernbereich mehr zu KI & Daten lesen", href: "/de/lernen" }
     ],
     SEO: [
       "Krypto Sentiment Methodik",
       "Wie funktioniert Sentiment Analyse",
-      "KI Modell Erkl‰rung Krypto",
+      "KI Modell Erkl√§rung Krypto",
       "Datenquellen Crypto Sentiment",
       "On-Chain und Social Media Analyse",
       "Crypto sentiment methodology",
       "Transparent AI crypto analytics",
       "Limitations of sentiment analysis",
-      "Krypto Datenqualit‰t",
+      "Krypto Datenqualit√§t",
       "Market mood scoring"
     ]
   },
   en: {
     metaTitle: "How our AI detects sentiment",
     metaDescription:
-      "Every day we analyse news, social media and on-chain data. Our AI models calculate a sentiment score based on patterns in this data. We keep the process transparent ó including limitations.",
+      "Every day we analyse news, social media and on-chain data. Our AI models calculate a sentiment score based on patterns in this data. We keep the process transparent ‚Äî including limitations.",
     short:
-      "Every day we analyse news, social media and on-chain data. Our AI models calculate a sentiment score based on patterns in this data. We keep the process transparent ó including limitations.",
+      "Every day we analyse news, social media and on-chain data. Our AI models calculate a sentiment score based on patterns in this data. We keep the process transparent ‚Äî including limitations.",
     sections: [
       {
         title: "How the score is built",
@@ -72,7 +72,7 @@ const copy = {
         paragraphs: [
           "Important: Our models can detect patterns in data, but they cannot predict the future.",
           "Data is never complete, may be biased and can change quickly.",
-          "All results are a snapshot of market mood ó not a guarantee and not financial advice."
+          "All results are a snapshot of market mood ‚Äî not a guarantee and not financial advice."
         ]
       }
     ],
@@ -181,4 +181,4 @@ export default function MethodikPage({ params }: { params: { locale: "de" | "en"
       </section>
     </main>
   );
-}
+}
