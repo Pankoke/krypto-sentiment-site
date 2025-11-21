@@ -61,45 +61,18 @@ type LocaleCopy = {
 
 const copy: Record<'de' | 'en', LocaleCopy> = {
   de: {
-    metaTitle: 'Krypto News & Signale – Stimmungsrelevante Krypto-Meldungen im Überblick',
+    metaTitle: 'Was heute die Stimmung bewegt',
     metaDescription:
-      'Gefilterte News mit Fokus auf Marktstimmung: Welche Meldungen treiben Sentiment bullish, neutral oder bearish?',
+      'Wichtigste Ereignisse des Tages: Nachrichten, Social-Media-Trends und On-Chain-Signale, die unsere KI als stimmungsrelevant einstuft.',
     short:
-      'Hier landen die täglichen Krypto-News, gefiltert nach Relevanz für die Marktstimmung. Statt News-Overload bekommst du kompakte Signale, die erklären, warum die Stimmung heute eher bullish, neutral oder bearish ist.',
+      'Hier findest du die wichtigsten Ereignisse des Tages – Nachrichten, Social-Media-Trends und On-Chain-Signale, die unsere KI als stimmungsrelevant eingestuft hat. Kurz, klar und ohne Fachjargon.',
     sections: [
       {
-        title: 'Von News-Flut zu Sentiment-Signalen',
+        title: 'Wie du News & Signale nutzt',
         paragraphs: [
-          'Unsere KI analysiert kontinuierlich News-Artikel aus unterschiedlichen Quellen, Social-Media-Posts, Threads sowie offizielle Ankündigungen von Projekten und Börsen.',
-          'Statt dir einfach nur alles der Reihe nach aufzulisten, versuchen wir, das Ganze in Stimmungssignale zu übersetzen: Welche Meldungen pushen die Stimmung klar nach oben? Welche sorgen für Unsicherheit oder Panik? Welche sind laut, aber am Ende nur Buzz ohne Substanz?'
-        ],
-        followUp:
-          'Das Ergebnis ist ein Radar für Stimmungs-Trigger. Du siehst nicht nur die News, sondern auch, warum sie wichtig ist und wie sie in das aktuelle Gesamtbild passt.'
-      },
-      {
-        title: 'Wie du „News & Signale“ nutzen kannst',
-        paragraphs: [
-          'Tagesüberblick holen: Schau dir die wichtigsten Meldungen des Tages an und beachte, ob sie eher positiv, neutral oder negativ wirken.',
-          'Mit dem Sentiment-Score abgleichen: Wechsle zur Sentiment-Übersicht, um zu sehen, ob die Nachrichtenlage zum Gesamt-Sentiment passt.',
-          'Einzelne Coins im Blick behalten: Über die Kryptowährungen-Sektion erkennst du, ob bestimmte News eher auf das Ökosystem oder einen spezifischen Coin zielen.',
-          'Rausfiltern, was dir egal ist: Nutze die News eher als Kontext als als To-Do-Liste.'
-        ]
-      },
-      {
-        title: 'KI hilft – ersetzt aber nicht dein Denken',
-        paragraphs: [
-          'Unsere Modelle helfen, Schlagzeilen zu clustern, Tonalität einzuschätzen und wiederkehrende Themen zu erkennen.',
-          'KI kann News falsch einordnen, Ironie übersehen oder Hype verspätet erkennen.',
-          'Deshalb verstehen wir News & Signale als Werkzeug – nicht als Wahrheit.'
-        ],
-        followUp:
-          'Wenn dich ein Thema interessiert, klicke auf die Originalquelle und hole dir weitere Perspektiven. Im Lernbereich findest du dazu passende Inhalte.'
-      },
-      {
-        title: 'Keine Handels-Signale',
-        paragraphs: [
-          'Signal heißt bei uns: Dieses Ereignis hat spürbaren Einfluss auf die Stimmung, positiv oder negativ.',
-          'Was du daraus machst, ist komplett dir überlassen. Crypto-Märkte sind risikoreich, und selbst scheinbar klare News können ganz anders interpretiert werden.'
+          'Dieser Bereich zeigt dir, welche Themen, Meldungen oder Ereignisse heute die Stimmung zu den wichtigsten Coins beeinflusst haben.',
+          'Positive Signale verbessern meist das Sentiment, negative drücken es – aber nicht jedes Ereignis wirkt gleich stark.',
+          'Alle Inhalte sind KI-generierte Stimmungsanalysen und stellen keine Finanzberatung dar.'
         ]
       }
     ],

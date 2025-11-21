@@ -1,205 +1,95 @@
-import Link from 'next/link';
-import type { Metadata } from 'next';
+import Link from "next/link";
+import type { Metadata } from "next";
 
-const BASE_URL = process.env.APP_BASE_URL ?? 'https://krypto-sentiment-site.vercel.app';
+const BASE_URL = process.env.APP_BASE_URL ?? "https://krypto-sentiment-site.vercel.app";
 
 const copy = {
   de: {
-    metaTitle: 'Ãœber uns â€“ Die Idee hinter Krypto Sentiment',
+    metaTitle: "Über uns",
     metaDescription:
-      'Erfahre, wer hinter Krypto Sentiment steht, warum wir Marktstimmung analysieren und warum unsere Inhalte keine Finanzberatung sind.',
+      "Wir möchten Sentiment-Analysen verständlich machen – ohne Hype, ohne Versprechen, ohne Finanzberatung.",
     short:
-      'Krypto Sentiment ist kein Trading-Geheimclub, sondern ein Projekt aus Datennerds, Krypto-Fans und Skeptiker:innen. Wir bauen Tools, die Marktstimmung sichtbar machen â€“ transparent, ehrlich und ohne Finanzberatungs-Anspruch.',
+      "Wir möchten Sentiment-Analysen verständlich machen – ohne Hype, ohne Versprechen, ohne Finanzberatung. Unsere Seite bietet einen unabhängigen, datenbasierten Blick auf die Stimmung im Kryptomarkt.",
     sections: [
       {
-        title: 'Unsere Motivation',
+        title: "Warum wir das tun",
         paragraphs: [
-          'Wir mÃ¶gen Krypto â€“ aber auch Ehrlichkeit. Zwischen â€žAlles auf 0â€œ und â€žDiesmal ist es andersâ€œ fehlt oft nÃ¼chterne Einordnung.',
-          'Krypto Sentiment ist der Gegenpol: Datengetrieben, erklÃ¤rend und selbstkritisch.'
+          "Wir möchten Sentiment-Analysen verständlich machen – ohne Hype, ohne Versprechen, ohne Finanzberatung.",
+          "Unsere Seite bietet einen unabhängigen, datenbasierten Blick auf die Stimmung im Kryptomarkt."
         ]
       },
       {
-        title: 'Was wir bauen',
+        title: "Wofür die Bereiche stehen",
         paragraphs: [
-          'Homepage, Sentiment, News & Signale, KryptowÃ¤hrungen und Daten & Charts arbeiten zusammen.',
-          'Methodik und Lernen erklÃ¤ren, wie alles zusammenspielt.',
-          'Wir verstehen uns nicht als Signalgeber, sondern als Informations-/Lernplattform.'
-        ]
-      },
-      {
-        title: 'Was wir nicht machen',
-        paragraphs: [
-          'Keine Kauf- oder Verkaufsempfehlungen, keine Renditeversprechen.',
-          'Keine VIP-Gruppen mit â€žnoch geheimerenâ€œ Infos.',
-          'Wenn du nach â€žWas soll ich morgen kaufen?â€œ suchst, bist du hier falsch.'
-        ]
-      },
-      {
-        title: 'Unser Umgang mit KI',
-        paragraphs: [
-          'KI analysiert Texte, bewertet Stimmung und hilft bei Beschreibungen.',
-          'Methodik zeigt, wie Modelle arbeiten und wo sie Fehler machen kÃ¶nnen.',
-          'Learn erklÃ¤rt, was KI leisten kann und warum â€žalles automatisierenâ€œ unrealistisch ist.'
-        ]
-      },
-      {
-        title: 'Transparenz & Verantwortung',
-        paragraphs: [
-          'Transparenz: Wir nennen die KI, erklÃ¤ren Scores und rÃ¤umen DatenlÃ¼cken ein.',
-          'Verantwortung: Inhalte sind keine Finanzberatung, wir erinnern an Risiken und eigenen Research.'
-        ]
-      },
-      {
-        title: 'Weiterentwicklung',
-        paragraphs: [
-          'Wir verstehen die Plattform als laufendes Projekt.',
-          'Community-Feedback Ã¼ber Kontakt flieÃŸt in neue Features.',
-          'Ideen und Kritik werden aktiv aufgenommen.'
-        ]
-      },
-      {
-        title: 'Wer diese Seite nutzen soll',
-        paragraphs: [
-          'Neugierige, die nicht jede Nacht in Telegram-Chats verbringen wollen.',
-          'Trader:innen, die Sentiment als zusÃ¤tzlichen Layer einsetzen.',
-          'Langfristige Investor:innen, die ohne FOMO-Stress informieren wollen.',
-          'Skeptiker:innen, die beobachten und verstehen wollen.'
-        ]
-      },
-      {
-        title: 'Wie es weitergeht',
-        paragraphs: [
-          'Mehr Datenquellen, bessere Modelle, verfeinerte Visualisierungen.',
-          'Neue Lerninhalte und potenzielle Kooperationen.',
-          'Feedback aus Kontakt hilft bei der Weiterentwicklung.'
+          "Die Startseite zeigt die Gesamtstimmung.",
+          "News & Signale erklären, welche Ereignisse die Stimmung bewegen.",
+          "Daten & Charts visualisieren Trends.",
+          "In der Methodik erfährst du, wie alles im Hintergrund funktioniert."
         ]
       }
     ],
-    navLinks: [
-      { label: 'Startseite', href: '/de' },
-      { label: 'Methodik', href: '/de/methodik' },
-      { label: 'Lernen', href: '/de/lernen' },
-      { label: 'Daten & Charts', href: '/de/daten' },
-      { label: 'News & Signale', href: '/de/news' },
-      { label: 'KryptowÃ¤hrungen', href: '/de/coins' },
-      { label: 'Kontakt', href: '/de/kontakt' }
+    ecosystemLinks: [
+      { label: "Startseite", href: "/de" },
+      { label: "Sentiment-Übersicht", href: "/de/sentiment" },
+      { label: "News & Signale", href: "/de/news" },
+      { label: "Daten & Charts", href: "/de/daten" },
+      { label: "Lernen", href: "/de/lernen" }
     ],
-    ctas: [
-      { label: 'Mehr Ã¼ber unsere Methodik lesen', href: '/de/methodik' },
-      { label: 'Aktuelle Marktstimmung ansehen', href: '/de/news' },
-      { label: 'Lernbereich Ã¶ffnen', href: '/de/lernen' },
-      { label: 'Kontakt fÃ¼r Feedback & Kooperationen nutzen', href: '/de/kontakt' }
-    ],
-    seoKeywords: [
-      'Ãœber uns Krypto Sentiment',
-      'Crypto sentiment project story',
-      'Transparente Krypto Analyse',
-      'Wer steckt hinter Krypto Sentiment',
-      'About crypto sentiment platform',
-      'KI basierte Krypto Stimmungsanalyse',
-      'Non financial advice disclaimer'
-    ]
+    nextSteps: {
+      title: "Nächste Schritte",
+      links: [
+        { label: "Aktuelle News & Signale ansehen", href: "/de/news" },
+        { label: "Sentiment-Trends in Charts erkunden", href: "/de/daten" },
+        { label: "Grundlagen im Lernbereich durchgehen", href: "/de/lernen" },
+        { label: "Sentiment für einzelne Coins prüfen", href: "/de/coins" }
+      ]
+    }
   },
   en: {
-    metaTitle: 'About â€“ the idea behind Krypto Sentiment',
+    metaTitle: "About us",
     metaDescription:
-      'Learn who builds Krypto Sentiment, why we analyze market mood and why our content is not financial advice.',
+      "We want to make sentiment analysis transparent and easy to understand — without hype, promises or financial advice.",
     short:
-      'Krypto Sentiment isnâ€™t a secret trading cabal, but a project by data nerds, crypto fans and healthy skeptics. We build tools that make market mood visible â€“ transparent, honest and without pretending to give financial advice.',
+      "We want to make sentiment analysis transparent and easy to understand — without hype, promises or financial advice. Our goal is to provide an independent, data-driven view of crypto market mood.",
     sections: [
       {
-        title: 'Why we created this',
+        title: "Why we built this",
         paragraphs: [
-          'We like crypto â€“ and honesty. Extreme narratives need sober counterpoints.',
-          'Krypto Sentiment is data-driven, explanatory and self-critical.'
+          "We want to make sentiment analysis transparent and easy to understand — without hype, promises or financial advice.",
+          "Our goal is to provide an independent, data-driven view of crypto market mood."
         ]
       },
       {
-        title: 'What weâ€™re building',
+        title: "How the sections fit together",
         paragraphs: [
-          'Homepage pulses, Sentiment structures scores, News collects events.',
-          'Cryptocurrencies and Data & Charts dive deeper, Methodology and Learn explain the logic.',
-          'This is an information and education project, not a signal service.'
-        ]
-      },
-      {
-        title: 'What we explicitly donâ€™t do',
-        paragraphs: [
-          'No buy/sell calls, no return promises, no secret tips.',
-          'No VIP group claiming to know â€œeven moreâ€.',
-          'If you want to be told what to buy tomorrow, youâ€™re in the wrong place.'
-        ]
-      },
-      {
-        title: 'How we use AI',
-        paragraphs: [
-          'AI helps with text analysis, sentiment, and some copy.',
-          'Methodology explains the models, data and failure modes.',
-          'Learn adds context on what AI realistically can and canâ€™t do.'
-        ]
-      },
-      {
-        title: 'Transparency & responsibility',
-        paragraphs: [
-          'We state that we use AI, explain how scores arise and admit data gaps.',
-          'We label everything as not financial advice and remind you of crypto risks.'
-        ]
-      },
-      {
-        title: 'Continuous improvement',
-        paragraphs: [
-          'The platform is a living project.',
-          'Feedback via Contact shapes charts, features and explanations.',
-          'We welcome ideas, wishes and criticism.'
-        ]
-      },
-      {
-        title: 'Who this is for',
-        paragraphs: [
-          'People who like crypto but donâ€™t live in chatrooms.',
-          'Traders using sentiment as an extra lens.',
-          'Long-term investors who want the mood without the FOMO.',
-          'Skeptics observing irrational moves.'
-        ]
-      },
-      {
-        title: 'Where we want to go',
-        paragraphs: [
-          'More data sources, refined models, improved Data & Charts.',
-          'New learning content shaped by the community.',
-          'Potential collaborations with tools, projects, educators.'
+          "The homepage shows the overall market mood.",
+          "News & Signals highlights the events that move sentiment.",
+          "Data & Charts visualizes trends.",
+          "The methodology section explains how everything works behind the scenes."
         ]
       }
     ],
-    navLinks: [
-      { label: 'Homepage', href: '/en' },
-      { label: 'Methodology', href: '/en/methodology' },
-      { label: 'Learn', href: '/en/learn' },
-      { label: 'Data & Charts', href: '/en/data' },
-      { label: 'News & Signals', href: '/en/news' },
-      { label: 'Cryptocurrencies', href: '/en/coins' },
-      { label: 'Contact', href: '/en/contact' }
+    ecosystemLinks: [
+      { label: "Homepage", href: "/en" },
+      { label: "Sentiment overview", href: "/en/sentiment" },
+      { label: "News & Signals", href: "/en/news" },
+      { label: "Data & Charts", href: "/en/data" },
+      { label: "Learn", href: "/en/learn" }
     ],
-    ctas: [
-      { label: 'Read our methodology', href: '/en/methodology' },
-      { label: 'Check the current market sentiment', href: '/en/news' },
-      { label: 'Open the Learn section', href: '/en/learn' },
-      { label: 'Use Contact for feedback & collaborations', href: '/en/contact' }
-    ],
-    seoKeywords: [
-      'Ãœber uns Krypto Sentiment',
-      'Crypto sentiment project story',
-      'Transparente Krypto Analyse',
-      'Wer steckt hinter Krypto Sentiment',
-      'About crypto sentiment platform',
-      'KI basierte Krypto Stimmungsanalyse',
-      'Non financial advice disclaimer'
-    ]
+    nextSteps: {
+      title: "Next steps",
+      links: [
+        { label: "Check today’s News & Signals", href: "/en/news" },
+        { label: "Explore sentiment trends in charts", href: "/en/data" },
+        { label: "Learn more in the education section", href: "/en/learn" },
+        { label: "View sentiment for individual coins", href: "/en/coins" }
+      ]
+    }
   }
 };
 
-export const generateMetadata = ({ params }: { params: { locale: 'de' | 'en' } }): Metadata => {
-  const canonical = `${BASE_URL}/${params.locale}/${params.locale === 'de' ? 'about' : 'about'}`;
+export const generateMetadata = ({ params }: { params: { locale: "de" | "en" } }): Metadata => {
+  const canonical = `${BASE_URL}/${params.locale}/${params.locale === "de" ? "ueber-uns" : "about"}`;
   const localeCopy = copy[params.locale];
   return {
     title: localeCopy.metaTitle,
@@ -208,7 +98,7 @@ export const generateMetadata = ({ params }: { params: { locale: 'de' | 'en' } }
   };
 };
 
-export default function AboutPage({ params }: { params: { locale: 'de' | 'en' } }) {
+export default function AboutPage({ params }: { params: { locale: "de" | "en" } }) {
   const locale = params.locale;
   const localeCopy = copy[locale];
 
@@ -216,19 +106,21 @@ export default function AboutPage({ params }: { params: { locale: 'de' | 'en' } 
     <main className="min-h-screen bg-gray-50 py-16">
       <section className="mx-auto max-w-5xl space-y-6 rounded-3xl border border-gray-200 bg-white/80 p-8 shadow-xl">
         <header className="space-y-3">
-          <p className="text-xs uppercase tracking-[0.5em] text-gray-400">
-            {locale === 'de' ? 'Ãœber uns' : 'About'}
-          </p>
+          <p className="text-xs uppercase tracking-[0.5em] text-gray-400">{locale === "de" ? "Über uns" : "About"}</p>
           <h1 className="text-4xl font-semibold text-gray-900">{localeCopy.metaTitle}</h1>
           <p className="text-sm text-gray-600">{localeCopy.short}</p>
         </header>
-        <nav className="flex flex-wrap gap-3 text-xs uppercase tracking-wide text-indigo-600">
-          {localeCopy.navLinks.map((link) => (
-            <Link key={link.label} href={link.href} className="hover:text-indigo-900">
+        <div className="flex flex-wrap gap-3">
+          {localeCopy.ecosystemLinks.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              className="rounded-full border border-gray-200 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-gray-700 transition hover:border-black"
+            >
               {link.label}
             </Link>
           ))}
-        </nav>
+        </div>
         {localeCopy.sections.map((section) => (
           <article
             key={section.title}
@@ -242,30 +134,17 @@ export default function AboutPage({ params }: { params: { locale: 'de' | 'en' } 
             ))}
           </article>
         ))}
-        <div className="rounded-2xl border border-gray-200 bg-white/90 p-6 shadow-sm">
-          <h3 className="text-lg font-semibold text-gray-900">{locale === 'de' ? 'CTAs' : 'CTAs'}</h3>
+        <div className="rounded-2xl border border-gray-100 bg-white/90 p-6 shadow-sm">
+          <h3 className="text-lg font-semibold text-gray-900">{localeCopy.nextSteps.title}</h3>
           <div className="mt-3 flex flex-wrap gap-3">
-            {localeCopy.ctas.map((cta) => (
+            {localeCopy.nextSteps.links.map((link) => (
               <Link
-                key={cta.label}
-                href={cta.href}
+                key={link.label}
+                href={link.href}
                 className="rounded-full bg-black px-5 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-gray-800"
               >
-                {cta.label}
+                {link.label}
               </Link>
-            ))}
-          </div>
-        </div>
-        <div className="rounded-2xl border border-gray-100 bg-gray-50/70 p-5 shadow-sm">
-          <p className="text-xs uppercase tracking-[0.4em] text-gray-400">SEO Keywords</p>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {localeCopy.seoKeywords.map((keyword) => (
-              <span
-                key={keyword}
-                className="rounded-full border border-gray-200 px-3 py-1 text-xs font-medium text-gray-700"
-              >
-                {keyword}
-              </span>
             ))}
           </div>
         </div>

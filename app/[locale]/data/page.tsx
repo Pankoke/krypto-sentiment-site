@@ -1,187 +1,125 @@
-import Link from 'next/link';
-import type { Metadata } from 'next';
+import Link from "next/link";
+import type { Metadata } from "next";
 
-const BASE_URL = process.env.APP_BASE_URL ?? 'https://krypto-sentiment-site.vercel.app';
+const BASE_URL = process.env.APP_BASE_URL ?? "https://krypto-sentiment-site.vercel.app";
 
 const copy = {
   de: {
-    metaTitle: 'Daten & Charts â€“ Visuelle Krypto-Sentiment-Analyse',
+    metaTitle: "Wenn Gefühl auf Zahlen trifft",
     metaDescription:
-      'Entdecke Sentiment-VerlÃ¤ufe, Coin-Vergleiche und On-Chain-Kennzahlen in interaktiven Charts â€“ als ErgÃ¤nzung zu News, Methodik und MarktÃ¼bersicht.',
+      "Stimmung ist nicht nur eine Momentaufnahme. Hier kannst du sehen, wie sich das Sentiment im Verlauf entwickelt hat – bullish, neutral oder bearish – und wie stark die täglichen Schwankungen ausfallen.",
     short:
-      'Hier werden Sentiment-Scores sichtbar: VerlÃ¤ufe, Vergleiche und Kennzahlen, damit du nicht nur ein GefÃ¼hl, sondern auch Daten dazu hast.',
+      "Stimmung ist nicht nur eine Momentaufnahme. Hier kannst du sehen, wie sich das Sentiment im Verlauf entwickelt hat – bullish, neutral oder bearish – und wie stark die täglichen Schwankungen ausfallen.",
     sections: [
       {
-        title: 'Warum Ã¼berhaupt Sentiment-Charts?',
+        title: "Wie lese ich den Sentiment-Score?",
         paragraphs: [
-          'Stimmung ist flÃ¼chtig â€“ Tweets, Hacks und GerÃ¼chte kÃ¶nnen den Ton sofort kippen.',
-          'Charts helfen dir, Trends, Reaktionen auf Ereignisse und Wahrnehmungsverzerrungen zu erkennen.'
+          "Der Score liegt zwischen 0 und 1:",
+          "• 0.00–0.33: eher bearish",
+          "• 0.34–0.66: neutral",
+          "• 0.67–1.00: eher bullish",
+          "",
+          "Vertrauen (%): Zeigt, wie stabil der Score wirkt.",
+          "Hohe Werte = wenig Rauschen in den Daten.",
+          "",
+          "Wichtig: Der Score ist kein Preisziel. Er beschreibt nur die Stimmung."
         ]
       },
       {
-        title: 'Was du hier typischerweise findest',
+        title: "Aktualisierung",
         paragraphs: [
-          'Gesamt-Sentiment-VerlÃ¤ufe mit Linien von bearish bis bullish.',
-          'Sentiment je KryptowÃ¤hrung und Event-Marker fÃ¼r wichtige News oder On-Chain-Geschehnisse.',
-          'On-Chain-Indikatoren wie Exchange-Flows oder aktive Adressen ergÃ¤nzen das Storytelling.'
-        ]
-      },
-      {
-        title: 'Wie du â€žDaten & Chartsâ€œ nutzt',
-        paragraphs: [
-          'Gesamttrend checken: War die Stimmung stabil bullish, oder gibt es einen Trendwechsel?',
-          'Events sehen: Nutze News & Signale Markierungen, um Reaktionen zu prÃ¼fen.',
-          'Coins beobachten: Vergleiche Watchlist-Projekte mit dem Gesamtmarkt.',
-          'On-Chain als Reality-Check: Wenn Stimmung hoch, aber AktivitÃ¤t niedrig ist, ergibt sich ein Warnsignal.'
-        ]
-      },
-      {
-        title: 'Typische Fragen',
-        paragraphs: [
-          'Hat der Markt einen Trendwechsel erlebt oder nur einen kleinen Ausschlag?',
-          'Steigt Sentiment lÃ¤nger als die Kurse?',
-          'Reagiert ein Asset Ã¼bertrieben auf kleine News?',
-          'Entsteht ein neues Narrativ fÃ¼r News & Signale oder Learn?'
-        ]
-      },
-      {
-        title: 'Grenzen der Visualisierung',
-        paragraphs: [
-          'Charts zeigen die Vergangenheit, nicht die Zukunft.',
-          'Daten sind nie vollstÃ¤ndig.',
-          'Menschen sehen Muster â€“ nicht jedes ist echt.',
-          'Behandle â€žDaten & Chartsâ€œ als Analyse-Tool, nicht als Orakel.'
-        ]
-      },
-      {
-        title: 'So passt es ins Gesamtbild',
-        paragraphs: [
-          'Die Startseite liefert das aktuelle BauchgefÃ¼hl.',
-          'Sentiment strukturiert Scores.',
-          'News & Signale liefert den narrativen Kontext.',
-          'KryptowÃ¤hrungen zoomt auf einzelne Assets.',
-          'Methodik erklÃ¤rt, wie Kennzahlen entstehen.',
-          'Learn schÃ¤rft deinen Blick fÃ¼r kritische Dateninterpretation.'
+          "Unsere Modelle laufen aktuell einmal täglich.",
+          "Wir aggregieren Social Media, News und On-Chain-Daten.",
+          "Die Methodik bleibt transparent – die Quellen können sich im Laufe der Zeit verändern."
         ]
       }
     ],
     navLinks: [
-      { label: 'Startseite', href: '/de' },
-      { label: 'Sentiment-Ãœbersicht', href: '/de/sentiment' },
-      { label: 'News & Signale', href: '/de/news' },
-      { label: 'KryptowÃ¤hrungen', href: '/de/coins' },
-      { label: 'Lernen', href: '/de/lernen' },
-      { label: 'Methodik', href: '/de/methodik' }
+      { label: "Startseite", href: "/de" },
+      { label: "Sentiment-Übersicht", href: "/de/sentiment" },
+      { label: "News & Signale", href: "/de/news" },
+      { label: "Kryptowährungen", href: "/de/coins" },
+      { label: "Lernen", href: "/de/lernen" },
+      { label: "Methodik", href: "/de/methodik" }
     ],
     ctas: [
-      { label: 'Gesamt-Sentiment-Verlauf anzeigen', href: '/de/sentiment' },
-      { label: 'Sentiment eines Coins im Detail ansehen', href: '/de/coins' },
-      { label: 'Passende News & Signale einblenden', href: '/de/news' },
-      { label: 'Mehr zur Methodik hinter den Daten lesen', href: '/de/methodik' }
+      { label: "Heutige Marktstimmung ansehen", href: "/de/sentiment" },
+      { label: "Sentiment-Trends in Charts entdecken", href: "/de/daten" },
+      { label: "Sentiment für einzelne Coins prüfen", href: "/de/coins" },
+      { label: "Grundlagen zum Sentiment lernen", href: "/de/lernen" }
     ],
     seoKeywords: [
-      'Krypto Sentiment Charts',
-      'Daten & Charts Krypto',
-      'Crypto sentiment time series',
-      'On-Chain Daten Visualisierung',
-      'Bitcoin Sentiment Verlauf',
-      'KryptowÃ¤hrungen Daten Dashboard',
-      'Crypto market mood charts',
-      'Sentiment vs On-Chain Analyse',
-      'Krypto Kennzahlen Visualisierung'
+      "Krypto Sentiment Charts",
+      "Daten & Charts Krypto",
+      "Crypto sentiment time series",
+      "On-Chain Daten Visualisierung",
+      "Bitcoin Sentiment Verlauf",
+      "Kryptowährungen Daten Dashboard",
+      "Crypto market mood charts",
+      "Sentiment vs On-Chain Analyse",
+      "Krypto Kennzahlen Visualisierung"
     ]
   },
   en: {
-    metaTitle: 'Data & Charts â€“ visual crypto sentiment analysis',
+    metaTitle: "Where mood meets metrics",
     metaDescription:
-      'This is where sentiment becomes visible: time series, coin comparisons and metrics to back the feeling with data.',
+      "Sentiment isn’t just a snapshot. Here you can track how the market mood has changed over time — bullish, neutral or bearish.",
     short:
-      'This is where sentiment becomes visible: time series, comparisons and metrics so you donâ€™t just have a feeling, but data to back it.',
+      "Sentiment isn’t just a snapshot. Here you can track how the market mood has changed over time — bullish, neutral or bearish.",
     sections: [
       {
-        title: 'Why sentiment charts matter',
+        title: "How to read the sentiment score",
         paragraphs: [
-          'Sentiment flips in an instant. Tweets, hacks, rumours can change the tone.',
-          'Charts help spot trends, event reactions, and perception mismatches.'
+          "The score ranges from 0 to 1:",
+          "• 0.00–0.33: bearish",
+          "• 0.34–0.66: neutral",
+          "• 0.67–1.00: bullish",
+          "",
+          "Confidence (%): Shows how stable the score appears.",
+          "High values = less noise in the data.",
+          "",
+          "Important: The score is not a price prediction — it only describes the mood."
         ]
       },
       {
-        title: 'What you typically find here',
+        title: "Update Frequency",
         paragraphs: [
-          'Overall sentiment curves from bearish to bullish.',
-          'Per-coin sentiment, event markers, and on-chain indicators.',
-          'Filters to adjust timeframes, highlight assets and connect to News & Signals.'
-        ]
-      },
-      {
-        title: 'How to work with Data & Charts',
-        paragraphs: [
-          'Start with the big picture: is sentiment trending or just noisy?',
-          'Overlay events from News & Signals to verify reactions.',
-          'Combine watchlist coins with charts and observe divergences.',
-          'Use on-chain metrics as a reality check.'
-        ]
-      },
-      {
-        title: 'Questions charts can help with',
-        paragraphs: [
-          'Is this a trend shift or a small spike?',
-          'Has sentiment been leading prices?',
-          'Is a specific asset overreacting?',
-          'Do you see a new narrative worth exploring in News & Signals and Learn?'
-        ]
-      },
-      {
-        title: 'Limits of visual data',
-        paragraphs: [
-          'Charts show the past, not a future guarantee.',
-          'Data can be incomplete.',
-          'Humans tend to see patterns even in randomness.',
-          'Use Data & Charts as an analysis aid, not a prophecy.'
-        ]
-      },
-      {
-        title: 'How it fits into the platform',
-        paragraphs: [
-          'Homepage shows the current gut feeling.',
-          'Sentiment structures the scores.',
-          'News & Signals adds narrative context to swings.',
-          'Cryptocurrencies zooms in on assets.',
-          'Methodology explains how metrics are built.',
-          'Learn teaches you to question charts and data.'
+          "Our models currently update once per day.",
+          "We aggregate social media signals, news headlines and on-chain metrics.",
+          "Data sources may evolve, but the methodology stays as transparent as possible."
         ]
       }
     ],
     navLinks: [
-      { label: 'Homepage', href: '/en' },
-      { label: 'Sentiment overview', href: '/en/sentiment' },
-      { label: 'News & Signals', href: '/en/news' },
-      { label: 'Cryptocurrencies', href: '/en/coins' },
-      { label: 'Learn', href: '/en/learn' },
-      { label: 'Methodology', href: '/en/methodology' }
+      { label: "Homepage", href: "/en" },
+      { label: "Sentiment overview", href: "/en/sentiment" },
+      { label: "News & Signals", href: "/en/news" },
+      { label: "Cryptocurrencies", href: "/en/coins" },
+      { label: "Learn", href: "/en/learn" },
+      { label: "Methodology", href: "/en/methodology" }
     ],
     ctas: [
-      { label: 'View overall sentiment timeline', href: '/en/sentiment' },
-      { label: "Inspect a coinâ€™s sentiment in detail", href: '/en/coins' },
-      { label: 'Show related News & Signals', href: '/en/news' },
-      { label: 'Read about the data methodology', href: '/en/methodology' }
+      { label: "See today’s market mood", href: "/en/sentiment" },
+      { label: "Explore sentiment trends in charts", href: "/en/data" },
+      { label: "View sentiment for individual cryptocurrencies", href: "/en/coins" },
+      { label: "Learn the basics of sentiment", href: "/en/learn" }
     ],
     seoKeywords: [
-      'Krypto Sentiment Charts',
-      'Daten & Charts Krypto',
-      'Crypto sentiment time series',
-      'On-Chain Daten Visualisierung',
-      'Bitcoin Sentiment Verlauf',
-      'KryptowÃ¤hrungen Daten Dashboard',
-      'Crypto market mood charts',
-      'Sentiment vs On-Chain Analyse',
-      'Krypto Kennzahlen Visualisierung'
+      "Crypto sentiment charts",
+      "Data & Charts crypto",
+      "Crypto sentiment time series",
+      "On-chain data visualization",
+      "Bitcoin sentiment timeline",
+      "Cryptocurrency data dashboard",
+      "Crypto market mood charts",
+      "Sentiment vs on-chain analysis",
+      "Crypto metrics visualization"
     ]
   }
 };
 
-export const generateMetadata = ({ params }: { params: { locale: 'de' | 'en' } }): Metadata => {
-  const canonical = `${BASE_URL}/${params.locale}/${params.locale === 'de' ? 'daten' : 'data'}`;
+export const generateMetadata = ({ params }: { params: { locale: "de" | "en" } }): Metadata => {
+  const canonical = `${BASE_URL}/${params.locale}/${params.locale === "de" ? "daten" : "data"}`;
   const localeCopy = copy[params.locale];
   return {
     title: localeCopy.metaTitle,
@@ -190,7 +128,7 @@ export const generateMetadata = ({ params }: { params: { locale: 'de' | 'en' } }
   };
 };
 
-export default function DataPage({ params }: { params: { locale: 'de' | 'en' } }) {
+export default function DataPage({ params }: { params: { locale: "de" | "en" } }) {
   const locale = params.locale;
   const localeCopy = copy[locale];
 
@@ -199,7 +137,7 @@ export default function DataPage({ params }: { params: { locale: 'de' | 'en' } }
       <section className="mx-auto max-w-5xl space-y-6 rounded-3xl border border-gray-200 bg-white/80 p-8 shadow-xl">
         <header className="space-y-3">
           <p className="text-xs uppercase tracking-[0.5em] text-gray-400">
-            {locale === 'de' ? 'Daten & Charts' : 'Data & Charts'}
+            {locale === "de" ? "Daten & Charts" : "Data & Charts"}
           </p>
           <h1 className="text-4xl font-semibold text-gray-900">{localeCopy.metaTitle}</h1>
           <p className="text-sm text-gray-600">{localeCopy.short}</p>
@@ -225,7 +163,7 @@ export default function DataPage({ params }: { params: { locale: 'de' | 'en' } }
           </article>
         ))}
         <div className="rounded-2xl border border-gray-200 bg-white/90 p-6 shadow-sm">
-          <h3 className="text-lg font-semibold text-gray-900">{locale === 'de' ? 'CTAs' : 'CTAs'}</h3>
+          <h3 className="text-lg font-semibold text-gray-900">{locale === "de" ? "CTAs" : "CTAs"}</h3>
           <div className="mt-3 flex flex-wrap gap-3">
             {localeCopy.ctas.map((cta) => (
               <Link

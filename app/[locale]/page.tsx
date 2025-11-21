@@ -5,156 +5,138 @@ const BASE_URL = process.env.APP_BASE_URL ?? 'https://krypto-sentiment-site.com'
 
 const copy = {
   de: {
-    metaTitle: 'Krypto Sentiment – Echtzeit Marktstimmung für Kryptowährungen',
-    metaDescription: 'Entdecke die Marktstimmung: KI-gestützte Scores aus News, Social Media und On-Chain-Daten.',
-    short: 'Krypto-Sentiment in Klartext: Wir zeigen dir, wie die Crowd gerade wirklich drauf ist – bullish, neutral oder bearish. Täglich analysiert, KI-gestützt, aber leicht verständlich erklärt.',
-    longIntroTitle: 'Willkommen bei Krypto Sentiment – deinem Kontrollzentrum für Stimmung im Kryptomarkt.',
+    metaTitle: 'Krypto Sentiment – Dein täglicher Überblick über die Stimmung im Kryptomarkt',
+    metaDescription:
+      'Krypto-Sentiment in Klartext: Täglicher Blick auf bullish, neutral oder bearish – KI-gestützt, datenbasiert, leicht verständlich. Keine Finanzberatung.',
+    short:
+      'Auf dieser Seite bekommst du jeden Tag eine aktuelle Einschätzung der Marktstimmung. Wir analysieren Nachrichten, Social Media und On-Chain-Daten, berechnen ein Sentiment und ordnen es verständlich ein. Für Einsteiger genauso gut geeignet wie für Fortgeschrittene, die über den Tellerrand hinaus schauen möchten.',
+    longIntroTitle: 'Dein täglicher Überblick über die Stimmung im Kryptomarkt',
     longIntro:
-      'Während andere noch durch X-Threads, Telegram-Gruppen und News-Feeds scrollen, bekommst du hier eine klare Antwort auf die simple Frage: „Wie fühlt sich der Markt gerade an?“',
-    combines:
-      'Wir kombinieren dafür drei Welten:',
+      'Krypto-Sentiment in Klartext: Wir zeigen dir täglich, wie die Crowd gerade drauf ist – bullish, neutral oder bearish. KI-gestützt, datenbasiert und leicht verständlich. Keine Finanzberatung.',
+    combines: 'Kurzversion',
     combineItems: [
-      'Social Media – was diskutiert die Community?',
-      'News & Signale – welche Meldungen bewegen den Markt?',
-      'On-Chain-Daten – was machen Wallets, Volumen und Flows wirklich?'
+      'Sentiment zeigt, wie optimistisch oder pessimistisch die Stimmung ist.',
+      'Score liegt zwischen 0 (bearish) und 1 (bullish).',
+      'Vertrauen zeigt, wie stabil die Einschätzung ist.',
+      'Wir werten täglich Signale aus Nachrichten, Social Media und On-Chain-Daten aus.',
+      'Keine Preisprognosen, keine Trading-Tipps – nur Stimmungsanalyse.'
     ],
     score:
-      'Aus all diesen Puzzleteilen baut unsere KI einen Sentiment-Score: bullish, neutral oder bearish – ergänzt durch erklärenden Kontext, Beispiele und, wo sinnvoll, Charts aus dem Bereich Daten & Charts.',
-    stadiumTitle: 'Warum eine Sentiment-Seite, wenn es doch schon Kurse gibt?',
+      'Wie lese ich den Sentiment-Score?\nDer Score liegt zwischen 0 und 1:\n• 0.00–0.33: eher bearish\n• 0.34–0.66: neutral\n• 0.67–1.00: eher bullish\n\nVertrauen (%): Zeigt, wie stabil der Score wirkt.\nHohe Werte = wenig Rauschen in den Daten.\n\nWichtig: Der Score ist kein Preisziel. Er beschreibt nur die Stimmung.',
+    stadiumTitle: 'Aktualisierung',
     stadiumBody:
-      'Kurse erzählen dir, was passiert ist. Sentiment versucht zu zeigen, wie der Markt gerade denkt. Stell dir vor, du sitzt in einem Stadion: Der Spielstand ist der Kurs – rein objektiv. Die Stimmung auf den Rängen ist das Sentiment – manchmal euphorisch, manchmal nervös, manchmal einfach nur müde. Genau dieses „Stadiongefühl“ des Kryptomarkts bringen wir auf eine übersichtliche Seite. Du kannst dann selbst entscheiden, ob du dich lieber mit der Masse treiben lässt oder bewusst gegen den Strom schwimmst – natürlich immer in eigener Verantwortung und ohne dass unsere Inhalte als Finanzberatung zu verstehen sind.',
-    usageIntro: 'Wie du die Startseite sinnvoll nutzt',
+      'Unsere Modelle laufen aktuell einmal täglich.\nWir aggregieren Social Media, News und On-Chain-Daten.\nDie Methodik bleibt transparent – die Quellen können sich im Laufe der Zeit verändern.',
+    usageIntro: 'Nächste Schritte',
     usageSections: [
-      {
-        title: 'Sentiment checken',
-        description:
-          'Schau zuerst auf den aktuellen Marktstimmungs-Status. Ist die allgemeine Stimmung eher bullish, eher neutral oder klar bearish?'
-      },
-      {
-        title: 'In die Details springen',
-        description:
-          'Über den Bereich News & Signale kannst du nachsehen, welche Meldungen besonders stark auf die Stimmung wirken. Über Kryptowährungen gelangst du zu den einzelnen Coins und siehst, wie sich Stimmung und Narrativ pro Asset unterscheiden.'
-      },
-      {
-        title: 'Daten & Charts',
-        description:
-          'In Daten & Charts findest du Visualisierungen, die den Sentiment-Kontext greifbarer machen.'
-      },
-      {
-        title: 'Hintergründe verstehen',
-        description:
-          'Wenn du genauer wissen willst, wie unsere Scores entstehen, lohnt sich ein Blick in die Methodik. Dort erklären wir transparent, wie die KI Daten zusammenträgt, filtert und gewichtet.'
-      },
-      {
-        title: 'Weiterlernen statt blind traden',
-        description:
-          'Im Bereich Lernen findest du verständliche Artikel rund um Sentiment-Analyse, Risikobewusstsein, Dateninterpretation und KI-Grundlagen.'
-      }
+      { title: 'Aktuelle News & Signale ansehen', description: '' },
+      { title: 'Sentiment-Trends in Charts entdecken', description: '' },
+      { title: 'Grundlagen zum Sentiment lernen', description: '' },
+      { title: 'Sentiment für einzelne Kryptowährungen ansehen', description: '' }
     ],
-    audienceTitle: 'Für wen ist Krypto Sentiment gedacht?',
-    audienceList: [
-      'Neugierige Einsteiger:innen, die ein Gefühl dafür bekommen wollen, wie verrückt (oder entspannt) der Markt gerade ist.',
-      'Erfahrene Trader, die Sentiment als zusätzlichen Layer neben Charttechnik und Fundamentaldaten nutzen.',
-      'Langfristige Investor:innen, die nicht jedem Hype hinterherlaufen wollen, aber trotzdem ein Auge auf die Stimmung haben.',
-      'Tech-Nerds & Datenfans, die sehen möchten, wie KI, On-Chain-Analysen und Social-Signals zusammengeführt werden.'
-    ],
-    transparencyTitle: 'Transparenz & Verantwortung',
+    audienceTitle: 'Kurzversion',
+    audienceList: [],
+    transparencyTitle: 'Keine Preisprognosen, keine Trading-Tipps – nur Stimmungsanalyse.',
     transparencyPoints: [
-      'KI-generiert (mit menschlich kuratierter Struktur).',
-      'Automatisiert aktualisiert.',
-      'Ohne Anspruch auf Vollständigkeit.',
-      'Keine Finanzberatung.'
+      'Sentiment zeigt, wie optimistisch oder pessimistisch die Stimmung ist.',
+      'Score liegt zwischen 0 (bearish) und 1 (bullish).',
+      'Vertrauen zeigt, wie stabil die Einschätzung ist.'
     ],
     finalCall:
-      'Krypto ist volatil, riskant und nichts für Geld, das du kurzfristig dringend brauchst. Nutze unsere Analysen als einen Baustein von vielen – und kombiniere sie mit eigener Recherche, kritischem Denken und einem klaren Risikomanagement.',
-    ecosystemTitle: 'Dein Einstieg in das Krypto-Stimmungs-Ökosystem',
+      'Wichtig: Der Score ist kein Preisziel. Er beschreibt nur die Stimmung. Keine Finanzberatung.',
+    ecosystemTitle: 'Nächste Schritte',
     ecosystemList: [
-      { title: 'Kryptowährungen', description: 'Sieh, welche Coins aktuell im Fokus stehen.' },
-      { title: 'News & Signale', description: 'Täglicher Stimmungs-Kontext zu relevanten Ereignissen.' },
-      { title: 'Daten & Charts', description: 'Visualisierungen zu Sentiment-Verläufen und Kennzahlen.' },
-      { title: 'Über uns', description: 'Lerne das Projekt und die Idee kennen.' },
-      { title: 'Kontakt', description: 'Teile Feedback, Feature-Wünsche oder Kooperationsideen.' }
+      { title: 'Heutige Marktstimmung ansehen', description: 'Zum täglichen Überblick wechseln.' },
+      { title: 'Grundlagen zum Sentiment lernen', description: 'Die Basics zum Stimmungs-Scoring verstehen.' },
+      { title: 'Sentiment-Trends in Charts entdecken', description: 'Verläufe und Trends visuell nachvollziehen.' },
+      { title: 'Sentiment für einzelne Kryptowährungen ansehen', description: 'Detaillierte Coin-Ansichten öffnen.' }
     ],
     ctas: [
-      { label: 'Jetzt aktuelle Marktstimmung checken', href: '/de/news' },
-      { label: 'Zu News & Signalen wechseln', href: '/de/news' },
-      { label: 'Mehr über unsere Methodik erfahren', href: '/de/methodik' },
-      { label: 'Im Lernbereich tiefer einsteigen', href: '/de/lernen' }
+      { label: 'Heutige Marktstimmung ansehen', href: '/de/news' },
+      { label: 'Grundlagen zum Sentiment lernen', href: '/de/learn' },
+      { label: 'Sentiment-Trends in Charts entdecken', href: '/de/daten' },
+      { label: 'Sentiment für einzelne Kryptowährungen ansehen', href: '/de/coins' }
     ],
-    seoKeywords: ['Crypto Sentiment', 'Krypto Marktstimmung', 'Bitcoin Sentiment Analyse', 'Kryptowährungen bullish bearish', 'KI Krypto Analyse', 'Crypto market mood dashboard', 'On-chain sentiment data', 'Krypto News & Signale', 'Sentiment Score Bitcoin Ethereum', 'Crypto trading psychology', 'Kryptomarkt Überblick', 'Real-time crypto sentiment']
+    seoKeywords: [
+      'Crypto Sentiment',
+      'Krypto Marktstimmung',
+      'Bitcoin Sentiment Analyse',
+      'Kryptowährungen bullish bearish',
+      'KI Krypto Analyse',
+      'Crypto market mood dashboard',
+      'On-chain sentiment data',
+      'Krypto News & Signale',
+      'Sentiment Score Bitcoin Ethereum',
+      'Crypto trading psychology',
+      'Kryptomarkt Überblick',
+      'Real-time crypto sentiment'
+    ]
   },
   en: {
-    metaTitle: 'Krypto Sentiment – Real-time market mood for cryptocurrencies',
-    metaDescription: 'Crypto market mood explained: AI scores from News, Social Signals, and on-chain data. No financial advice.',
-    short: 'Krypto-Sentiment in plain language: we show you how the crowd actually feels – bullish, neutral or bearish. Updated daily, powered by AI, but explained in a way humans understand.',
-    longIntroTitle: 'Welcome to Krypto Sentiment – your control center for crypto market mood.',
+    metaTitle: 'Krypto Sentiment – Your daily overview of the crypto market’s mood',
+    metaDescription:
+      'Clear, AI-based sentiment analysis: See whether the market feels bullish, neutral or bearish — explained in simple, data-driven language. No financial advice.',
+    short:
+      'Every day, you’ll find a fresh sentiment analysis of the crypto market. We evaluate news, social media and on-chain data, calculate a sentiment score and explain it in a beginner-friendly way. Useful for newcomers and advanced users alike.',
+    longIntroTitle: 'Your daily overview of the crypto market’s mood',
     longIntro:
-      'While others are still doom-scrolling through X threads, Telegram chats and news feeds, you get a simple answer to a simple question: “How does the market feel right now?”',
-    combines: 'We bring together three worlds:',
+      'Clear, AI-based sentiment analysis: See whether the market feels bullish, neutral or bearish — explained in simple, data-driven language. No financial advice.',
+    combines: 'Short version',
     combineItems: [
-      'Social media – what is the community talking about?',
-      'News & signals – which headlines are actually moving the market?',
-      'On-chain data – what are wallets, volumes and flows doing under the surface?'
+      'Sentiment shows whether the market feels optimistic or pessimistic.',
+      'Score ranges from 0 (bearish) to 1 (bullish).',
+      'Confidence shows how stable the score appears.',
+      'We analyse headlines, social media signals and on-chain metrics.',
+      'No price predictions, no trading advice – only sentiment.'
     ],
     score:
-      'From all of this, our AI builds a sentiment score: bullish, neutral or bearish – backed by short explanations, examples and, where it makes sense, charts from the Data & Charts section.',
-    stadiumTitle: 'Why a sentiment homepage if prices already exist?',
+      'How to read the sentiment score\nThe score ranges from 0 to 1:\n• 0.00–0.33: bearish\n• 0.34–0.66: neutral\n• 0.67–1.00: bullish\n\nConfidence (%): Shows how stable the score appears.\nHigh values = less noise in the data.\n\nImportant: The score is not a price prediction — it only describes the mood.',
+    stadiumTitle: 'Update Frequency',
     stadiumBody:
-      'Prices tell you what happened. Sentiment tries to show how the market is thinking right now. Imagine you’re in a stadium: The score on the board is the price – cold and objective. The noise from the stands is the sentiment – sometimes euphoric, sometimes stressed, sometimes weirdly quiet. Our goal is to capture this “stadium feeling” of the crypto market on a clean, structured page. You decide whether you want to move with the crowd or deliberately against it – always at your own risk and never as financial advice.',
-    usageIntro: 'How to use this homepage',
+      'Our models currently update once per day.\nWe aggregate social media signals, news headlines and on-chain metrics.\nData sources may evolve, but the methodology stays as transparent as possible.',
+    usageIntro: 'Next steps',
     usageSections: [
-      {
-        title: 'Check the current sentiment',
-        description: 'Start with today’s overall mood: is the market leaning bullish, stuck in neutral or clearly bearish?'
-      },
-      {
-        title: 'Dive into the details',
-        description: 'Use the News & Signals area to see which stories are pushing sentiment up or down. Jump into the Cryptocurrencies section to explore how sentiment differs from coin to coin.'
-      },
-      {
-        title: 'Visit Data & Charts',
-        description: 'See visualizations that make the mood and its changes easier to grasp.'
-      },
-      {
-        title: 'Understand the logic behind the numbers',
-        description: 'The Methodology section walks you through how AI models collect, filter and weight data points.'
-      },
-      {
-        title: 'Learn instead of blindly trading',
-        description: 'Find accessible articles on sentiment analysis, risk awareness, data interpretation and AI basics.'
-      }
+      { title: 'See today’s market mood', description: '' },
+      { title: 'Learn the basics of sentiment', description: '' },
+      { title: 'Explore sentiment trends in charts', description: '' },
+      { title: 'View sentiment for individual cryptocurrencies', description: '' }
     ],
-    audienceTitle: 'Who is Krypto Sentiment for?',
-    audienceList: [
-      'Curious beginners who want a quick feeling for how crazy (or calm) the market is right now.',
-      'Experienced traders who use sentiment as an additional layer on top of charts and fundamentals.',
-      'Long-term investors who don’t want to chase every hype cycle but still like to track the emotional side of the market.',
-      'Tech and data enthusiasts who enjoy seeing AI, on-chain analytics and social signals combined.'
-    ],
-    transparencyTitle: 'Transparency & responsibility',
+    audienceTitle: 'Short version',
+    audienceList: [],
+    transparencyTitle: 'No price predictions, no trading advice – only sentiment.',
     transparencyPoints: [
-      'AI-generated with a human-designed structure.',
-      'Automatically updated.',
-      'Incomplete by nature (no model sees everything).',
-      'Not financial advice.'
+      'Sentiment shows whether the market feels optimistic or pessimistic.',
+      'Score ranges from 0 (bearish) to 1 (bullish).',
+      'Confidence shows how stable the score appears.'
     ],
     finalCall:
-      'Crypto is volatile and risky. Never use money you can’t afford to lose, and always combine our insights with your own research, a healthy dose of skepticism and a clear risk strategy.',
-    ecosystemTitle: 'Your entry point into the sentiment ecosystem',
+      'Important: The score is not a price prediction — it only describes the mood. No financial advice.',
+    ecosystemTitle: 'Next steps',
     ecosystemList: [
-      { title: 'Cryptocurrencies', description: 'See which assets are currently in focus and how their sentiment develops.' },
-      { title: 'News & Signals', description: 'Key events and their mood context.' },
-      { title: 'Data & Charts', description: 'Visualize sentiment, trends and related metrics.' },
-      { title: 'About', description: 'Read the story and idea behind the project.' },
-      { title: 'Contact', description: 'Share feedback, ideas or collaboration requests.' }
+      { title: 'See today’s market mood', description: 'Jump to the latest overview.' },
+      { title: 'Learn the basics of sentiment', description: 'Understand how scoring works.' },
+      { title: 'Explore sentiment trends in charts', description: 'Follow trends and volatility.' },
+      { title: 'View sentiment for individual cryptocurrencies', description: 'Open detailed coin views.' }
     ],
     ctas: [
-      { label: "Check today’s market sentiment", href: '/en/news' },
-      { label: 'Jump to News & Signals', href: '/en/news' },
-      { label: 'Learn more about our methodology', href: '/en/methodology' },
-      { label: 'Dive deeper in the Learn section', href: '/en/learn' }
+      { label: 'See today’s market mood', href: '/en/news' },
+      { label: 'Learn the basics of sentiment', href: '/en/learn' },
+      { label: 'Explore sentiment trends in charts', href: '/en/data' },
+      { label: 'View sentiment for individual cryptocurrencies', href: '/en/coins' }
     ],
-    seoKeywords: ['Crypto Sentiment', 'Krypto Marktstimmung', 'Bitcoin Sentiment Analyse', 'Kryptowährungen bullish bearish', 'KI Krypto Analyse', 'Crypto market mood dashboard', 'On-chain sentiment data', 'Krypto News & Signale', 'Sentiment Score Bitcoin Ethereum', 'Crypto trading psychology', 'Kryptomarkt Überblick', 'Real-time crypto sentiment']
+    seoKeywords: [
+      'Crypto Sentiment',
+      'Crypto market mood',
+      'Bitcoin sentiment analysis',
+      'Crypto bullish bearish score',
+      'AI crypto analysis',
+      'Crypto market mood dashboard',
+      'On-chain sentiment data',
+      'Crypto news signals sentiment',
+      'Sentiment score Bitcoin Ethereum',
+      'Crypto trading psychology',
+      'Crypto market overview',
+      'Real-time crypto sentiment'
+    ]
   }
 } as const;
 
