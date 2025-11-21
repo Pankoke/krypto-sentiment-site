@@ -15,8 +15,8 @@ async function loadLatestFile(): Promise<string | null> {
     if (!rawReports.length) {
       return null;
     }
-    rawReports.sort();
-    const latest = rawReports[rawReports.length - 1];
+    rawReports.sort((a, b) => b.localeCompare(a));
+    const latest = rawReports[0];
     return latest ? join(dir, latest) : null;
   } catch {
     return null;
@@ -57,7 +57,7 @@ export async function GET(req: Request): Promise<Response> {
 
   const latestPath = await loadLatestFile();
   if (!latestPath) {
-    const message = 'No raw sentiment report found (expected pattern YYYY-MM-DD.json).';
+    const message = 'No raw report found';
     return Response.json({ error: message }, { status: 404, headers: JSON_HEADERS });
   }
 

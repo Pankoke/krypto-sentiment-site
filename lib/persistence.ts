@@ -30,9 +30,9 @@ export interface DailySnapshot {
 }
 
 // Report-Dateikonvention:
-// - Roh-Report: YYYY-MM-DD.json
-// - Snapshot pro Locale: YYYY-MM-DD.<locale>.json
-// Sentiment-API liest ausschließlich Roh-Reports.
+// - Raw reports: YYYY-MM-DD.json
+// - Localized snapshots: YYYY-MM-DD.<locale>.json
+// The sentiment API filters raw reports via RegExp.
 const REPORT_DIR = join(DATA_DIR, 'reports');
 const FALLBACK_REPORT_DIR = join(FALLBACK_DATA_DIR, 'reports');
 const REPORT_DIRS = [REPORT_DIR, FALLBACK_REPORT_DIR];

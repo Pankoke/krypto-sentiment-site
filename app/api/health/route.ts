@@ -14,6 +14,7 @@ interface HealthTopic {
   generatedAt: string | null;
   itemsCount: number;
   resolvedFilePath: string | null;
+  status: 'found' | 'missing';
 }
 
 interface HealthResponse {
@@ -33,6 +34,7 @@ function buildHealthTopic(entry: { date: string; generatedAt: string | null; ite
     generatedAt: entry?.generatedAt ?? null,
     itemsCount: entry?.items ?? 0,
     resolvedFilePath: entry?.path ?? null,
+    status: entry ? 'found' : 'missing',
   };
 }
 

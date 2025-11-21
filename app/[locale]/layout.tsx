@@ -3,11 +3,16 @@ import type { ReactNode } from "react";
 type LocaleLayoutProps = {
   children: ReactNode;
   params: {
-    locale: string;
+    locale: "de" | "en";
   };
 };
 
+export function generateStaticParams() {
+  return [{ locale: "de" }, { locale: "en" }];
+}
+
 export default function LocaleLayout({ children }: LocaleLayoutProps) {
-  // Falls später lokales Layout-Verhalten nötig ist, kann es hier ergänzt werden.
+  // Das eigentliche Locale-Handling (Messages, NextIntl) passiert im Root-Layout (app/layout.tsx).
+  // Dieses Segment-Layout sorgt nur dafür, dass die Route /[locale]/... existiert.
   return <>{children}</>;
 }

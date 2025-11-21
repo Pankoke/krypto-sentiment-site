@@ -5,32 +5,26 @@ export const dynamic = 'force-dynamic';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' } as const;
 
+type TriggerMode = 'triggered' | 'skipped';
+
 type TriggerResponse =
   | {
       ok: true;
+      mode: TriggerMode;
       date: string;
       assets: number;
       saved: string;
-      mode: DailyGenerateMode;
       skipped: boolean;
     }
   | { ok: false; error: string };
 
-function buildForbidden(): Response {
-  return Response.json({ error: 'Forbidden' }, { status: 403, headers: JSON_HEADERS });
-}
-
 export async function GET(req: Request): Promise<Response> {
-  const secret = process.env.DAILY_API_SECRET ?? null;
-  if (!secret) {
-    const payload: TriggerResponse = { ok: false, error: 'Daily API secret is not configured.' };
-    return Response.json(payload, { status: 500, headers: JSON_HEADERS });
-  }
-
+  const secret = process.env.DAILY_API_SECRET ?? process.env.CRON_SECRET;
   const url = new URL(req.url);
-  const key = url.searchParams.get('key') ?? req.headers.get('x-daily-secret');
-  if (key !== secret) {
-    return buildForbidden();
+  const key = url.searchParams.get('key');
+  if (secret && key !== secret) {
+    const payload: TriggerResponse = { ok: false, error: 'Forbidden' };
+    return Response.json(payload, { status: 403, headers: JSON_HEADERS });
   }
 
   try {
@@ -41,10 +35,10 @@ export async function GET(req: Request): Promise<Response> {
 
     const payload: TriggerResponse = {
       ok: true,
+      mode: result.skipped ? 'skipped' : 'triggered',
       date: result.report.date,
       assets: result.report.assets.length,
       saved,
-      mode,
       skipped: result.skipped,
     };
     return Response.json(payload, { headers: JSON_HEADERS });

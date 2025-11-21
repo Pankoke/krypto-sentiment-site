@@ -22,15 +22,13 @@ export default function GenerateButton() {
     setResult(null);
     setError(null);
     try {
-      const res = await fetch('/api/admin/trigger-daily-run');
+      const res = await fetch('/api/admin/trigger-daily-run', { method: 'POST' });
       const json = (await res.json()) as TriggerResponse;
       if (!res.ok || !json.ok) {
         throw new Error(json.error || `HTTP ${res.status}`);
       }
       const savedPath = json.saved ?? 'Datei gespeichert';
-      setResult(`Admin-Run erfolgreich: ${savedPath}`);
-      // Optional: Seite neu laden, damit der Bericht sichtbar wird
-      setTimeout(() => window.location.reload(), 500);
+      setResult(`Daily-Run erfolgreich gestartet: ${savedPath}`);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
@@ -45,7 +43,7 @@ export default function GenerateButton() {
         disabled={loading}
         className="inline-flex items-center justify-center rounded-md bg-black px-3 py-1.5 text-white text-sm hover:bg-gray-800 disabled:opacity-60"
       >
-        {loading ? 'Admin-Run läuft...' : 'Admin: Tagesbericht auslösen'}
+        {loading ? 'Starte Daily-Run…' : 'Daily-Run jetzt starten (Admin)'}
       </button>
       {result && <div className="text-sm text-green-700">{result}</div>}
       {error && (
