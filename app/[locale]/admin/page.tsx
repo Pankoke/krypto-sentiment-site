@@ -141,9 +141,9 @@ export default function AdminDashboard() {
               </div>
               <div className="space-y-1">
                 <Button
-                  variant="secondary"
                   disabled={actionState.clearSnapshots.loading}
                   onClick={() => runAction("clearSnapshots", "/api/admin/clear-snapshots", { method: "POST" })}
+                  className="bg-slate-700 hover:bg-slate-800"
                 >
                   {actionState.clearSnapshots.loading ? "Löschen..." : "Snapshots leeren (Redis)"}
                 </Button>
@@ -156,9 +156,9 @@ export default function AdminDashboard() {
               </div>
               <div className="space-y-1">
                 <Button
-                  variant="outline"
                   disabled={actionState.revalidate.loading}
                   onClick={() => runAction("revalidate", "/api/admin/revalidate-sentiment", { method: "POST" })}
+                  className="bg-white text-slate-900 border border-slate-300 hover:bg-slate-50"
                 >
                   {actionState.revalidate.loading ? "Revalidiere..." : "Sentiment-Seiten revalidieren"}
                 </Button>
@@ -209,7 +209,7 @@ export default function AdminDashboard() {
                 </div>
               )}
               <div className="flex gap-2">
-                <Button variant="ghost" size="sm" onClick={() => refreshLogs()}>
+                <Button className="bg-transparent text-slate-700 hover:bg-slate-100 px-2 py-1" onClick={() => refreshLogs()}>
                   Refresh
                 </Button>
                 <Link href="/api/admin/logs?limit=200" className="text-xs text-indigo-600 underline">
@@ -252,7 +252,7 @@ export default function AdminDashboard() {
               </div>
             )}
             <div className="flex gap-2">
-              <Button variant="ghost" size="sm" onClick={() => refreshHistory()}>
+              <Button className="bg-transparent text-slate-700 hover:bg-slate-100 px-2 py-1" onClick={() => refreshHistory()}>
                 Refresh
               </Button>
               <Link href="/api/admin/snapshot-history?days=30" className="text-xs text-indigo-600 underline">
