@@ -57,7 +57,7 @@ export function SentimentCard({ item, historyPoints }: SentimentCardProps) {
           <p className="text-2xl font-semibold text-slate-900">{item.score.toFixed(2)}</p>
         </div>
         <div className="text-right">
-          <p className="text-xs uppercase tracking-wide text-slate-400">24h Änderung</p>
+          <p className="text-xs uppercase tracking-wide text-slate-400">24h Ã„nderung</p>
           <p
             className={
               change24h > 0
@@ -78,4 +78,4 @@ export function SentimentCard({ item, historyPoints }: SentimentCardProps) {
       </div>
     </article>
   );
-}
+}
