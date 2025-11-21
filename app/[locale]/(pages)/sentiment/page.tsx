@@ -1,5 +1,8 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import type { SentimentItem } from 'lib/sentiment/types';
+import type { AssetSentimentPoint } from 'lib/news/snapshot';
+import { SentimentCard } from '@/components/sentiment/SentimentCard';
 
 const BASE_URL = process.env.APP_BASE_URL ?? 'https://krypto-sentiment-site.com';
 
@@ -188,6 +191,48 @@ const copy = {
   }
 };
 
+type BulkHistoryEntry = {
+  asset: string;
+  points: AssetSentimentPoint[];
+};
+
+async function loadSentimentItems(): Promise<SentimentItem[]> {
+  try {
+    const res = await fetch('/api/sentiment', { next: { revalidate: 300 } });
+    if (!res.ok) {
+      return [];
+    }
+    const data = (await res.json()) as { items?: SentimentItem[] };
+    return Array.isArray(data.items) ? data.items : [];
+  } catch {
+    return [];
+  }
+}
+
+async function loadHistoryMap(symbols: string[], days = 30): Promise<Map<string, AssetSentimentPoint[]>> {
+  if (!symbols.length) {
+    return new Map();
+  }
+  const params = new URLSearchParams({
+    assets: symbols.join(','),
+    days: String(days),
+  }).toString();
+  try {
+    const res = await fetch(`/api/sentiment/history/bulk?${params}`, { next: { revalidate: 300 } });
+    if (!res.ok) {
+      return new Map();
+    }
+    const data = (await res.json()) as BulkHistoryEntry[];
+    const map = new Map<string, AssetSentimentPoint[]>();
+    data.forEach((entry) => {
+      map.set(entry.asset.toUpperCase(), entry.points ?? []);
+    });
+    return map;
+  } catch {
+    return new Map();
+  }
+}
+
 export const generateMetadata = ({ params }: { params: { locale: 'de' | 'en' } }): Metadata => {
   const canonical = `${BASE_URL}/${params.locale}/sentiment`;
   const localeCopy = copy[params.locale];
@@ -198,9 +243,12 @@ export const generateMetadata = ({ params }: { params: { locale: 'de' | 'en' } }
   };
 };
 
-export default function Page({ params }: { params: { locale: 'de' | 'en' } }) {
+export default async function Page({ params }: { params: { locale: 'de' | 'en' } }) {
   const locale = params.locale;
   const localeCopy = copy[locale];
+  const sentimentItems = await loadSentimentItems();
+  const historyMap = await loadHistoryMap(sentimentItems.map((item) => item.symbol));
+
   return (
     <main className="min-h-screen bg-gray-50 py-16">
       <section className="mx-auto max-w-5xl space-y-6 rounded-3xl border border-gray-200 bg-white/80 p-8 shadow-xl">
@@ -218,6 +266,28 @@ export default function Page({ params }: { params: { locale: 'de' | 'en' } }) {
             </Link>
           ))}
         </nav>
+        <div className="space-y-3 rounded-2xl border border-gray-100 bg-gray-50/70 p-5 shadow-sm">
+          <h2 className="text-xl font-semibold text-gray-900">
+            {locale === 'de' ? 'Aktuelle Sentiment-Karten' : 'Current Sentiment Cards'}
+          </h2>
+          {sentimentItems.length === 0 ? (
+            <p className="text-sm text-gray-700">
+              {locale === 'de'
+                ? 'Keine Sentiment-Daten vorhanden.'
+                : 'No sentiment data available.'}
+            </p>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2">
+              {sentimentItems.map((item) => (
+                <SentimentCard
+                  key={item.symbol}
+                  item={item}
+                  historyPoints={historyMap.get(item.symbol.toUpperCase())}
+                />
+              ))}
+            </div>
+          )}
+        </div>
         {localeCopy.sections.map((section) => (
           <article
             key={section.title}

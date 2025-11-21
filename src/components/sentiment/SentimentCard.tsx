@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useMemo, useState } from 'react';
-import useSWR from 'swr';
 import { useTranslations } from 'next-intl';
 import type { SentimentItem } from 'lib/sentiment/types';
 import type { AssetSentimentPoint } from 'lib/news/snapshot';
@@ -9,9 +8,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendBadge } from './TrendBadge';
 import { Sparkline } from './Sparkline';
 
-interface SentimentCardProps {
+type SentimentCardProps = {
   item: SentimentItem;
-}
+  historyPoints?: AssetSentimentPoint[];
+};
 
 const sentimentColors: Record<SentimentItem['trend'], string> = {
   bullish: 'bg-emerald-100 text-emerald-800',
@@ -22,18 +22,13 @@ const sentimentColors: Record<SentimentItem['trend'], string> = {
 const formatScore = (score: number) => score.toFixed(2);
 const asPercent = (value: number) => `${Math.round(Math.max(0, Math.min(1, value)) * 100)}%`;
 
-export function SentimentCard({ item }: SentimentCardProps) {
+export function SentimentCard({ item, historyPoints }: SentimentCardProps) {
   const t = useTranslations();
   const [expandedRationale, setExpandedRationale] = useState(false);
   const [showRawJson, setShowRawJson] = useState(false);
-  const fetcher = (url: string) =>
-    fetch(url).then((resp) => resp.json() as Promise<{ asset: string; points: AssetSentimentPoint[] }>);
-  const { data: historyData } = useSWR(
-    item.symbol ? `/api/sentiment/history?asset=${item.symbol}&days=30` : null,
-    fetcher
-  );
-  const sparklinePoints = historyData?.points.length
-    ? historyData.points.map((point) => ({
+
+  const sparklinePoints = historyPoints?.length
+    ? historyPoints.map((point) => ({
         t: new Date(point.date).getTime(),
         c: point.score,
       }))

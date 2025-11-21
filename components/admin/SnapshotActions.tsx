@@ -2,20 +2,27 @@
 
 import { useState } from "react";
 
-const ACTIONS = [
-  { label: "Neu generieren", path: "/api/news/generate?mode=overwrite" },
-  { label: "Validieren", path: "/api/news/validate" },
+type Action = {
+  label: string;
+  path: string;
+  method?: "GET" | "POST";
+};
+
+const ACTIONS: Action[] = [
+  { label: "Daily-Run anstoßen", path: "/api/admin/trigger-daily-run", method: "GET" },
+  { label: "Snapshots leeren (Redis)", path: "/api/admin/clear-snapshots", method: "POST" },
+  { label: "Sentiment-Seiten revalidieren", path: "/api/admin/revalidate-sentiment", method: "POST" },
 ];
 
 export default function SnapshotActions() {
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  async function runAction(path: string) {
+  async function runAction(action: Action) {
     setBusy(true);
     setStatus("Lade …");
     try {
-      const res = await fetch(path);
+      const res = await fetch(action.path, { method: action.method ?? "GET" });
       const payload = await res.json();
       setStatus(JSON.stringify(payload));
     } catch (error) {
@@ -31,7 +38,7 @@ export default function SnapshotActions() {
         <button
           key={action.label}
           disabled={busy}
-          onClick={() => runAction(action.path)}
+          onClick={() => runAction(action)}
           className="rounded-md bg-indigo-600 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white hover:bg-indigo-500 disabled:opacity-50"
         >
           {action.label}
