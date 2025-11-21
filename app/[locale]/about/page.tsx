@@ -5,57 +5,57 @@ const BASE_URL = process.env.APP_BASE_URL ?? "https://krypto-sentiment-site.verc
 
 const copy = {
   de: {
-    metaTitle: "Über uns",
+    metaTitle: "Ãœber uns",
     metaDescription:
-      "Wir möchten Sentiment-Analysen verständlich machen – ohne Hype, ohne Versprechen, ohne Finanzberatung.",
+      "Wir mÃ¶chten Sentiment-Analysen verstÃ¤ndlich machen â€“ ohne Hype, ohne Versprechen, ohne Finanzberatung.",
     short:
-      "Wir möchten Sentiment-Analysen verständlich machen – ohne Hype, ohne Versprechen, ohne Finanzberatung. Unsere Seite bietet einen unabhängigen, datenbasierten Blick auf die Stimmung im Kryptomarkt.",
+      "Wir mÃ¶chten Sentiment-Analysen verstÃ¤ndlich machen â€“ ohne Hype, ohne Versprechen, ohne Finanzberatung. Unsere Seite bietet einen unabhÃ¤ngigen, datenbasierten Blick auf die Stimmung im Kryptomarkt.",
     sections: [
       {
         title: "Warum wir das tun",
         paragraphs: [
-          "Wir möchten Sentiment-Analysen verständlich machen – ohne Hype, ohne Versprechen, ohne Finanzberatung.",
-          "Unsere Seite bietet einen unabhängigen, datenbasierten Blick auf die Stimmung im Kryptomarkt."
+          "Wir mÃ¶chten Sentiment-Analysen verstÃ¤ndlich machen â€“ ohne Hype, ohne Versprechen, ohne Finanzberatung.",
+          "Unsere Seite bietet einen unabhÃ¤ngigen, datenbasierten Blick auf die Stimmung im Kryptomarkt."
         ]
       },
       {
-        title: "Wofür die Bereiche stehen",
+        title: "WofÃ¼r die Bereiche stehen",
         paragraphs: [
           "Die Startseite zeigt die Gesamtstimmung.",
-          "News & Signale erklären, welche Ereignisse die Stimmung bewegen.",
+          "News & Signale erklÃ¤ren, welche Ereignisse die Stimmung bewegen.",
           "Daten & Charts visualisieren Trends.",
-          "In der Methodik erfährst du, wie alles im Hintergrund funktioniert."
+          "In der Methodik erfÃ¤hrst du, wie alles im Hintergrund funktioniert."
         ]
       }
     ],
     ecosystemLinks: [
       { label: "Startseite", href: "/de" },
-      { label: "Sentiment-Übersicht", href: "/de/sentiment" },
+      { label: "Sentiment-Ãœbersicht", href: "/de/sentiment" },
       { label: "News & Signale", href: "/de/news" },
       { label: "Daten & Charts", href: "/de/daten" },
       { label: "Lernen", href: "/de/lernen" }
     ],
     nextSteps: {
-      title: "Nächste Schritte",
+      title: "NÃ¤chste Schritte",
       links: [
         { label: "Aktuelle News & Signale ansehen", href: "/de/news" },
         { label: "Sentiment-Trends in Charts erkunden", href: "/de/daten" },
         { label: "Grundlagen im Lernbereich durchgehen", href: "/de/lernen" },
-        { label: "Sentiment für einzelne Coins prüfen", href: "/de/coins" }
+        { label: "Sentiment fÃ¼r einzelne Coins prÃ¼fen", href: "/de/coins" }
       ]
     }
   },
   en: {
     metaTitle: "About us",
     metaDescription:
-      "We want to make sentiment analysis transparent and easy to understand — without hype, promises or financial advice.",
+      "We want to make sentiment analysis transparent and easy to understand â€” without hype, promises or financial advice.",
     short:
-      "We want to make sentiment analysis transparent and easy to understand — without hype, promises or financial advice. Our goal is to provide an independent, data-driven view of crypto market mood.",
+      "We want to make sentiment analysis transparent and easy to understand â€” without hype, promises or financial advice. Our goal is to provide an independent, data-driven view of crypto market mood.",
     sections: [
       {
         title: "Why we built this",
         paragraphs: [
-          "We want to make sentiment analysis transparent and easy to understand — without hype, promises or financial advice.",
+          "We want to make sentiment analysis transparent and easy to understand â€” without hype, promises or financial advice.",
           "Our goal is to provide an independent, data-driven view of crypto market mood."
         ]
       },
@@ -79,7 +79,7 @@ const copy = {
     nextSteps: {
       title: "Next steps",
       links: [
-        { label: "Check today’s News & Signals", href: "/en/news" },
+        { label: "Check todayâ€™s News & Signals", href: "/en/news" },
         { label: "Explore sentiment trends in charts", href: "/en/data" },
         { label: "Learn more in the education section", href: "/en/learn" },
         { label: "View sentiment for individual coins", href: "/en/coins" }
@@ -106,7 +106,7 @@ export default function AboutPage({ params }: { params: { locale: "de" | "en" } 
     <main className="min-h-screen bg-gray-50 py-16">
       <section className="mx-auto max-w-5xl space-y-6 rounded-3xl border border-gray-200 bg-white/80 p-8 shadow-xl">
         <header className="space-y-3">
-          <p className="text-xs uppercase tracking-[0.5em] text-gray-400">{locale === "de" ? "Über uns" : "About"}</p>
+          <p className="text-xs uppercase tracking-[0.5em] text-gray-400">{locale === "de" ? "Ãœber uns" : "About"}</p>
           <h1 className="text-4xl font-semibold text-gray-900">{localeCopy.metaTitle}</h1>
           <p className="text-sm text-gray-600">{localeCopy.short}</p>
         </header>
@@ -151,4 +151,4 @@ export default function AboutPage({ params }: { params: { locale: "de" | "en" } 
       </section>
     </main>
   );
-}
+}

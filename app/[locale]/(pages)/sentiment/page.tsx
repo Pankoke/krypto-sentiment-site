@@ -45,10 +45,10 @@ async function loadHistoryMap(symbols: string[], days = 30): Promise<Map<string,
 export const generateMetadata = ({ params }: { params: { locale: "de" | "en" } }): Metadata => {
   const canonical = `${BASE_URL}/${params.locale}/sentiment`;
   const title =
-    params.locale === "de" ? "Krypto-Stimmungsübersicht" : "Crypto market sentiment overview";
+    params.locale === "de" ? "Krypto-StimmungsÃ¼bersicht" : "Crypto market sentiment overview";
   const description =
     params.locale === "de"
-      ? "Tägliche Marktstimmung für ausgewählte Kryptowährungen. Scores basieren auf News, Social Media und On-Chain-Signalen."
+      ? "TÃ¤gliche Marktstimmung fÃ¼r ausgewÃ¤hlte KryptowÃ¤hrungen. Scores basieren auf News, Social Media und On-Chain-Signalen."
       : "Daily market mood for selected cryptocurrencies. Scores are based on news, social media, and on-chain signals.";
 
   return {
@@ -66,10 +66,10 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
   const historyMap = await loadHistoryMap(sentimentItems.map((item) => item.symbol));
 
   const headingTitle =
-    locale === "de" ? "Krypto-Stimmungsübersicht" : "Crypto market sentiment overview";
+    locale === "de" ? "Krypto-StimmungsÃ¼bersicht" : "Crypto market sentiment overview";
   const subline =
     locale === "de"
-      ? "Tägliche Marktstimmung für ausgewählte Kryptowährungen. Scores basieren auf News, Social Media und On-Chain-Signalen."
+      ? "TÃ¤gliche Marktstimmung fÃ¼r ausgewÃ¤hlte KryptowÃ¤hrungen. Scores basieren auf News, Social Media und On-Chain-Signalen."
       : "Daily market mood for selected cryptocurrencies. Scores are based on news, social media, and on-chain signals.";
 
   const latestReportDate = (() => {
@@ -109,7 +109,7 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
         {sentimentItems.length === 0 ? (
           <div className="rounded-xl border border-dashed border-slate-300 bg-white px-4 py-10 text-center text-sm text-slate-500">
             {locale === "de"
-              ? "Keine Sentiment-Daten vorhanden. Aktuell liegen keine Sentiment-Daten vor. Versuche es später erneut oder prüfe den Admin-Bereich."
+              ? "Keine Sentiment-Daten vorhanden. Aktuell liegen keine Sentiment-Daten vor. Versuche es spÃ¤ter erneut oder prÃ¼fe den Admin-Bereich."
               : "No sentiment data available right now. Try again later or check the admin area."}
           </div>
         ) : (
@@ -126,4 +126,4 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
       </section>
     </main>
   );
-}
+}
