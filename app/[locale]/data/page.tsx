@@ -1,23 +1,23 @@
-import Link from "next/link";
+ï»¿import Link from "next/link";
 import type { Metadata } from "next";
 
 const BASE_URL = process.env.APP_BASE_URL ?? "https://krypto-sentiment-site.vercel.app";
 
 const copy = {
   de: {
-    metaTitle: "Wenn Gefühl auf Zahlen trifft",
+    metaTitle: "Wenn GefÃ¼hl auf Zahlen trifft",
     metaDescription:
-      "Stimmung ist nicht nur eine Momentaufnahme. Hier kannst du sehen, wie sich das Sentiment im Verlauf entwickelt hat – bullish, neutral oder bearish – und wie stark die täglichen Schwankungen ausfallen.",
+      "Stimmung ist nicht nur eine Momentaufnahme. Hier kannst du sehen, wie sich das Sentiment im Verlauf entwickelt hat â€“ bullish, neutral oder bearish â€“ und wie stark die tÃ¤glichen Schwankungen ausfallen.",
     short:
-      "Stimmung ist nicht nur eine Momentaufnahme. Hier kannst du sehen, wie sich das Sentiment im Verlauf entwickelt hat – bullish, neutral oder bearish – und wie stark die täglichen Schwankungen ausfallen.",
+      "Stimmung ist nicht nur eine Momentaufnahme. Hier kannst du sehen, wie sich das Sentiment im Verlauf entwickelt hat â€“ bullish, neutral oder bearish â€“ und wie stark die tÃ¤glichen Schwankungen ausfallen.",
     sections: [
       {
         title: "Wie lese ich den Sentiment-Score?",
         paragraphs: [
           "Der Score liegt zwischen 0 und 1:",
-          "• 0.00–0.33: eher bearish",
-          "• 0.34–0.66: neutral",
-          "• 0.67–1.00: eher bullish",
+          "â€¢ 0.00â€“0.33: eher bearish",
+          "â€¢ 0.34â€“0.66: neutral",
+          "â€¢ 0.67â€“1.00: eher bullish",
           "",
           "Vertrauen (%): Zeigt, wie stabil der Score wirkt.",
           "Hohe Werte = wenig Rauschen in den Daten.",
@@ -28,24 +28,24 @@ const copy = {
       {
         title: "Aktualisierung",
         paragraphs: [
-          "Unsere Modelle laufen aktuell einmal täglich.",
+          "Unsere Modelle laufen aktuell einmal tÃ¤glich.",
           "Wir aggregieren Social Media, News und On-Chain-Daten.",
-          "Die Methodik bleibt transparent – die Quellen können sich im Laufe der Zeit verändern."
+          "Die Methodik bleibt transparent â€“ die Quellen kÃ¶nnen sich im Laufe der Zeit verÃ¤ndern."
         ]
       }
     ],
     navLinks: [
       { label: "Startseite", href: "/de" },
-      { label: "Sentiment-Übersicht", href: "/de/sentiment" },
+      { label: "Sentiment-Ãœbersicht", href: "/de/sentiment" },
       { label: "News & Signale", href: "/de/news" },
-      { label: "Kryptowährungen", href: "/de/coins" },
+      { label: "KryptowÃ¤hrungen", href: "/de/coins" },
       { label: "Lernen", href: "/de/lernen" },
       { label: "Methodik", href: "/de/methodik" }
     ],
     ctas: [
       { label: "Heutige Marktstimmung ansehen", href: "/de/sentiment" },
       { label: "Sentiment-Trends in Charts entdecken", href: "/de/daten" },
-      { label: "Sentiment für einzelne Coins prüfen", href: "/de/coins" },
+      { label: "Sentiment fÃ¼r einzelne Coins prÃ¼fen", href: "/de/coins" },
       { label: "Grundlagen zum Sentiment lernen", href: "/de/lernen" }
     ],
     seoKeywords: [
@@ -54,7 +54,7 @@ const copy = {
       "Crypto sentiment time series",
       "On-Chain Daten Visualisierung",
       "Bitcoin Sentiment Verlauf",
-      "Kryptowährungen Daten Dashboard",
+      "KryptowÃ¤hrungen Daten Dashboard",
       "Crypto market mood charts",
       "Sentiment vs On-Chain Analyse",
       "Krypto Kennzahlen Visualisierung"
@@ -63,22 +63,22 @@ const copy = {
   en: {
     metaTitle: "Where mood meets metrics",
     metaDescription:
-      "Sentiment isn’t just a snapshot. Here you can track how the market mood has changed over time — bullish, neutral or bearish.",
+      "Sentiment isnâ€™t just a snapshot. Here you can track how the market mood has changed over time â€” bullish, neutral or bearish.",
     short:
-      "Sentiment isn’t just a snapshot. Here you can track how the market mood has changed over time — bullish, neutral or bearish.",
+      "Sentiment isnâ€™t just a snapshot. Here you can track how the market mood has changed over time â€” bullish, neutral or bearish.",
     sections: [
       {
         title: "How to read the sentiment score",
         paragraphs: [
           "The score ranges from 0 to 1:",
-          "• 0.00–0.33: bearish",
-          "• 0.34–0.66: neutral",
-          "• 0.67–1.00: bullish",
+          "â€¢ 0.00â€“0.33: bearish",
+          "â€¢ 0.34â€“0.66: neutral",
+          "â€¢ 0.67â€“1.00: bullish",
           "",
           "Confidence (%): Shows how stable the score appears.",
           "High values = less noise in the data.",
           "",
-          "Important: The score is not a price prediction — it only describes the mood."
+          "Important: The score is not a price prediction â€” it only describes the mood."
         ]
       },
       {
@@ -99,7 +99,7 @@ const copy = {
       { label: "Methodology", href: "/en/methodology" }
     ],
     ctas: [
-      { label: "See today’s market mood", href: "/en/sentiment" },
+      { label: "See todayâ€™s market mood", href: "/en/sentiment" },
       { label: "Explore sentiment trends in charts", href: "/en/data" },
       { label: "View sentiment for individual cryptocurrencies", href: "/en/coins" },
       { label: "Learn the basics of sentiment", href: "/en/learn" }
@@ -155,15 +155,15 @@ export default function DataPage({ params }: { params: { locale: "de" | "en" } }
             className="space-y-3 rounded-2xl border border-gray-100 bg-gray-50/70 p-5 shadow-sm"
           >
             <h2 className="text-xl font-semibold text-gray-900">{section.title}</h2>
-            {section.paragraphs.map((paragraph) => (
-              <p key={paragraph} className="text-sm text-gray-700 leading-relaxed">
+            {section.paragraphs.map((paragraph, idx) => (
+              <p key={`${section.title}-${idx}`} className="text-sm text-gray-700 leading-relaxed">
                 {paragraph}
               </p>
             ))}
           </article>
         ))}
         <div className="rounded-2xl border border-gray-200 bg-white/90 p-6 shadow-sm">
-          <h3 className="text-lg font-semibold text-gray-900">{locale === "de" ? "CTAs" : "CTAs"}</h3>
+          <h3 className="text-lg font-semibold text-gray-900">CTAs</h3>
           <div className="mt-3 flex flex-wrap gap-3">
             {localeCopy.ctas.map((cta) => (
               <Link
