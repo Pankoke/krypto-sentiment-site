@@ -61,7 +61,8 @@
     "learn": "Lernen",
     "about": "Über uns",
     "contact": "Kontakt",
-    "backHome": "Zur Startseite"
+    "backHome": "Zur Startseite",
+    "sentiment": "Sentiment"
   },
   "news": {
     "title": "News & Signale",

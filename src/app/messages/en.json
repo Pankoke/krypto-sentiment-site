@@ -57,7 +57,8 @@
     "data": "Data & Charts",
     "learn": "Learn",
     "about": "About",
-    "contact": "Contact"
+    "contact": "Contact",
+    "sentiment": "Sentiment"
   },
   "news": {
     "title": "News & Signals",
