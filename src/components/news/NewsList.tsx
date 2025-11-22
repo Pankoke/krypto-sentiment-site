@@ -1,7 +1,6 @@
-"use client";
+﻿"use client";
 
 import React, { type ReactNode } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { useTranslations } from "next-intl";
 import type { AssetReport } from "lib/news/aggregator";
 
@@ -15,6 +14,7 @@ type Props = {
   status: NewsSnapshotStatus;
   errorMessage?: string;
   action?: ReactNode;
+  locale?: string;
 };
 
 export default function NewsList({
@@ -25,14 +25,14 @@ export default function NewsList({
   status,
   errorMessage,
   action,
+  locale,
 }: Props) {
   const t = useTranslations("news");
   const displayDate = generatedAt ?? reportDate;
-  const formattedDate = new Date(displayDate).toLocaleString();
 
   if (status === "error") {
     return (
-      <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-center text-sm text-red-900 space-y-3">
+      <div className="space-y-3 rounded-xl border border-red-200 bg-red-50 p-6 text-center text-sm text-red-900">
         <p>{t("newsStatus.error", { error: errorMessage ?? "unknown" })}</p>
         {action ? <div className="flex justify-center">{action}</div> : null}
       </div>
@@ -41,79 +41,97 @@ export default function NewsList({
 
   if (status === "empty") {
     return (
-      <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center text-sm text-gray-700 space-y-3">
-        <p>{t("newsStatus.empty")}</p>
-        {action ? <div className="flex justify-center">{action}</div> : null}
+      <div className="rounded-xl border border-dashed border-slate-300 bg-white px-4 py-10 text-center text-sm text-slate-500">
+        Noch keine News vorhanden.
       </div>
     );
   }
 
   const staleAlert =
     status === "stale" ? (
-      <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-        {t("newsStatus.stale", { date: formattedDate })}
+      <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+        Momentan liegen keine aktuellen News vor. Es wird der letzte verfügbare Snapshot angezeigt.
       </div>
     ) : null;
 
   return (
     <div className="space-y-6">
       <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-        <p className="text-sm text-gray-500">
-          {t("generatedAt", { date: displayDate })}
-        </p>
-        {methodNote ? (
-          <p className="text-xs text-gray-500 mt-1">{methodNote}</p>
-        ) : null}
+        <p className="text-sm text-gray-500">{t("generatedAt", { date: displayDate })}</p>
+        {methodNote ? <p className="mt-1 text-xs text-gray-500">{methodNote}</p> : null}
         {staleAlert ? <div className="mt-2">{staleAlert}</div> : null}
         {action && status === "stale" ? <div className="mt-3 flex justify-center">{action}</div> : null}
       </div>
+
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {assets.map((asset) => {
-          const confidence = typeof asset.confidence === "number" ? Math.round(asset.confidence * 100) : 0;
-          const score = typeof asset.score === "number" ? asset.score.toFixed(2) : "--";
+          const signals = asset.top_signals ?? [];
+          const sourceLabel = signals[0]?.source ?? "signal";
+          const timestamp = asset.generatedAt ?? asset.rationale ? displayDate : undefined;
+          const score =
+            typeof asset.score === "number" ? asset.score.toFixed(2) : asset.score ?? "--";
+          const confidence =
+            typeof asset.confidence === "number" ? Math.round(asset.confidence * 100) : null;
           return (
-            <Card key={`${asset.symbol}-${asset.sentiment}-${score}`}>
-              <CardHeader>
-                <div className="flex items-center justify-between gap-2">
-                  <div>
-                    <CardTitle>{asset.symbol}</CardTitle>
-                    <p className="text-xs text-gray-500">{asset.sentiment ?? "—"}</p>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-sm font-semibold">{t("label.score")}</div>
-                    <div className="text-lg font-bold">{score}</div>
-                    <div className="text-xs text-gray-500">
-                      {t("label.confidence")}: {confidence}%
-                    </div>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                {asset.rationale ? (
-                  <p className="text-sm text-gray-700 whitespace-pre-wrap">{asset.rationale}</p>
-                ) : (
-                  <p className="text-sm text-gray-500">{t("noRationale")}</p>
+            <article
+              key={`${asset.symbol}-${asset.sentiment}-${asset.score}`}
+              className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <div className="flex items-center justify-between">
+                <span
+                  className={[
+                    "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ring-1",
+                    sourceLabel === "twitter"
+                      ? "bg-sky-50 text-sky-700 ring-sky-100"
+                      : "bg-slate-50 text-slate-700 ring-slate-200",
+                  ].join(" ")}
+                >
+                  {sourceLabel}
+                </span>
+
+                {timestamp && (
+                  <time className="text-[11px] text-slate-400">
+                    {new Date(timestamp).toLocaleString(locale ?? "de-DE")}
+                  </time>
                 )}
-                {asset.top_signals && asset.top_signals.length > 0 ? (
-                  <div className="mt-3">
-                    <p className="text-xs uppercase tracking-wide text-gray-500">
-                      {t("topSignals")}
-                    </p>
-                    <ul className="mt-1 list-disc list-inside text-sm text-gray-700 space-y-1">
-                      {asset.top_signals.slice(0, 3).map((signal, index) => (
-                        <li
-                          key={`${signal.source ?? 'signal'}-${signal.evidence ?? ''}-${index}`}
-                          className="truncate"
-                        >
-                          <span className="font-semibold">{signal.source ?? "signal"}:</span>{" "}
-                          {signal.evidence ?? "–"}
-                        </li>
-                      ))}
-                    </ul>
+              </div>
+
+              <div>
+                <h3 className="text-base font-semibold leading-snug text-slate-900">{asset.symbol}</h3>
+                <p className="text-xs text-slate-500">{asset.sentiment}</p>
+              </div>
+
+              {asset.rationale ? (
+                <p className="text-sm leading-relaxed text-slate-600">{asset.rationale}</p>
+              ) : null}
+
+              <div className="flex items-center gap-4 text-xs text-slate-600">
+                <div>
+                  <span className="font-semibold">Score</span>{" "}
+                  <span>{score}</span>
+                </div>
+                {confidence !== null && (
+                  <div>
+                    <span className="font-semibold">{t("label.confidence")}</span>{" "}
+                    <span>{confidence}%</span>
                   </div>
-                ) : null}
-              </CardContent>
-            </Card>
+                )}
+              </div>
+
+              {signals.length > 0 && (
+                <div className="mt-1 flex flex-wrap gap-1.5">
+                  {signals.slice(0, 4).map((sig, idx) => (
+                    <span
+                      key={`${sig.source ?? "signal"}-${idx}`}
+                      className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700 ring-1 ring-emerald-100"
+                    >
+                      <span>{sig.source ?? "signal"}</span>
+                      {sig.evidence ? <span className="pl-1">{sig.evidence}</span> : null}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </article>
           );
         })}
       </div>
