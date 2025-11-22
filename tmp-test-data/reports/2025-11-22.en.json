@@ -33,7 +33,7 @@
         "Social ist negativ und prägt damit den Score.",
         "News trägt mit einem Gewicht von 15% zusätzlich bei."
       ],
-      "asOf": "2025-11-22T12:57:54.044Z",
+      "asOf": "2025-11-22T13:44:02.277Z",
       "history": [
         -0.7300000000000001,
         -0.7300000000000001
@@ -41,6 +41,6 @@
     }
   ],
   "complete": true,
-  "generatedAt": "2025-11-22T12:57:54.044Z",
+  "generatedAt": "2025-11-22T13:44:02.277Z",
   "version": "1.0"
 }

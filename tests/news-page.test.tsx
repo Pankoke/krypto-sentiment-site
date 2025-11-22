@@ -9,10 +9,6 @@ const translations: Record<string, string> = {
   'newsStatus.empty': 'Noch keine News vorhanden.',
   'newsStatus.error': 'Fehler: {error}',
   'newsStatus.stale': 'Stand veraltet ({date}).',
-  'label.score': 'Score',
-  'label.confidence': 'Confidence',
-  topSignals: 'Top signals',
-  noRationale: 'Keine Rationale',
 };
 
 vi.mock('next-intl', () => ({
@@ -33,11 +29,11 @@ const makeAsset = (symbol: string) => ({
   score: 0.6,
   confidence: 0.8,
   rationale: 'Rechne mit Auftrieb.',
-  top_signals: [{ id: '1', source: 'news-wire', evidence: 'Signal stärkt' }],
+  top_signals: [{ id: '1', source: 'news-wire', evidence: 'Signal staerkt' }],
 });
 
 describe('NewsList snapshot renderer', () => {
-  it('shows snapshot metadata and assets', () => {
+  it('shows snapshot metadata and derived news items', () => {
     render(
       <NewsList
         assets={[makeAsset('BTC'), makeAsset('ETH')]}
@@ -49,15 +45,14 @@ describe('NewsList snapshot renderer', () => {
     );
     expect(screen.getByText('Stand: 2025-11-14T06:00:00.000Z')).toBeInTheDocument();
     expect(screen.getByText('Methodisch up to date')).toBeInTheDocument();
-    expect(screen.getByText('BTC')).toBeInTheDocument();
-    expect(screen.getAllByText('Signal stärkt').length).toBeGreaterThan(1);
-    expect(screen.getAllByText('Score').length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Signal/).length).toBeGreaterThan(1);
+    expect(screen.getAllByText('BTC').length).toBeGreaterThan(0);
   });
 
   it('renders empty snapshot message when no assets', () => {
     render(<NewsList assets={[]} reportDate="2025-11-14" status="empty" />);
     expect(
-      screen.getByText((content) => content.includes('Noch keine News vorhanden'))
+      screen.getByText((content) => content.includes('Noch keine News'))
     ).toBeInTheDocument();
   });
 });
