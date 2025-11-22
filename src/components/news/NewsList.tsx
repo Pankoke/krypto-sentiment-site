@@ -2,22 +2,12 @@
 
 import React, { type ReactNode } from "react";
 import { useTranslations } from "next-intl";
-import type { AssetReport } from "lib/news/aggregator";
+import type { NewsItem } from "lib/news/types";
 
 export type NewsSnapshotStatus = "ok" | "empty" | "stale" | "error";
 
-type NewsCardItem = {
-  id: string;
-  source: string;
-  title: string;
-  summary?: string;
-  timestamp?: string;
-  tags?: string[];
-  url?: string;
-};
-
 type Props = {
-  assets: AssetReport[];
+  items: NewsItem[];
   reportDate: string;
   generatedAt?: string;
   methodNote?: string;
@@ -28,7 +18,7 @@ type Props = {
 };
 
 export default function NewsList({
-  assets,
+  items,
   reportDate,
   generatedAt,
   methodNote,
@@ -39,31 +29,6 @@ export default function NewsList({
 }: Props) {
   const t = useTranslations("news");
   const displayDate = generatedAt ?? reportDate;
-
-  const newsItems: NewsCardItem[] = assets.flatMap((asset, assetIdx) => {
-    const signals = asset.top_signals ?? [];
-    if (!signals.length) {
-      return [
-        {
-          id: `${asset.symbol}-${assetIdx}`,
-          source: "signal",
-          title: asset.rationale || asset.symbol,
-          summary: asset.rationale,
-          timestamp: displayDate,
-          tags: [asset.symbol, asset.sentiment],
-        },
-      ];
-    }
-    return signals.map((sig, idx) => ({
-      id: `${asset.symbol}-${idx}`,
-      source: sig.source ?? "signal",
-      title: sig.evidence || asset.symbol,
-      summary: asset.rationale,
-      timestamp: displayDate,
-      tags: [asset.symbol, asset.sentiment],
-      url: undefined,
-    }));
-  });
 
   if (status === "error") {
     return (
@@ -98,13 +63,13 @@ export default function NewsList({
         {action && status === "stale" ? <div className="mt-3 flex justify-center">{action}</div> : null}
       </div>
 
-      {newsItems.length === 0 ? (
+      {items.length === 0 ? (
         <div className="rounded-xl border border-dashed border-slate-300 bg-white px-4 py-10 text-center text-sm text-slate-500">
           Aktuell liegen keine News vor. Bitte später erneut prüfen.
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {newsItems.map((item) => (
+          {items.map((item) => (
             <article
               key={item.id}
               className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"

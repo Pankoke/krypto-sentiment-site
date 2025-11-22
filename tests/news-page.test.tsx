@@ -36,7 +36,28 @@ describe('NewsList snapshot renderer', () => {
   it('shows snapshot metadata and derived news items', () => {
     render(
       <NewsList
-        assets={[makeAsset('BTC'), makeAsset('ETH')]}
+        items={[
+          {
+            id: '1',
+            source: 'social',
+            title: 'Headline',
+            summary: 'Kurztext',
+            timestamp: '2025-11-14T06:00:00.000Z',
+            symbols: ['BTC'],
+            sentiment: 'bullish',
+            tags: ['BTC', 'bullish'],
+          },
+          {
+            id: '2',
+            source: 'news-wire',
+            title: 'Headline 2',
+            summary: 'Noch ein kurzer Text',
+            timestamp: '2025-11-14T06:00:00.000Z',
+            symbols: ['ETH'],
+            sentiment: 'bullish',
+            tags: ['ETH', 'bullish'],
+          },
+        ]}
         reportDate="2025-11-14"
         generatedAt="2025-11-14T06:00:00.000Z"
         methodNote="Methodisch up to date"
@@ -45,12 +66,11 @@ describe('NewsList snapshot renderer', () => {
     );
     expect(screen.getByText('Stand: 2025-11-14T06:00:00.000Z')).toBeInTheDocument();
     expect(screen.getByText('Methodisch up to date')).toBeInTheDocument();
-    expect(screen.getAllByText(/Signal/).length).toBeGreaterThan(1);
-    expect(screen.getAllByText('BTC').length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Headline/).length).toBeGreaterThan(0);
   });
 
   it('renders empty snapshot message when no assets', () => {
-    render(<NewsList assets={[]} reportDate="2025-11-14" status="empty" />);
+    render(<NewsList items={[]} reportDate="2025-11-14" status="empty" />);
     expect(
       screen.getByText((content) => content.includes('Noch keine News'))
     ).toBeInTheDocument();

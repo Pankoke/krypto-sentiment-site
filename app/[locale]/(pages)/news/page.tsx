@@ -4,6 +4,7 @@ import NewsList, { type NewsSnapshotStatus } from '../../../../src/components/ne
 import { RefreshButton } from '../../../../src/components/news/RefreshButton';
 import { loadLatestAvailableSnapshot, loadSnapshotForLocale } from '../../../../lib/news/snapshot';
 import { formatBerlinSnapshotLabel } from '../../../../lib/timezone';
+import { snapshotToNewsItems } from '../../../../lib/news/transform';
 
 const BASE_URL = process.env.APP_BASE_URL ?? 'https://krypto-sentiment-site.com';
 const OG_LOCALES: Record<'de' | 'en', string> = {
@@ -121,6 +122,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
       : null;
 
   const items = snapshot?.assets ?? [];
+  const newsItems = snapshot ? snapshotToNewsItems(snapshot, snapshot.generatedAt) : [];
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -143,7 +145,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
         ) : null}
 
         <NewsList
-          assets={items}
+          items={newsItems}
           reportDate={snapshot?.date ?? new Date().toISOString()}
           generatedAt={snapshot?.generatedAt}
           methodNote={snapshot?.method_note}
