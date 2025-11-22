@@ -58,8 +58,8 @@ export function SentimentCard({ item, historyPoints }: SentimentCardProps) {
         </span>
       </div>
 
-      {item.rationale && (
-        <p className="mt-2 text-xs leading-relaxed text-slate-600">{item.rationale}</p>
+      {item.bullets.length > 0 && (
+        <p className="mt-2 text-xs leading-relaxed text-slate-600">{item.bullets[0]?.text}</p>
       )}
 
       {topSignals.length > 0 && (
