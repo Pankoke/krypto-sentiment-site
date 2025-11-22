@@ -1,4 +1,4 @@
-﻿import type { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import NewsList, { type NewsSnapshotStatus } from '../../../../src/components/news/NewsList';
 import { RefreshButton } from '../../../../src/components/news/RefreshButton';
@@ -24,7 +24,7 @@ function determineStatus(
     return 'error';
   }
   if (!snapshot) {
-    return snapshotFlag === 'missing' ? 'empty' : 'empty';
+    return 'empty';
   }
   if (!snapshot.generatedAt) {
     return 'empty';
@@ -52,11 +52,11 @@ type NewsPageProps = { params: { locale: 'de' | 'en' } };
 export async function generateMetadata({ params }: NewsPageProps): Promise<Metadata> {
   const base = new URL(BASE_URL);
   const canonical = new URL(`/${params.locale}/news`, base).toString();
-  const title = params.locale === 'de' ? 'Was heute die Stimmung bewegt' : 'What’s moving sentiment today';
+  const title = params.locale === 'de' ? 'Was heute die Stimmung bewegt' : "What's moving sentiment today";
   const description =
     params.locale === 'de'
-      ? 'Hier findest du die wichtigsten Ereignisse des Tages – Nachrichten, Social-Media-Trends und On-Chain-Signale, die unsere KI als stimmungsrelevant eingestuft hat. Kurz, klar und ohne Fachjargon.'
-      : 'Here you’ll find the key events of the day — news headlines, social trends and on-chain signals that our AI identified as relevant for market sentiment. Short, clear and easy to understand.';
+      ? 'Hier findest du die wichtigsten Ereignisse des Tages - Nachrichten, Social-Media-Trends und On-Chain-Signale, die unsere KI als stimmungsrelevant eingestuft hat. Kurz, klar und ohne Fachjargon.'
+      : "Here you'll find the key events of the day - news headlines, social trends and on-chain signals that our AI identified as relevant for market sentiment. Short, clear and easy to understand.";
 
   return {
     title,
@@ -65,16 +65,16 @@ export async function generateMetadata({ params }: NewsPageProps): Promise<Metad
       canonical,
       languages: {
         de: new URL('/de/news', base).toString(),
-        en: new URL('/en/news', base).toString()
-      }
+        en: new URL('/en/news', base).toString(),
+      },
     },
     openGraph: {
       title,
       description,
       url: canonical,
       locale: OG_LOCALES[params.locale],
-      siteName: 'Krypto Sentiment'
-    }
+      siteName: 'Krypto Sentiment',
+    },
   };
 }
 
@@ -90,7 +90,9 @@ export default async function NewsPage({ params }: NewsPageProps) {
       const latestResult = await loadLatestAvailableSnapshot(params.locale);
       if (latestResult?.snapshot) {
         snapshot = latestResult.snapshot;
-        const fallbackDateTime = formatBerlinSnapshotLabel(latestResult.snapshot.generatedAt ?? new Date().toISOString());
+        const fallbackDateTime = formatBerlinSnapshotLabel(
+          latestResult.snapshot.generatedAt ?? new Date().toISOString()
+        );
         banner = t('news.fallbackBanner', {
           date: fallbackDateTime?.date ?? '',
           time: fallbackDateTime?.time ?? '',
@@ -109,19 +111,26 @@ export default async function NewsPage({ params }: NewsPageProps) {
   const statusAction =
     status === 'empty' || status === 'stale'
       ? (
-          <div className="flex justify-center">
-            <RefreshButton label={t('news.retry')} />
-          </div>
+        <div className="flex justify-center">
+          <RefreshButton label={t('news.retry')} />
+        </div>
         )
       : status === 'error'
-      ? (
+        ? (
           <div className="flex justify-center">
             <RefreshButton label={t('news.retry')} />
           </div>
-        )
-      : null;
+          )
+        : null;
 
   const newsItems = snapshot ? snapshotToNewsItems(snapshot, snapshot.generatedAt) : [];
+  const formattedGeneratedAt =
+    snapshot?.generatedAt && snapshot.generatedAt.length
+      ? new Date(snapshot.generatedAt).toLocaleString(params.locale === 'de' ? 'de-DE' : 'en-US', {
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        })
+      : null;
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -132,8 +141,8 @@ export default async function NewsPage({ params }: NewsPageProps) {
           </h1>
           <p className="max-w-2xl text-sm text-slate-600">
             {params.locale === 'de'
-              ? 'Tägliche Nachrichten, Signale und Marktstimmungsindikatoren aus ausgewählten Quellen.'
-              : 'Daily news, signals and market mood indicators from selected sources.'}
+              ? 'Tägliche Signale und Marktindikatoren aus Social Media, Newsfeeds und On-Chain-Daten.'
+              : 'Daily signals and market indicators from social media, news feeds and on-chain data.'}
           </p>
         </header>
 
@@ -154,8 +163,12 @@ export default async function NewsPage({ params }: NewsPageProps) {
           locale={params.locale}
         />
 
-        {snapshot?.generatedAt ? (
-          <p className="mt-4 text-xs text-slate-500">{t('news.generatedAt', { date: snapshot.generatedAt })}</p>
+        {formattedGeneratedAt ? (
+          <p className="mt-4 text-xs text-slate-500">
+            {params.locale === 'de'
+              ? `Stand: ${formattedGeneratedAt} – Aggregierte Signale aus Social, News und On-Chain.`
+              : `As of: ${formattedGeneratedAt} – Aggregated signals from social, news and on-chain.`}
+          </p>
         ) : null}
       </section>
     </main>

@@ -4,10 +4,17 @@ import type { NewsItem } from "./types";
 const truncate = (value: string, limit: number): string =>
   value.length > limit ? `${value.slice(0, limit - 3)}...` : value;
 
-const stripJsonLike = (value: string): string => {
-  // Remove obvious JSON-ish blocks to keep UI text clean
-  const withoutBraces = value.replace(/\{.*?\}/g, " ").replace(/\s+/g, " ").trim();
-  return withoutBraces.length ? withoutBraces : value;
+const sanitizeText = (value?: string): string => {
+  if (!value) return "";
+  // Remove anything starting with a JSON block
+  const cutBeforeBrace = value.includes("{") ? value.slice(0, value.indexOf("{")) : value;
+  const withoutJsonKeys = cutBeforeBrace.replace(/"[\w-]+":\s*[^,}]+/g, " ");
+  const withoutBrackets = withoutJsonKeys.replace(/\[[^\]]*\]/g, " ");
+  const singleLine = withoutBrackets.replace(/\s+/g, " ").trim();
+  // Keep only the first couple of sentences to avoid model rambles
+  const sentences = singleLine.split(/(?<=[.!?])\s+/).filter(Boolean);
+  const condensed = sentences.slice(0, 2).join(" ");
+  return condensed || singleLine;
 };
 
 export function snapshotToNewsItems(report: AggregatedReport, timestamp?: string): NewsItem[] {
@@ -15,9 +22,10 @@ export function snapshotToNewsItems(report: AggregatedReport, timestamp?: string
   const ts = timestamp ?? report.generatedAt ?? new Date().toISOString();
 
   for (const asset of report.assets) {
-    const symbols = [asset.symbol].filter(Boolean);
-    const tags = [asset.symbol, asset.sentiment].filter(Boolean);
-    const summary = asset.rationale ? truncate(stripJsonLike(asset.rationale), 220) : undefined;
+    const symbols = Array.from(new Set([asset.symbol].filter(Boolean)));
+    const tags = Array.from(new Set([asset.symbol, asset.sentiment].filter(Boolean)));
+    const summaryClean = sanitizeText(asset.rationale);
+    const summary = summaryClean ? truncate(summaryClean, 220) : undefined;
 
     if (!asset.top_signals?.length) {
       items.push({
@@ -34,8 +42,8 @@ export function snapshotToNewsItems(report: AggregatedReport, timestamp?: string
     }
 
     asset.top_signals.forEach((sig, idx) => {
-      const cleanEvidence = truncate(stripJsonLike(sig.evidence ?? ""), 160);
-      const title = cleanEvidence || asset.symbol;
+      const cleanEvidence = sanitizeText(sig.evidence);
+      const title = truncate(cleanEvidence || asset.symbol, 140);
       items.push({
         id: `${asset.symbol}-${idx}`,
         source: sig.source ?? "signal",

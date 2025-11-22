@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { type ReactNode, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
@@ -71,6 +71,8 @@ export default function NewsList({
     [items, assetFilter, sourceFilter]
   );
 
+  const formattedDisplayDate = formatTimestamp(displayDate) || displayDate;
+
   if (status === "error") {
     return (
       <div className="space-y-3 rounded-xl border border-red-200 bg-red-50 p-6 text-center text-sm text-red-900">
@@ -98,7 +100,7 @@ export default function NewsList({
   return (
     <div className="space-y-6">
       <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-        <p className="text-sm text-gray-500">{t("generatedAt", { date: displayDate })}</p>
+        <p className="text-sm text-gray-500">{t("generatedAt", { date: formattedDisplayDate })}</p>
         {methodNote ? <p className="mt-1 text-xs text-gray-500">{methodNote}</p> : null}
         {staleAlert ? <div className="mt-2">{staleAlert}</div> : null}
         {action && status === "stale" ? <div className="mt-3 flex justify-center">{action}</div> : null}
@@ -191,14 +193,16 @@ export default function NewsList({
                           {sym}
                         </span>
                       ))}
-                      {item.tags?.map((tag) => (
-                        <span
-                          key={`${item.id}-${tag}`}
-                          className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-700 ring-1 ring-slate-200"
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                      {item.tags
+                        ?.filter((tag) => !(item.symbols ?? []).includes(tag))
+                        .map((tag) => (
+                          <span
+                            key={`${item.id}-${tag}`}
+                            className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-700 ring-1 ring-slate-200"
+                          >
+                            {tag}
+                          </span>
+                        ))}
                     </div>
                   )}
 

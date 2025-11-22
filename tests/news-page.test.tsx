@@ -64,7 +64,7 @@ describe('NewsList snapshot renderer', () => {
         status="ok"
       />
     );
-    expect(screen.getByText('Stand: 2025-11-14T06:00:00.000Z')).toBeInTheDocument();
+    expect(screen.getByText(/Stand: 14\.11\.2025, 07:00/)).toBeInTheDocument();
     expect(screen.getByText('Methodisch up to date')).toBeInTheDocument();
     expect(screen.getAllByText(/Headline/).length).toBeGreaterThan(0);
   });
