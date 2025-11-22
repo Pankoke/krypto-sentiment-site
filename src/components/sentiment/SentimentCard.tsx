@@ -26,6 +26,7 @@ export function SentimentCard({ item, historyPoints }: SentimentCardProps) {
   const sentimentLabel =
     item.trend === "bullish" ? "Bullish" : item.trend === "bearish" ? "Bearish" : "Neutral";
   const confidencePercent = Math.round((item.confidence ?? 0) * 100);
+  const topSignals = item.top_signals ?? [];
 
   return (
     <article className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
@@ -36,9 +37,6 @@ export function SentimentCard({ item, historyPoints }: SentimentCardProps) {
             {item.name && <span className="text-xs font-medium text-slate-500">{item.name}</span>}
           </div>
           {item.category && <p className="mt-1 text-xs text-slate-500">{item.category}</p>}
-          <p className="mt-1 text-xs text-slate-500">
-            Confidence {confidencePercent}%
-          </p>
         </div>
         <span
           className={[
@@ -55,7 +53,27 @@ export function SentimentCard({ item, historyPoints }: SentimentCardProps) {
           <p className="text-xs uppercase tracking-wide text-slate-400">Sentiment-Score</p>
           <p className="text-2xl font-semibold text-slate-900">{item.score.toFixed(2)}</p>
         </div>
+        <span className="inline-flex items-center rounded-full bg-indigo-50 px-2 py-0.5 text-[11px] font-medium text-indigo-700 ring-1 ring-indigo-100">
+          Vertrauen: {confidencePercent}%
+        </span>
       </div>
+
+      {item.rationale && (
+        <p className="mt-2 text-xs leading-relaxed text-slate-600">{item.rationale}</p>
+      )}
+
+      {topSignals.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {topSignals.map((sig) => (
+            <span
+              key={`${sig.source}-${sig.evidence}`}
+              className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-700 ring-1 ring-slate-200"
+            >
+              {sig.source}: {sig.evidence}
+            </span>
+          ))}
+        </div>
+      )}
 
       <div className="mt-1">
         <Sparkline data={sparklinePoints} />
