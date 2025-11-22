@@ -121,7 +121,6 @@ export default async function NewsPage({ params }: NewsPageProps) {
         )
       : null;
 
-  const items = snapshot?.assets ?? [];
   const newsItems = snapshot ? snapshotToNewsItems(snapshot, snapshot.generatedAt) : [];
 
   return (
