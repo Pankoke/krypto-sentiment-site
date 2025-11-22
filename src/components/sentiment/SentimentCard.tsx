@@ -15,6 +15,15 @@ const sentimentBadgeClasses: Record<SentimentItem["trend"], string> = {
   bearish: "bg-rose-50 text-rose-700 ring-rose-100",
 };
 
+const signalClassByGroup: Record<SentimentItem["bullets"][number]["group"], string> = {
+  social: "bg-sky-50 text-sky-700 ring-sky-100",
+  news: "bg-amber-50 text-amber-800 ring-amber-100",
+  onchain: "bg-emerald-50 text-emerald-700 ring-emerald-100",
+};
+
+const truncate = (value: string, limit: number) =>
+  value.length > limit ? `${value.slice(0, limit - 3)}...` : value;
+
 export function SentimentCard({ item, historyPoints }: SentimentCardProps) {
   const sparklinePoints = historyPoints?.length
     ? historyPoints.map((point) => ({
@@ -27,16 +36,9 @@ export function SentimentCard({ item, historyPoints }: SentimentCardProps) {
     item.trend === "bullish" ? "Bullish" : item.trend === "bearish" ? "Bearish" : "Neutral";
   const confidencePercent = Math.round((item.confidence ?? 0) * 100);
   const topSignals = item.bullets ?? [];
-  const truncatedRationale = topSignals[0]?.text
-    ? topSignals[0].text.length > 220
-      ? `${topSignals[0].text.slice(0, 220)}…`
-      : topSignals[0].text
-    : null;
-  const signalClassByGroup: Record<SentimentItem["bullets"][number]["group"], string> = {
-    social: "bg-sky-50 text-sky-700 ring-sky-100",
-    news: "bg-amber-50 text-amber-800 ring-amber-100",
-    onchain: "bg-emerald-50 text-emerald-700 ring-emerald-100",
-  };
+  const limitedSignals = topSignals.slice(0, 4);
+  const primaryRationale = topSignals[0]?.text ?? "";
+  const truncatedRationale = primaryRationale ? truncate(primaryRationale, 180) : null;
 
   return (
     <article className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
@@ -64,7 +66,7 @@ export function SentimentCard({ item, historyPoints }: SentimentCardProps) {
           <p className="text-2xl font-semibold text-slate-900">{item.score.toFixed(2)}</p>
         </div>
         <span className="inline-flex items-center rounded-full bg-indigo-50 px-2 py-0.5 text-[11px] font-medium text-indigo-700 ring-1 ring-indigo-100">
-          Vertrauen: {confidencePercent}%
+          Vertrauen {confidencePercent}%
         </span>
       </div>
 
@@ -72,19 +74,24 @@ export function SentimentCard({ item, historyPoints }: SentimentCardProps) {
         <p className="mt-2 text-xs leading-relaxed text-slate-600">{truncatedRationale}</p>
       )}
 
-      {topSignals.length > 0 && (
+      {limitedSignals.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-1.5">
-          {topSignals.slice(0, 4).map((sig) => (
+          {limitedSignals.map((sig, index) => (
             <span
-              key={`${sig.group}-${sig.text}`}
+              key={`${sig.group}-${index}`}
               className={[
                 "inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ring-1",
                 signalClassByGroup[sig.group] ?? "bg-slate-100 text-slate-700 ring-slate-200",
               ].join(" ")}
             >
-              {sig.source ? `${sig.source}: ${sig.text}` : sig.text}
+              {sig.source ? `${sig.source}: ${truncate(sig.text, 80)}` : truncate(sig.text, 80)}
             </span>
           ))}
+          {topSignals.length > limitedSignals.length && (
+            <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-700 ring-1 ring-slate-200">
+              +{topSignals.length - limitedSignals.length} weitere
+            </span>
+          )}
         </div>
       )}
 
@@ -94,4 +101,3 @@ export function SentimentCard({ item, historyPoints }: SentimentCardProps) {
     </article>
   );
 }
-
