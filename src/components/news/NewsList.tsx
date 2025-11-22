@@ -67,7 +67,7 @@ export default function NewsList({
         {assets.map((asset) => {
           const signals = asset.top_signals ?? [];
           const sourceLabel = signals[0]?.source ?? "signal";
-          const timestamp = asset.generatedAt ?? asset.rationale ? displayDate : undefined;
+          const timestamp = displayDate;
           const score =
             typeof asset.score === "number" ? asset.score.toFixed(2) : asset.score ?? "--";
           const confidence =
