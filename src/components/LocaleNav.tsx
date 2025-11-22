@@ -43,7 +43,7 @@ export function LocaleNav() {
   const t = useTranslations('nav');
 
   return (
-    <nav className="text-sm flex items-center gap-4">
+    <nav className="flex items-center gap-4 text-xs md:text-sm">
       {keys.map((key) => (
         <Link
           key={key}
@@ -51,8 +51,8 @@ export function LocaleNav() {
           aria-current={currentPath === localePaths[locale][key] ? 'page' : undefined}
           className={
             currentPath === localePaths[locale][key]
-              ? 'text-black font-semibold'
-              : 'text-gray-700 hover:text-black'
+              ? 'font-semibold text-slate-900'
+              : 'text-slate-600 hover:text-slate-900'
           }
         >
           {t(key)}

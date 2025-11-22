@@ -1,20 +1,19 @@
-import type { ReactNode } from 'react';
-import type { Metadata } from 'next';
-import Link from 'next/link';
-import './globals.css';
-import { NextIntlClientProvider } from 'next-intl';
-import { cookies } from 'next/headers';
-import { defaultLocale } from '../i18n';
-import { LocaleNav } from '../src/components/LocaleNav';
+﻿import type { ReactNode } from "react";
+import type { Metadata } from "next";
+import Link from "next/link";
+import "./globals.css";
+import { NextIntlClientProvider } from "next-intl";
+import { cookies } from "next/headers";
+import { defaultLocale } from "../i18n";
+import { LocaleNav } from "../src/components/LocaleNav";
 
 export const metadata: Metadata = {
-  title: 'Krypto Sentiment',
-  description: 'Tägliche Krypto-Sentiment-Berichte'
+  title: "Krypto Sentiment",
+  description: "Tägliche Krypto-Sentiment-Berichte"
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  // determine locale from cookie set by middleware or fallback
-  const cookieLocale = cookies().get('NEXT_LOCALE')?.value ?? defaultLocale;
+  const cookieLocale = cookies().get("NEXT_LOCALE")?.value ?? defaultLocale;
   let messages: Record<string, string> = {};
   try {
     messages = (await import(`../src/app/messages/${cookieLocale}.json`)).default as Record<string, string>;
@@ -25,33 +24,46 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   type FooterMessages = { footer?: { disclaimer?: string } };
   const footerMessages = messages as FooterMessages;
   const footerDisclaimer =
-    typeof footerMessages.footer?.disclaimer === 'string'
+    typeof footerMessages.footer?.disclaimer === "string"
       ? footerMessages.footer!.disclaimer
-      : 'KI-generierter Inhalt; keine Finanzberatung.';
+      : "KI-generierter Inhalt; keine Finanzberatung.";
 
   return (
     <html lang={cookieLocale}>
       <head>
         <meta charSet="utf-8" />
       </head>
-      <body className="min-h-screen bg-gray-50 text-gray-900">
+      <body className="min-h-screen bg-slate-50 text-slate-900">
         <NextIntlClientProvider locale={cookieLocale} messages={messages}>
-          <header className="border-b bg-white/70 backdrop-blur">
-            <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-              <Link href="/" className="text-lg font-semibold">
-                Krypto Sentiment
-              </Link>
-              <div className="text-sm flex items-center gap-4">
-                <LocaleNav />
+          <div className="flex min-h-screen flex-col">
+            <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur">
+              <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+                <Link href="/" className="flex items-center gap-2">
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white">
+                    KS
+                  </span>
+                  <div className="leading-tight">
+                    <div className="text-sm font-semibold tracking-tight text-slate-900">Krypto Sentiment</div>
+                    <div className="hidden text-[11px] text-slate-500 sm:block">Daily market mood for crypto assets</div>
+                  </div>
+                </Link>
+                <div className="flex items-center gap-6">
+                  <LocaleNav />
+                </div>
               </div>
-            </div>
-          </header>
-          <main className="max-w-5xl mx-auto p-6">{children}</main>
-          <footer className="border-t bg-white/70 backdrop-blur">
-            <div className="max-w-5xl mx-auto px-6 py-4 text-xs text-gray-500">
-              {footerDisclaimer}
-            </div>
-          </footer>
+            </header>
+
+            <main className="flex-1">
+              <div className="mx-auto max-w-6xl px-4 py-6">{children}</div>
+            </main>
+
+            <footer className="border-t border-slate-200 bg-white">
+              <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs text-slate-500">
+                <span>© {new Date().getFullYear()} Krypto Sentiment</span>
+                <span>{footerDisclaimer}</span>
+              </div>
+            </footer>
+          </div>
         </NextIntlClientProvider>
       </body>
     </html>
