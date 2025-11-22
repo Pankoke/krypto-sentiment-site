@@ -9,6 +9,8 @@ export interface SentimentBullet {
 
 export interface SentimentItem {
   symbol: string;
+  name?: string;
+  category?: string;
   score: number;
   confidence: number;
   trend: SentimentTrend;

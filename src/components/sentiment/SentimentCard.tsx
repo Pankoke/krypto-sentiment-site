@@ -9,7 +9,7 @@ interface SentimentCardProps {
   historyPoints?: AssetSentimentPoint[];
 }
 
-const sentimentBadgeClasses: Record<SentimentItem["sentiment"], string> = {
+const sentimentBadgeClasses: Record<SentimentItem["trend"], string> = {
   bullish: "bg-emerald-50 text-emerald-700 ring-emerald-100",
   neutral: "bg-slate-50 text-slate-700 ring-slate-200",
   bearish: "bg-rose-50 text-rose-700 ring-rose-100",
@@ -23,9 +23,8 @@ export function SentimentCard({ item, historyPoints }: SentimentCardProps) {
       }))
     : item.sparkline;
 
-  const change24h = item.change24h ?? 0;
   const sentimentLabel =
-    item.sentiment === "bullish" ? "Bullish" : item.sentiment === "bearish" ? "Bearish" : "Neutral";
+    item.trend === "bullish" ? "Bullish" : item.trend === "bearish" ? "Bearish" : "Neutral";
   const confidencePercent = Math.round((item.confidence ?? 0) * 100);
 
   return (
@@ -44,7 +43,7 @@ export function SentimentCard({ item, historyPoints }: SentimentCardProps) {
         <span
           className={[
             "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1",
-            sentimentBadgeClasses[item.sentiment],
+            sentimentBadgeClasses[item.trend],
           ].join(" ")}
         >
           {sentimentLabel}
@@ -56,21 +55,6 @@ export function SentimentCard({ item, historyPoints }: SentimentCardProps) {
           <p className="text-xs uppercase tracking-wide text-slate-400">Sentiment-Score</p>
           <p className="text-2xl font-semibold text-slate-900">{item.score.toFixed(2)}</p>
         </div>
-        <div className="text-right">
-          <p className="text-xs uppercase tracking-wide text-slate-400">24h Änderung</p>
-          <p
-            className={
-              change24h > 0
-                ? "text-sm font-medium text-emerald-600"
-                : change24h < 0
-                ? "text-sm font-medium text-rose-600"
-                : "text-sm font-medium text-slate-500"
-            }
-          >
-            {change24h > 0 ? "+" : ""}
-            {change24h.toFixed(2)}%
-          </p>
-        </div>
       </div>
 
       <div className="mt-1">
@@ -78,4 +62,5 @@ export function SentimentCard({ item, historyPoints }: SentimentCardProps) {
       </div>
     </article>
   );
-}
+}
+

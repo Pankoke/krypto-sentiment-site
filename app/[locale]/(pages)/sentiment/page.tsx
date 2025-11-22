@@ -126,4 +126,5 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
       </section>
     </main>
   );
-}
+}
+
