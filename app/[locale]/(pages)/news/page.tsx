@@ -1,5 +1,4 @@
 ﻿import type { Metadata } from 'next';
-import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import NewsList, { type NewsSnapshotStatus } from '../../../../src/components/news/NewsList';
 import { RefreshButton } from '../../../../src/components/news/RefreshButton';
