@@ -26,7 +26,7 @@ export function SentimentCard({ item, historyPoints }: SentimentCardProps) {
   const sentimentLabel =
     item.trend === "bullish" ? "Bullish" : item.trend === "bearish" ? "Bearish" : "Neutral";
   const confidencePercent = Math.round((item.confidence ?? 0) * 100);
-  const topSignals = item.top_signals ?? [];
+  const topSignals = item.bullets ?? [];
 
   return (
     <article className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
@@ -66,10 +66,10 @@ export function SentimentCard({ item, historyPoints }: SentimentCardProps) {
         <div className="mt-3 flex flex-wrap gap-1.5">
           {topSignals.map((sig) => (
             <span
-              key={`${sig.source}-${sig.evidence}`}
+              key={`${sig.group}-${sig.text}`}
               className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-700 ring-1 ring-slate-200"
             >
-              {sig.source}: {sig.evidence}
+              {sig.source ? `${sig.source}: ${sig.text}` : sig.text}
             </span>
           ))}
         </div>
