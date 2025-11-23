@@ -21,10 +21,11 @@ export function AssetScoreStrip({ items }: AssetScoreStripProps) {
     <div className="flex flex-wrap gap-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       {uniqueItems.map((item) => {
         const percent = Math.max(0, Math.min(item.score, 1)) * 100;
-        const change =
+        const previousPoint =
           item.sparkline && item.sparkline.length >= 2
-            ? item.score - item.sparkline[item.sparkline.length - 2].c
-            : 0;
+            ? item.sparkline[item.sparkline.length - 2]
+            : undefined;
+        const change = typeof previousPoint?.c === "number" ? item.score - previousPoint.c : 0;
         const changeClass =
           change > 0 ? "bg-emerald-50 text-emerald-700 ring-emerald-100" : change < 0 ? "bg-rose-50 text-rose-700 ring-rose-100" : "bg-slate-50 text-slate-700 ring-slate-200";
         const changePrefix = change > 0 ? "▲" : change < 0 ? "▼" : "•";
