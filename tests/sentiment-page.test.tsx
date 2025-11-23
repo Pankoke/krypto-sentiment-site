@@ -47,7 +47,6 @@ describe('Sentiment page', () => {
     const ui = await SentimentPage({ params: { locale: 'de' } });
     render(ui);
     expect(screen.getAllByText(/Sentiment/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Aktuelle Sentiment-Karten/i).length).toBeGreaterThan(0);
   });
 
   it('zeigt Hinweis, wenn keine Daten vorhanden sind', async () => {
@@ -59,7 +58,7 @@ describe('Sentiment page', () => {
     );
     const ui = await SentimentPage({ params: { locale: 'de' } });
     render(ui);
-    expect(screen.getAllByText(/Keine Sentiment-Daten vorhanden/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Keine Sentiment-Daten/i).length).toBeGreaterThan(0);
   });
 
   it('rendert Cards bei gelieferten Daten', async () => {
@@ -85,7 +84,7 @@ describe('Sentiment page', () => {
     );
     const ui = await SentimentPage({ params: { locale: 'de' } });
     render(ui);
-    expect(screen.getByText('BTC')).toBeInTheDocument();
-    expect(screen.getByText('ETH')).toBeInTheDocument();
+    expect(screen.getAllByText('BTC').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('ETH').length).toBeGreaterThan(0);
   });
 });

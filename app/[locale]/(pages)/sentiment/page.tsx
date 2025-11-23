@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import type { SentimentItem } from "lib/sentiment/types";
 import type { AssetSentimentPoint } from "lib/news/snapshot";
 import { SentimentCard } from "@/components/sentiment/SentimentCard";
+import { computeGlobalSentiment } from "lib/sentiment/aggregate";
+import { GlobalMarketBar } from "@/components/sentiment/GlobalMarketBar";
+import { AssetScoreStrip } from "@/components/sentiment/AssetScoreStrip";
 
 const BASE_URL = process.env.APP_BASE_URL ?? "https://krypto-sentiment-site.com";
 
@@ -85,9 +88,11 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
         });
   })();
 
+  const globalSentiment = computeGlobalSentiment(sentimentItems);
+
   return (
     <main className="min-h-screen bg-slate-50">
-      <section className="mx-auto max-w-6l px-4 py-10 md:py-12">
+      <section className="mx-auto max-w-6xl px-4 py-10 md:py-12">
         <header className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-slate-900 md:text-3xl">
@@ -102,6 +107,18 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
             </p>
           )}
         </header>
+
+        {sentimentItems.length > 0 ? (
+          <div className="mb-6 space-y-4">
+            <GlobalMarketBar
+              score={globalSentiment.score}
+              label={globalSentiment.label}
+              count={globalSentiment.count}
+              asOf={latestReportDate ?? undefined}
+            />
+            <AssetScoreStrip items={sentimentItems} />
+          </div>
+        ) : null}
 
         <h2 className="sr-only">
           {locale === "de" ? "Aktuelle Sentiment-Karten" : "Current sentiment cards"}
