@@ -5,6 +5,10 @@ import { RefreshButton } from '../../../../src/components/news/RefreshButton';
 import { loadLatestAvailableSnapshot, loadSnapshotForLocale } from '../../../../lib/news/snapshot';
 import { formatBerlinSnapshotLabel } from '../../../../lib/timezone';
 import { snapshotToNewsItems } from '../../../../lib/news/transform';
+import type { SentimentItem } from '../../../../lib/sentiment/types';
+import { computeGlobalSentiment } from '../../../../lib/sentiment/aggregate';
+import { GlobalMarketBar } from '../../../../src/components/sentiment/GlobalMarketBar';
+import { AssetScoreStrip } from '../../../../src/components/sentiment/AssetScoreStrip';
 
 const BASE_URL = process.env.APP_BASE_URL ?? 'https://krypto-sentiment-site.com';
 const OG_LOCALES: Record<'de' | 'en', string> = {
@@ -124,6 +128,20 @@ export default async function NewsPage({ params }: NewsPageProps) {
         : null;
 
   const newsItems = snapshot ? snapshotToNewsItems(snapshot, snapshot.generatedAt) : [];
+  const sentimentItems: SentimentItem[] = snapshot
+    ? snapshot.assets.map((asset) => ({
+        symbol: asset.symbol.toUpperCase(),
+        score: asset.score,
+        confidence: asset.confidence,
+        trend: asset.sentiment,
+        bullets: [],
+        generatedAt: snapshot.generatedAt ?? new Date().toISOString(),
+        sparkline: [],
+        name: asset.symbol.toUpperCase(),
+        category: "asset",
+      }))
+    : [];
+  const globalSentiment = computeGlobalSentiment(sentimentItems);
   const formattedGeneratedAt =
     snapshot?.generatedAt && snapshot.generatedAt.length
       ? new Date(snapshot.generatedAt).toLocaleString(params.locale === 'de' ? 'de-DE' : 'en-US', {
@@ -145,6 +163,18 @@ export default async function NewsPage({ params }: NewsPageProps) {
               : 'Daily signals and market indicators from social media, news feeds and on-chain data.'}
           </p>
         </header>
+
+        {sentimentItems.length > 0 ? (
+          <div className="mb-6 space-y-4">
+            <GlobalMarketBar
+              score={globalSentiment.score}
+              label={globalSentiment.label}
+              count={globalSentiment.count}
+              asOf={formattedGeneratedAt ?? undefined}
+            />
+            <AssetScoreStrip items={sentimentItems} />
+          </div>
+        ) : null}
 
         {banner ? (
           <div className="mb-6 rounded-xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-800">
