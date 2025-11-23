@@ -73,6 +73,20 @@ export default function NewsList({
 
   const formattedDisplayDate = formatTimestamp(displayDate) || displayDate;
 
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+
+  const toggleExpanded = (id: string) => {
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
   if (status === "error") {
     return (
       <div className="space-y-3 rounded-xl border border-red-200 bg-red-50 p-6 text-center text-sm text-red-900">
@@ -166,6 +180,13 @@ export default function NewsList({
                           ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
                           : "bg-slate-50 text-slate-700 ring-slate-200",
                       ].join(" ")}
+                      title={
+                        item.source === "social"
+                          ? "Signale aus Social-Media-Daten (z. B. Twitter, Reddit)"
+                          : item.source === "onchain"
+                          ? "Signale aus On-Chain-Daten (Transaktionen, Adressen etc.)"
+                          : "Signale aus Newsfeeds & Artikeln"
+                      }
                     >
                       {item.source}
                     </span>
@@ -183,6 +204,21 @@ export default function NewsList({
                     ) : null}
                   </div>
 
+                  {item.details ? (
+                    <button
+                      type="button"
+                      onClick={() => toggleExpanded(item.id)}
+                      aria-expanded={expandedIds.has(item.id)}
+                      className="text-left text-xs font-medium text-slate-600 hover:text-slate-800"
+                    >
+                      {expandedIds.has(item.id) ? "Weniger anzeigen" : "Mehr anzeigen"}
+                    </button>
+                  ) : null}
+
+                  {item.details && expandedIds.has(item.id) ? (
+                    <p className="text-sm leading-relaxed text-slate-600">{item.details}</p>
+                  ) : null}
+
                   {(item.tags?.length || item.symbols.length) && (
                     <div className="flex flex-wrap gap-1.5">
                       {item.symbols.map((sym) => (
@@ -198,7 +234,23 @@ export default function NewsList({
                         .map((tag) => (
                           <span
                             key={`${item.id}-${tag}`}
-                            className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-700 ring-1 ring-slate-200"
+                            className={[
+                              "inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ring-1",
+                              tag === "bullish"
+                                ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+                                : tag === "bearish"
+                                ? "bg-rose-50 text-rose-700 ring-rose-100"
+                                : "bg-slate-100 text-slate-700 ring-slate-200",
+                            ].join(" ")}
+                            title={
+                              tag === "bullish"
+                                ? "Überwiegend positive Signale im aktuellen Zeitraum"
+                                : tag === "bearish"
+                                ? "Überwiegend negative Signale im aktuellen Zeitraum"
+                                : tag === "neutral"
+                                ? "Gemischte oder ausgeglichene Signale"
+                                : undefined
+                            }
                           >
                             {tag}
                           </span>

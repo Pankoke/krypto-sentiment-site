@@ -26,6 +26,7 @@ export function snapshotToNewsItems(report: AggregatedReport, timestamp?: string
     const tags = Array.from(new Set([asset.symbol, asset.sentiment].filter(Boolean)));
     const summaryClean = sanitizeText(asset.rationale);
     const summary = summaryClean ? truncate(summaryClean, 220) : undefined;
+    const detailBase = asset.rationale ? sanitizeText(asset.rationale) : "";
 
     if (!asset.top_signals?.length) {
       items.push({
@@ -37,6 +38,7 @@ export function snapshotToNewsItems(report: AggregatedReport, timestamp?: string
         symbols,
         sentiment: asset.sentiment,
         tags,
+        details: detailBase ? truncate(detailBase, 400) : undefined,
       });
       continue;
     }
@@ -44,6 +46,7 @@ export function snapshotToNewsItems(report: AggregatedReport, timestamp?: string
     asset.top_signals.forEach((sig, idx) => {
       const cleanEvidence = sanitizeText(sig.evidence);
       const title = truncate(cleanEvidence || asset.symbol, 140);
+      const detailsCombined = `${cleanEvidence} ${detailBase}`.trim();
       items.push({
         id: `${asset.symbol}-${idx}`,
         source: sig.source ?? "signal",
@@ -53,6 +56,7 @@ export function snapshotToNewsItems(report: AggregatedReport, timestamp?: string
         symbols,
         sentiment: asset.sentiment,
         tags,
+        details: detailsCombined ? truncate(detailsCombined, 420) : undefined,
       });
     });
   }

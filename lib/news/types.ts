@@ -10,4 +10,5 @@ export type NewsItem = {
   sentiment: AssetReport["sentiment"];
   tags?: string[];
   url?: string;
+  details?: string;
 };
