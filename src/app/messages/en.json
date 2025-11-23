@@ -120,6 +120,26 @@
     "lowConfidence": "Low Confidence",
     "highVolRegime": "High-Vol Regime"
   },
+  "scoreLegend": {
+    "veryBearish": "0.0–0.2: Strongly bearish",
+    "slightlyBearish": "0.2–0.4: Slightly bearish",
+    "neutral": "0.4–0.6: Neutral",
+    "slightlyBullish": "0.6–0.8: Slightly bullish",
+    "veryBullish": "0.8–1.0: Strongly bullish"
+  },
+  "scoreTooltip": {
+    "title": "How do we calculate the score?",
+    "text": "The score combines signals from social media, news feeds, and on-chain metrics. Each asset is assigned a value between 0 (bearish) and 1 (bullish). The global market score is calculated as the average of all included assets."
+  },
+  "change24h": {
+    "increase": "24h: +{value}",
+    "decrease": "24h: {value}",
+    "neutral": "24h: ±0"
+  },
+  "scoreExplanation": {
+    "heading": "What does the market sentiment mean?",
+    "text": "The market sentiment reflects how positive or negative the current overall mood in the crypto market is. It is based on social discussions, news articles, and on-chain activity. A higher score indicates a more positive sentiment, while a low score signals a more negative one."
+  },
   "snapshotStatus": {
     "empty": "No daily report yet. Start the cron job or generate one manually.",
     "stale": "The latest report is older than 24 hours (as of {date}).",

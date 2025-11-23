@@ -126,6 +126,26 @@
     "lowConfidence": "Geringes Vertrauen",
     "highVolRegime": "High-Vol Regime"
   },
+  "scoreLegend": {
+    "veryBearish": "0.0–0.2: Stark bearish",
+    "slightlyBearish": "0.2–0.4: Leicht bearish",
+    "neutral": "0.4–0.6: Neutral",
+    "slightlyBullish": "0.6–0.8: Leicht bullish",
+    "veryBullish": "0.8–1.0: Stark bullish"
+  },
+  "scoreTooltip": {
+    "title": "Wie berechnen wir den Score?",
+    "text": "Der Score kombiniert Signale aus Social Media, Newsfeeds und On-Chain-Daten. Für jedes Asset wird ein Wert zwischen 0 (bearish) und 1 (bullish) berechnet. Der globale Markt-Score ergibt sich aus dem Durchschnitt aller berücksichtigten Assets."
+  },
+  "change24h": {
+    "increase": "24h: +{value}",
+    "decrease": "24h: {value}",
+    "neutral": "24h: ±0"
+  },
+  "scoreExplanation": {
+    "heading": "Was bedeutet die Marktstimmung?",
+    "text": "Die Marktstimmung zeigt, wie positiv oder negativ die Stimmung rund um Kryptowährungen aktuell ist. Sie basiert auf sozialen Diskussionen, Nachrichtenartikeln und On-Chain-Aktivitäten. Ein hoher Score deutet auf eine eher positive Stimmung hin, ein niedriger Score auf eine eher negative."
+  },
   "snapshotStatus": {
     "empty": "Noch kein täglicher Bericht verfügbar. Starte den Cron-Job oder generiere manuell einen Report.",
     "stale": "Der letzte Bericht ist älter als 24 Stunden (Stand {date}).",

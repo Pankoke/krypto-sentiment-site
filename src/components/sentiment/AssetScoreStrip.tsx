@@ -2,6 +2,12 @@ import type { SentimentItem } from "lib/sentiment/types";
 
 type AssetScoreStripProps = {
   items: SentimentItem[];
+  locale?: string;
+  changeTexts?: {
+    increase: string;
+    decrease: string;
+    neutral: string;
+  };
 };
 
 const sentimentClasses: Record<SentimentItem["trend"], string> = {
@@ -10,7 +16,7 @@ const sentimentClasses: Record<SentimentItem["trend"], string> = {
   bearish: "bg-rose-50 text-rose-700 ring-rose-100",
 };
 
-export function AssetScoreStrip({ items }: AssetScoreStripProps) {
+export function AssetScoreStrip({ items, locale, changeTexts }: AssetScoreStripProps) {
   const uniqueItems = items.reduce<SentimentItem[]>((acc, curr) => {
     if (acc.find((it) => it.symbol === curr.symbol)) return acc;
     acc.push(curr);
@@ -26,9 +32,25 @@ export function AssetScoreStrip({ items }: AssetScoreStripProps) {
             ? item.sparkline[item.sparkline.length - 2]
             : undefined;
         const change = typeof previousPoint?.c === "number" ? item.score - previousPoint.c : 0;
+        const formatter = new Intl.NumberFormat(locale ?? undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+        const formattedAbs = formatter.format(Math.abs(change));
         const changeClass =
-          change > 0 ? "bg-emerald-50 text-emerald-700 ring-emerald-100" : change < 0 ? "bg-rose-50 text-rose-700 ring-rose-100" : "bg-slate-50 text-slate-700 ring-slate-200";
+          change > 0
+            ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+            : change < 0
+            ? "bg-rose-50 text-rose-700 ring-rose-100"
+            : "bg-slate-50 text-slate-700 ring-slate-200";
         const changePrefix = change > 0 ? "▲" : change < 0 ? "▼" : "•";
+        const changeText =
+          change > 0
+            ? (changeTexts?.increase ?? "24h: +{value}").replace("{value}", formattedAbs)
+            : change < 0
+            ? (changeTexts?.decrease ?? "24h: {value}").replace("{value}", `-${formattedAbs}`)
+            : changeTexts?.neutral ?? "24h: ±0";
+
         return (
           <div
             key={item.symbol}
@@ -64,7 +86,7 @@ export function AssetScoreStrip({ items }: AssetScoreStripProps) {
                 className={["ml-2 inline-flex items-center rounded-full px-2 py-0.5 font-semibold ring-1", changeClass].join(" ")}
                 title="Veränderung zum letzten Wert"
               >
-                {changePrefix} {change.toFixed(2)}
+                {changePrefix} {changeText}
               </span>
             </div>
             <div className="text-[11px] text-slate-600">Score {item.score.toFixed(2)}</div>

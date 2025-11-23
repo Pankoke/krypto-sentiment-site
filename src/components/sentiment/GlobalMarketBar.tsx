@@ -2,6 +2,9 @@ import type { GlobalSentimentResult } from "lib/sentiment/aggregate";
 
 type GlobalMarketBarProps = GlobalSentimentResult & {
   asOf?: string;
+  legendLabels?: string[];
+  tooltipTitle?: string;
+  tooltipText?: string;
 };
 
 const labelText: Record<GlobalSentimentResult["label"], string> = {
@@ -12,8 +15,16 @@ const labelText: Record<GlobalSentimentResult["label"], string> = {
   "very-bullish": "Sehr bullish",
 };
 
-export function GlobalMarketBar({ score, label, count, asOf }: GlobalMarketBarProps) {
+export function GlobalMarketBar({ score, label, count, asOf, legendLabels, tooltipTitle, tooltipText }: GlobalMarketBarProps) {
   const percent = Math.max(0, Math.min(score, 1)) * 100;
+  const legend = legendLabels ?? [
+    "0.0–0.2: Stark bearish",
+    "0.2–0.4: Leicht bearish",
+    "0.4–0.6: Neutral",
+    "0.6–0.8: Leicht bullish",
+    "0.8–1.0: Stark bullish",
+  ];
+  const tooltipContent = `${tooltipTitle ?? "Info"}: ${tooltipText ?? ""}`.trim();
   return (
     <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex flex-col gap-2 text-sm text-slate-700 md:flex-row md:items-center md:justify-between">
@@ -23,7 +34,7 @@ export function GlobalMarketBar({ score, label, count, asOf }: GlobalMarketBarPr
           </div>
           <span
             className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-[11px] font-semibold text-slate-600"
-            title="Der Score kombiniert Signale aus Social Media, Newsfeeds und On-Chain-Daten. Für jedes Asset wird ein Wert zwischen 0 (bearish) und 1 (bullish) berechnet. Der globale Markt-Score ist der Durchschnitt aller berücksichtigten Assets."
+            title={tooltipContent}
           >
             i
           </span>
@@ -51,19 +62,12 @@ export function GlobalMarketBar({ score, label, count, asOf }: GlobalMarketBarPr
         <span>Bullish</span>
       </div>
       <div className="flex flex-wrap gap-2 text-[11px] text-slate-600">
-        {[
-          { range: "0.0–0.2", label: "stark bearish" },
-          { range: "0.2–0.4", label: "leicht bearish" },
-          { range: "0.4–0.6", label: "neutral" },
-          { range: "0.6–0.8", label: "leicht bullish" },
-          { range: "0.8–1.0", label: "stark bullish" },
-        ].map((entry) => (
+        {legend.map((entry) => (
           <span
-            key={entry.range}
+            key={entry}
             className="inline-flex items-center rounded-full bg-slate-50 px-2 py-0.5 ring-1 ring-slate-200"
           >
-            <span className="mr-1 font-semibold text-slate-900">{entry.range}</span>
-            <span className="text-slate-600">{entry.label}</span>
+            {entry}
           </span>
         ))}
       </div>

@@ -84,6 +84,7 @@ export async function generateMetadata({ params }: NewsPageProps): Promise<Metad
 
 export default async function NewsPage({ params }: NewsPageProps) {
   const t = await getTranslations();
+  const tSentiment = await getTranslations("sentiment");
   const snapshotResult = await loadSnapshotForLocale(params.locale);
   let snapshot = snapshotResult.snapshot;
   let banner: string | null = null;
@@ -142,6 +143,18 @@ export default async function NewsPage({ params }: NewsPageProps) {
       }))
     : [];
   const globalSentiment = computeGlobalSentiment(sentimentItems);
+  const legendLabels = [
+    tSentiment("scoreLegend.veryBearish"),
+    tSentiment("scoreLegend.slightlyBearish"),
+    tSentiment("scoreLegend.neutral"),
+    tSentiment("scoreLegend.slightlyBullish"),
+    tSentiment("scoreLegend.veryBullish"),
+  ];
+  const changeTexts = {
+    increase: tSentiment("change24h.increase"),
+    decrease: tSentiment("change24h.decrease"),
+    neutral: tSentiment("change24h.neutral"),
+  };
   const formattedGeneratedAt =
     snapshot?.generatedAt && snapshot.generatedAt.length
       ? new Date(snapshot.generatedAt).toLocaleString(params.locale === "de" ? "de-DE" : "en-US", {
@@ -170,9 +183,20 @@ export default async function NewsPage({ params }: NewsPageProps) {
               score={globalSentiment.score}
               label={globalSentiment.label}
               count={globalSentiment.count}
+              legendLabels={legendLabels}
+              tooltipTitle={tSentiment("scoreTooltip.title")}
+              tooltipText={tSentiment("scoreTooltip.text")}
               asOf={formattedGeneratedAt ?? undefined}
             />
-            <AssetScoreStrip items={sentimentItems} />
+            <AssetScoreStrip
+              items={sentimentItems}
+              locale={params.locale === "de" ? "de-DE" : "en-US"}
+              changeTexts={changeTexts}
+            />
+            <div className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-700 shadow-sm">
+              <h3 className="text-base font-semibold text-slate-900">{tSentiment("scoreExplanation.heading")}</h3>
+              <p className="mt-1 leading-relaxed">{tSentiment("scoreExplanation.text")}</p>
+            </div>
           </div>
         ) : null}
 

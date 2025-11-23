@@ -5,6 +5,7 @@ import { SentimentCard } from "@/components/sentiment/SentimentCard";
 import { computeGlobalSentiment } from "lib/sentiment/aggregate";
 import { GlobalMarketBar } from "@/components/sentiment/GlobalMarketBar";
 import { AssetScoreStrip } from "@/components/sentiment/AssetScoreStrip";
+import { getTranslations } from "next-intl/server";
 
 const BASE_URL = process.env.APP_BASE_URL ?? "https://krypto-sentiment-site.com";
 
@@ -65,6 +66,7 @@ type SentimentPageProps = { params: { locale: "de" | "en" } };
 
 export default async function SentimentPage({ params }: SentimentPageProps) {
   const { locale } = params;
+  const t = await getTranslations("sentiment");
   const sentimentItems = await loadSentimentItems();
   const historyMap = await loadHistoryMap(sentimentItems.map((item) => item.symbol));
 
@@ -89,6 +91,18 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
   })();
 
   const globalSentiment = computeGlobalSentiment(sentimentItems);
+  const legendLabels = [
+    t("scoreLegend.veryBearish"),
+    t("scoreLegend.slightlyBearish"),
+    t("scoreLegend.neutral"),
+    t("scoreLegend.slightlyBullish"),
+    t("scoreLegend.veryBullish"),
+  ];
+  const changeTexts = {
+    increase: t("change24h.increase"),
+    decrease: t("change24h.decrease"),
+    neutral: t("change24h.neutral"),
+  };
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -114,9 +128,20 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
               score={globalSentiment.score}
               label={globalSentiment.label}
               count={globalSentiment.count}
+              legendLabels={legendLabels}
+              tooltipTitle={t("scoreTooltip.title")}
+              tooltipText={t("scoreTooltip.text")}
               asOf={latestReportDate ?? undefined}
             />
-            <AssetScoreStrip items={sentimentItems} />
+            <AssetScoreStrip
+              items={sentimentItems}
+              locale={locale === "de" ? "de-DE" : "en-US"}
+              changeTexts={changeTexts}
+            />
+            <div className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-700 shadow-sm">
+              <h3 className="text-base font-semibold text-slate-900">{t("scoreExplanation.heading")}</h3>
+              <p className="mt-1 leading-relaxed">{t("scoreExplanation.text")}</p>
+            </div>
           </div>
         ) : null}
 
