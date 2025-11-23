@@ -15,7 +15,7 @@ const labelText: Record<GlobalSentimentResult["label"], string> = {
 export function GlobalMarketBar({ score, label, count, asOf }: GlobalMarketBarProps) {
   const percent = Math.max(0, Math.min(score, 1)) * 100;
   return (
-    <div className="space-y-2 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex flex-col gap-1 text-sm text-slate-700 md:flex-row md:items-center md:justify-between">
         <div className="font-semibold text-slate-900">
           Heutige Marktstimmung: {labelText[label]} (Score {score.toFixed(2)})
@@ -25,7 +25,7 @@ export function GlobalMarketBar({ score, label, count, asOf }: GlobalMarketBarPr
         </div>
       </div>
       <div
-        className="relative h-3 overflow-hidden rounded-full bg-gradient-to-r from-rose-100 via-slate-100 to-emerald-100"
+        className="relative h-4 overflow-hidden rounded-full bg-gradient-to-r from-rose-100 via-slate-100 to-emerald-100"
         title="Globaler Sentiment-Score (Durchschnitt der Asset-Scores)"
       >
         <div
@@ -33,9 +33,14 @@ export function GlobalMarketBar({ score, label, count, asOf }: GlobalMarketBarPr
           style={{ width: `${percent}%` }}
         />
         <div
-          className="absolute inset-y-0 w-[2px] bg-slate-700"
+          className="absolute inset-y-0 w-[2px] bg-slate-700/80"
           style={{ left: `${percent}%` }}
         />
+      </div>
+      <div className="flex items-center justify-between text-[11px] text-slate-500">
+        <span>Bärisch</span>
+        <span>Neutral</span>
+        <span>Bullish</span>
       </div>
     </div>
   );

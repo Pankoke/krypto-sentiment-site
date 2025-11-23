@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { type ReactNode, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
@@ -19,6 +19,26 @@ type Props = {
 
 const truncate = (value?: string, limit = 200) =>
   value && value.length > limit ? `${value.slice(0, limit - 3)}...` : value;
+
+const sourceBadge = (source: string) => {
+  switch (source) {
+    case "social":
+      return "bg-sky-50 text-sky-700 ring-sky-100";
+    case "onchain":
+      return "bg-emerald-50 text-emerald-700 ring-emerald-100";
+    case "news-wire":
+      return "bg-amber-50 text-amber-800 ring-amber-100";
+    default:
+      return "bg-slate-50 text-slate-700 ring-slate-200";
+  }
+};
+
+const sentimentBadge = (tag: string) => {
+  if (tag === "bullish") return "bg-emerald-50 text-emerald-700 ring-emerald-100";
+  if (tag === "bearish") return "bg-rose-50 text-rose-700 ring-rose-100";
+  if (tag === "neutral") return "bg-slate-50 text-slate-700 ring-slate-200";
+  return "bg-slate-100 text-slate-700 ring-slate-200";
+};
 
 export default function NewsList({
   items,
@@ -72,7 +92,6 @@ export default function NewsList({
   );
 
   const formattedDisplayDate = formatTimestamp(displayDate) || displayDate;
-
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   const toggleExpanded = (id: string) => {
@@ -107,30 +126,30 @@ export default function NewsList({
   const staleAlert =
     status === "stale" ? (
       <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-        Momentan liegen keine aktuellen News vor. Es wird der letzte verfuegbare Snapshot angezeigt.
+        Momentan liegen keine aktuellen News vor. Es wird der letzte verfügbare Snapshot angezeigt.
       </div>
     ) : null;
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-        <p className="text-sm text-gray-500">{t("generatedAt", { date: formattedDisplayDate })}</p>
-        {methodNote ? <p className="mt-1 text-xs text-gray-500">{methodNote}</p> : null}
+      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <p className="text-sm text-slate-600">{t("generatedAt", { date: formattedDisplayDate })}</p>
+        {methodNote ? <p className="mt-1 text-xs text-slate-500">{methodNote}</p> : null}
         {staleAlert ? <div className="mt-2">{staleAlert}</div> : null}
         {action && status === "stale" ? <div className="mt-3 flex justify-center">{action}</div> : null}
       </div>
 
       {items.length === 0 ? (
         <div className="rounded-xl border border-dashed border-slate-300 bg-white px-4 py-10 text-center text-sm text-slate-500">
-          Aktuell liegen keine News vor. Bitte spaeter erneut pruefen.
+          Aktuell liegen keine News vor. Bitte später erneut prüfen.
         </div>
       ) : (
         <>
           <div className="flex flex-wrap gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
             <div className="flex flex-col gap-1">
-              <label className="text-xs font-medium text-slate-600">Asset</label>
+              <label className="text-xs font-medium text-slate-700">Asset</label>
               <select
-                className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-sm text-slate-700"
+                className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-sm text-slate-800 shadow-sm"
                 value={assetFilter}
                 onChange={(e) => setAssetFilter(e.target.value)}
               >
@@ -143,9 +162,9 @@ export default function NewsList({
               </select>
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs font-medium text-slate-600">Quelle</label>
+              <label className="text-xs font-medium text-slate-700">Quelle</label>
               <select
-                className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-sm text-slate-700"
+                className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-sm text-slate-800 shadow-sm"
                 value={sourceFilter}
                 onChange={(e) => setSourceFilter(e.target.value)}
               >
@@ -161,24 +180,20 @@ export default function NewsList({
 
           {filteredItems.length === 0 ? (
             <div className="rounded-xl border border-dashed border-slate-300 bg-white px-4 py-10 text-center text-sm text-slate-500">
-              Keine News fuer die aktuelle Filterauswahl.
+              Keine News für die aktuelle Filterauswahl.
             </div>
           ) : (
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
               {filteredItems.map((item) => (
                 <article
                   key={item.id}
-                  className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                  className="flex h-full flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                 >
                   <div className="flex items-center justify-between gap-3 text-[11px] text-slate-500">
                     <span
                       className={[
                         "inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ring-1",
-                        item.source === "social"
-                          ? "bg-sky-50 text-sky-700 ring-sky-100"
-                          : item.source === "onchain"
-                          ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-                          : "bg-slate-50 text-slate-700 ring-slate-200",
+                        sourceBadge(item.source),
                       ].join(" ")}
                       title={
                         item.source === "social"
@@ -198,9 +213,7 @@ export default function NewsList({
                       {truncate(item.title, 140)}
                     </h3>
                     {item.summary ? (
-                      <p className="text-sm leading-relaxed text-slate-600">
-                        {truncate(item.summary, 200)}
-                      </p>
+                      <p className="text-sm leading-relaxed text-slate-700">{truncate(item.summary, 200)}</p>
                     ) : null}
                   </div>
 
@@ -216,11 +229,11 @@ export default function NewsList({
                   ) : null}
 
                   {item.details && expandedIds.has(item.id) ? (
-                    <p className="text-sm leading-relaxed text-slate-600">{item.details}</p>
+                    <p className="text-sm leading-relaxed text-slate-700">{item.details}</p>
                   ) : null}
 
                   {(item.tags?.length || item.symbols.length) && (
-                    <div className="flex flex-wrap gap-1.5">
+                    <div className="mt-auto flex flex-wrap gap-1.5">
                       {item.symbols.map((sym) => (
                         <span
                           key={`${item.id}-${sym}`}
@@ -236,11 +249,7 @@ export default function NewsList({
                             key={`${item.id}-${tag}`}
                             className={[
                               "inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ring-1",
-                              tag === "bullish"
-                                ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-                                : tag === "bearish"
-                                ? "bg-rose-50 text-rose-700 ring-rose-100"
-                                : "bg-slate-100 text-slate-700 ring-slate-200",
+                              sentimentBadge(tag),
                             ].join(" ")}
                             title={
                               tag === "bullish"
@@ -265,7 +274,7 @@ export default function NewsList({
                       rel="noopener noreferrer"
                       className="mt-1 inline-flex w-fit items-center gap-1 text-xs font-medium text-slate-700 hover:text-slate-900"
                     >
-                      Quelle oeffnen →
+                      Quelle öffnen →
                     </a>
                   )}
                 </article>

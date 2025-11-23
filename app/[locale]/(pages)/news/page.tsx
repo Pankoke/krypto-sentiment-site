@@ -1,19 +1,19 @@
-import type { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
-import NewsList, { type NewsSnapshotStatus } from '../../../../src/components/news/NewsList';
-import { RefreshButton } from '../../../../src/components/news/RefreshButton';
-import { loadLatestAvailableSnapshot, loadSnapshotForLocale } from '../../../../lib/news/snapshot';
-import { formatBerlinSnapshotLabel } from '../../../../lib/timezone';
-import { snapshotToNewsItems } from '../../../../lib/news/transform';
-import type { SentimentItem } from '../../../../lib/sentiment/types';
-import { computeGlobalSentiment } from '../../../../lib/sentiment/aggregate';
-import { GlobalMarketBar } from '../../../../src/components/sentiment/GlobalMarketBar';
-import { AssetScoreStrip } from '../../../../src/components/sentiment/AssetScoreStrip';
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
+import NewsList, { type NewsSnapshotStatus } from "../../../../src/components/news/NewsList";
+import { RefreshButton } from "../../../../src/components/news/RefreshButton";
+import { loadLatestAvailableSnapshot, loadSnapshotForLocale } from "../../../../lib/news/snapshot";
+import { formatBerlinSnapshotLabel } from "../../../../lib/timezone";
+import { snapshotToNewsItems } from "../../../../lib/news/transform";
+import type { SentimentItem } from "../../../../lib/sentiment/types";
+import { computeGlobalSentiment } from "../../../../lib/sentiment/aggregate";
+import { GlobalMarketBar } from "../../../../src/components/sentiment/GlobalMarketBar";
+import { AssetScoreStrip } from "../../../../src/components/sentiment/AssetScoreStrip";
 
-const BASE_URL = process.env.APP_BASE_URL ?? 'https://krypto-sentiment-site.com';
-const OG_LOCALES: Record<'de' | 'en', string> = {
-  de: 'de_DE',
-  en: 'en_US',
+const BASE_URL = process.env.APP_BASE_URL ?? "https://krypto-sentiment-site.com";
+const OG_LOCALES: Record<"de" | "en", string> = {
+  de: "de_DE",
+  en: "en_US",
 };
 
 const STALE_THRESHOLD_MS = Number(process.env.NEWS_STALE_THRESHOLD_MS ?? 24 * 60 * 60 * 1000);
@@ -21,45 +21,45 @@ const STALE_THRESHOLD_MS = Number(process.env.NEWS_STALE_THRESHOLD_MS ?? 24 * 60
 type SnapshotState = NewsSnapshotStatus;
 
 function determineStatus(
-  snapshot: Awaited<ReturnType<typeof loadSnapshotForLocale>>['snapshot'],
+  snapshot: Awaited<ReturnType<typeof loadSnapshotForLocale>>["snapshot"],
   snapshotFlag: string | undefined
 ): SnapshotState {
-  if (snapshotFlag === 'error') {
-    return 'error';
+  if (snapshotFlag === "error") {
+    return "error";
   }
   if (!snapshot) {
-    return 'empty';
+    return "empty";
   }
   if (!snapshot.generatedAt) {
-    return 'empty';
+    return "empty";
   }
   const parsed = Date.parse(snapshot.generatedAt);
   if (Number.isNaN(parsed)) {
-    return 'empty';
+    return "empty";
   }
   const age = Date.now() - parsed;
   if (age > STALE_THRESHOLD_MS) {
-    return 'stale';
+    return "stale";
   }
   if (!snapshot.assets.length) {
-    return 'empty';
+    return "empty";
   }
-  return 'ok';
+  return "ok";
 }
 
-export const runtime = 'nodejs';
+export const runtime = "nodejs";
 export const revalidate = 86400;
-export const dynamic = 'force-static';
+export const dynamic = "force-static";
 
-type NewsPageProps = { params: { locale: 'de' | 'en' } };
+type NewsPageProps = { params: { locale: "de" | "en" } };
 
 export async function generateMetadata({ params }: NewsPageProps): Promise<Metadata> {
   const base = new URL(BASE_URL);
   const canonical = new URL(`/${params.locale}/news`, base).toString();
-  const title = params.locale === 'de' ? 'Was heute die Stimmung bewegt' : "What's moving sentiment today";
+  const title = params.locale === "de" ? "Was heute die Stimmung bewegt" : "What's moving sentiment today";
   const description =
-    params.locale === 'de'
-      ? 'Hier findest du die wichtigsten Ereignisse des Tages - Nachrichten, Social-Media-Trends und On-Chain-Signale, die unsere KI als stimmungsrelevant eingestuft hat. Kurz, klar und ohne Fachjargon.'
+    params.locale === "de"
+      ? "Hier findest du die wichtigsten Ereignisse des Tages - Nachrichten, Social-Media-Trends und On-Chain-Signale, die unsere KI als stimmungsrelevant eingestuft hat. Kurz, klar und ohne Fachjargon."
       : "Here you'll find the key events of the day - news headlines, social trends and on-chain signals that our AI identified as relevant for market sentiment. Short, clear and easy to understand.";
 
   return {
@@ -68,8 +68,8 @@ export async function generateMetadata({ params }: NewsPageProps): Promise<Metad
     alternates: {
       canonical,
       languages: {
-        de: new URL('/de/news', base).toString(),
-        en: new URL('/en/news', base).toString(),
+        de: new URL("/de/news", base).toString(),
+        en: new URL("/en/news", base).toString(),
       },
     },
     openGraph: {
@@ -77,7 +77,7 @@ export async function generateMetadata({ params }: NewsPageProps): Promise<Metad
       description,
       url: canonical,
       locale: OG_LOCALES[params.locale],
-      siteName: 'Krypto Sentiment',
+      siteName: "Krypto Sentiment",
     },
   };
 }
@@ -88,7 +88,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
   let snapshot = snapshotResult.snapshot;
   let banner: string | null = null;
   if (!snapshot) {
-    if (snapshotResult.status === 'error') {
+    if (snapshotResult.status === "error") {
       banner = null;
     } else {
       const latestResult = await loadLatestAvailableSnapshot(params.locale);
@@ -97,32 +97,32 @@ export default async function NewsPage({ params }: NewsPageProps) {
         const fallbackDateTime = formatBerlinSnapshotLabel(
           latestResult.snapshot.generatedAt ?? new Date().toISOString()
         );
-        banner = t('news.fallbackBanner', {
-          date: fallbackDateTime?.date ?? '',
-          time: fallbackDateTime?.time ?? '',
+        banner = t("news.fallbackBanner", {
+          date: fallbackDateTime?.date ?? "",
+          time: fallbackDateTime?.time ?? "",
         });
       }
     }
   } else if (snapshotResult.usedFallback) {
     const fallbackDateTime = formatBerlinSnapshotLabel(snapshot.generatedAt ?? new Date().toISOString());
-    banner = t('news.fallbackBanner', {
-      date: fallbackDateTime?.date ?? '',
-      time: fallbackDateTime?.time ?? '',
+    banner = t("news.fallbackBanner", {
+      date: fallbackDateTime?.date ?? "",
+      time: fallbackDateTime?.time ?? "",
     });
   }
 
   const status = determineStatus(snapshot, snapshotResult.status);
   const statusAction =
-    status === 'empty' || status === 'stale'
+    status === "empty" || status === "stale"
       ? (
         <div className="flex justify-center">
-          <RefreshButton label={t('news.retry')} />
+          <RefreshButton label={t("news.retry")} />
         </div>
         )
-      : status === 'error'
+      : status === "error"
         ? (
           <div className="flex justify-center">
-            <RefreshButton label={t('news.retry')} />
+            <RefreshButton label={t("news.retry")} />
           </div>
           )
         : null;
@@ -144,28 +144,28 @@ export default async function NewsPage({ params }: NewsPageProps) {
   const globalSentiment = computeGlobalSentiment(sentimentItems);
   const formattedGeneratedAt =
     snapshot?.generatedAt && snapshot.generatedAt.length
-      ? new Date(snapshot.generatedAt).toLocaleString(params.locale === 'de' ? 'de-DE' : 'en-US', {
-          dateStyle: 'medium',
-          timeStyle: 'short',
+      ? new Date(snapshot.generatedAt).toLocaleString(params.locale === "de" ? "de-DE" : "en-US", {
+          dateStyle: "medium",
+          timeStyle: "short",
         })
       : null;
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <section className="mx-auto max-w-4xl px-4 py-10 md:py-12">
-        <header className="mb-8 space-y-2">
+    <main className="min-h-screen bg-[#F7F9FB]">
+      <section className="mx-auto max-w-6xl space-y-6 px-4 py-10 md:py-12">
+        <header className="space-y-2">
           <h1 className="text-2xl font-semibold tracking-tight text-slate-900 md:text-3xl">
-            {params.locale === 'de' ? 'Krypto-News & Signale' : 'Crypto News & Signals'}
+            {params.locale === "de" ? "Krypto-News & Signale" : "Crypto News & Signals"}
           </h1>
           <p className="max-w-2xl text-sm text-slate-600">
-            {params.locale === 'de'
-              ? 'Tägliche Signale und Marktindikatoren aus Social Media, Newsfeeds und On-Chain-Daten.'
-              : 'Daily signals and market indicators from social media, news feeds and on-chain data.'}
+            {params.locale === "de"
+              ? "Tägliche Signale und Marktindikatoren aus Social Media, Newsfeeds und On-Chain-Daten."
+              : "Daily signals and market indicators from social media, news feeds and on-chain data."}
           </p>
         </header>
 
         {sentimentItems.length > 0 ? (
-          <div className="mb-6 space-y-4">
+          <div className="space-y-4">
             <GlobalMarketBar
               score={globalSentiment.score}
               label={globalSentiment.label}
@@ -177,7 +177,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
         ) : null}
 
         {banner ? (
-          <div className="mb-6 rounded-xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-800">
+          <div className="rounded-xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-800">
             {banner}
           </div>
         ) : null}
@@ -194,10 +194,10 @@ export default async function NewsPage({ params }: NewsPageProps) {
         />
 
         {formattedGeneratedAt ? (
-          <p className="mt-4 text-xs text-slate-500">
-            {params.locale === 'de'
-              ? `Stand: ${formattedGeneratedAt} – Aggregierte Signale aus Social, News und On-Chain.`
-              : `As of: ${formattedGeneratedAt} – Aggregated signals from social, news and on-chain.`}
+          <p className="text-xs text-slate-500">
+            {params.locale === "de"
+              ? `Stand: ${formattedGeneratedAt} · Aggregierte Signale aus Social, News und On-Chain.`
+              : `As of: ${formattedGeneratedAt} · Aggregated signals from social, news and on-chain.`}
           </p>
         ) : null}
       </section>

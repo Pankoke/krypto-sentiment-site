@@ -18,13 +18,13 @@ export function AssetScoreStrip({ items }: AssetScoreStripProps) {
   }, []);
 
   return (
-    <div className="flex flex-wrap gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="flex flex-wrap gap-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       {uniqueItems.map((item) => {
         const percent = Math.max(0, Math.min(item.score, 1)) * 100;
         return (
           <div
             key={item.symbol}
-            className="flex min-w-[140px] flex-1 flex-col gap-2 rounded-xl border border-slate-100 bg-slate-50 p-3"
+            className="flex min-w-[140px] flex-1 flex-col gap-2 rounded-xl border border-slate-100 bg-white p-3 shadow-sm"
             title={`${item.symbol} – Score ${item.score.toFixed(2)} (${item.trend})`}
           >
             <div className="flex items-center justify-between text-xs text-slate-700">
@@ -47,7 +47,7 @@ export function AssetScoreStrip({ items }: AssetScoreStripProps) {
             </div>
             <div className="relative h-2 overflow-hidden rounded-full bg-slate-200">
               <div
-                className="absolute left-0 top-0 h-full rounded-full bg-slate-900/60"
+                className="absolute left-0 top-0 h-full rounded-full bg-slate-900/70"
                 style={{ width: `${percent}%` }}
               />
             </div>
