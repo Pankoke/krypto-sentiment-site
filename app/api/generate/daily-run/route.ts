@@ -110,7 +110,7 @@ export async function GET(req: Request) {
   const allowed = await limitWithWindow('daily-run', 3, 3600);
   if (!allowed) {
     await writeLog({
-      level: 'warning',
+      level: 'warn',
       message: 'daily-run blocked by rate limit',
       context: 'api/generate-daily-run',
     });
