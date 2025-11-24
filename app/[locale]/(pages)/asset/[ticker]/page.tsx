@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { getLatestSentimentFromSnapshots, getAssetHistoryFromSnapshots } from "lib/news/snapshot";
+import { Sparkline } from "@/components/sentiment/Sparkline";
 
 const BASE_URL = process.env.APP_BASE_URL ?? "https://krypto-sentiment-site.com";
 
@@ -63,6 +65,15 @@ export default async function AssetPage({ params }: PageParams) {
   if (snapshot && !assetEntry) {
     notFound();
   }
+  const history = await getAssetHistoryFromSnapshots(ticker, locale);
+  const sparklineData = history.points.map((point) => ({
+    t: new Date(point.timestamp).getTime(),
+    c: point.score,
+  }));
+  const change24h =
+    history.points.length >= 2
+      ? history.points[history.points.length - 1].score - history.points[history.points.length - 2].score
+      : null;
 
   return (
     <main className="min-h-screen bg-slate-50 py-12">
@@ -94,6 +105,19 @@ export default async function AssetPage({ params }: PageParams) {
                 {locale === "de" ? "Stand" : "As of"}:{" "}
                 {new Date(snapshot?.timestamp ?? Date.now()).toLocaleString(locale === "de" ? "de-DE" : "en-US")}
               </p>
+              <p className="text-sm text-slate-600">
+                {locale === "de" ? "24h Änderung" : "24h change"}:{" "}
+                {change24h === null ? "–" : change24h >= 0 ? `+${change24h.toFixed(2)}` : change24h.toFixed(2)}
+              </p>
+              <div className="pt-2">
+                {sparklineData.length ? (
+                  <Sparkline data={sparklineData} className="w-40 h-12" />
+                ) : (
+                  <p className="text-xs text-slate-500">
+                    {locale === "de" ? "Noch keine Sentiment-Historie verfügbar." : "No sentiment history available yet."}
+                  </p>
+                )}
+              </div>
             </div>
           ) : (
             <p className="mt-2">{text.comingSoon}</p>

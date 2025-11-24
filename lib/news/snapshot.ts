@@ -226,6 +226,27 @@ export async function getAssetHistory(asset: string, days = 7, locale = 'de'): P
   return history;
 }
 
+export async function getAssetHistoryFromSnapshots(
+  ticker: string,
+  locale: string,
+  days = 14
+): Promise<{ ticker: string; points: Array<{ timestamp: string; score: number }> }> {
+  const normalized = ticker.trim().toUpperCase();
+  const snapshots = await listNewsSnapshots(locale);
+  const selected = snapshots.slice(0, Math.max(1, Math.min(days, snapshots.length)));
+  const points = selected
+    .map((snapshot) => {
+      const asset = snapshot.assets.find((entry) => entry.symbol.toUpperCase() === normalized);
+      if (!asset) return null;
+      const ts = snapshot.generatedAt ?? `${snapshot.date}T00:00:00.000Z`;
+      return { timestamp: ts, score: asset.score };
+    })
+    .filter((entry): entry is { timestamp: string; score: number } => Boolean(entry))
+    .reverse(); // chronologisch
+
+  return { ticker: normalized, points };
+}
+
 export type SnapshotMetadata = {
   date: string;
   locale: string;
