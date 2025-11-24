@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { createAdminSession } from "lib/admin/session";
 
 const SESSION_COOKIE = "admin_session";
