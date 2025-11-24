@@ -5,6 +5,14 @@ import { render, screen } from '@testing-library/react';
 vi.mock('@/components/sentiment/SentimentCard', () => ({
   SentimentCard: ({ item }: { item: { symbol: string } }) => <div>{item.symbol}</div>,
 }));
+vi.mock('@/components/sentiment/GlobalMarketBar', () => ({
+  GlobalMarketBar: () => <div>GlobalMarketBar</div>,
+}));
+vi.mock('@/components/sentiment/AssetScoreStrip', () => ({
+  AssetScoreStrip: ({ items }: { items: Array<{ symbol: string }> }) => (
+    <div>{items.map((i) => i.symbol).join(',')}</div>
+  ),
+}));
 vi.mock('@/components/ui', () => ({
   Card: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   CardHeader: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
