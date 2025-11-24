@@ -3,6 +3,7 @@
 import type { SentimentItem } from "lib/sentiment/types";
 import type { AssetSentimentPoint } from "lib/news/snapshot";
 import { Sparkline } from "./Sparkline";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui";
 
 interface SentimentCardProps {
   item: SentimentItem;
@@ -41,13 +42,13 @@ export function SentimentCard({ item, historyPoints }: SentimentCardProps) {
   const truncatedRationale = primaryRationale ? truncate(primaryRationale, 180) : null;
 
   return (
-    <article className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-      <header className="flex items-start justify-between gap-3">
+    <Card className="flex h-full flex-col transition hover:-translate-y-0.5 hover:shadow-md">
+      <CardHeader className="flex flex-row items-start justify-between gap-3 pb-3">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-base font-semibold text-slate-900">{item.symbol}</span>
+          <CardTitle className="flex items-center gap-2">
+            <span>{item.symbol}</span>
             {item.name && <span className="text-xs font-medium text-slate-500">{item.name}</span>}
-          </div>
+          </CardTitle>
           {item.category && <p className="mt-1 text-xs text-slate-500">{item.category}</p>}
         </div>
         <span
@@ -58,46 +59,48 @@ export function SentimentCard({ item, historyPoints }: SentimentCardProps) {
         >
           {sentimentLabel}
         </span>
-      </header>
+      </CardHeader>
 
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <p className="text-xs uppercase tracking-wide text-slate-400">Sentiment-Score</p>
-          <p className="text-2xl font-semibold text-slate-900">{item.score.toFixed(2)}</p>
+      <CardContent className="flex flex-col gap-3 pb-4">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-wide text-slate-400">Sentiment-Score</p>
+            <p className="text-2xl font-semibold text-slate-900">{item.score.toFixed(2)}</p>
+          </div>
+          <span className="inline-flex items-center rounded-full bg-indigo-50 px-2 py-0.5 text-[11px] font-medium text-indigo-700 ring-1 ring-indigo-100">
+            Vertrauen {confidencePercent}%
+          </span>
         </div>
-        <span className="inline-flex items-center rounded-full bg-indigo-50 px-2 py-0.5 text-[11px] font-medium text-indigo-700 ring-1 ring-indigo-100">
-          Vertrauen {confidencePercent}%
-        </span>
-      </div>
 
-      {truncatedRationale && (
-        <p className="mt-2 text-xs leading-relaxed text-slate-600">{truncatedRationale}</p>
-      )}
+        {truncatedRationale && (
+          <p className="text-xs leading-relaxed text-slate-600">{truncatedRationale}</p>
+        )}
 
-      {limitedSignals.length > 0 && (
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {limitedSignals.map((sig, index) => (
-            <span
-              key={`${sig.group}-${index}`}
-              className={[
-                "inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ring-1",
-                signalClassByGroup[sig.group] ?? "bg-slate-100 text-slate-700 ring-slate-200",
-              ].join(" ")}
-            >
-              {sig.source ? `${sig.source}: ${truncate(sig.text, 80)}` : truncate(sig.text, 80)}
-            </span>
-          ))}
-          {topSignals.length > limitedSignals.length && (
-            <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-700 ring-1 ring-slate-200">
-              +{topSignals.length - limitedSignals.length} weitere
-            </span>
-          )}
-        </div>
-      )}
+        {limitedSignals.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {limitedSignals.map((sig, index) => (
+              <span
+                key={`${sig.group}-${index}`}
+                className={[
+                  "inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ring-1",
+                  signalClassByGroup[sig.group] ?? "bg-slate-100 text-slate-700 ring-slate-200",
+                ].join(" ")}
+              >
+                {sig.source ? `${sig.source}: ${truncate(sig.text, 80)}` : truncate(sig.text, 80)}
+              </span>
+            ))}
+            {topSignals.length > limitedSignals.length && (
+              <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-700 ring-1 ring-slate-200">
+                +{topSignals.length - limitedSignals.length} weitere
+              </span>
+            )}
+          </div>
+        )}
+      </CardContent>
 
-      <div className="mt-1">
+      <CardFooter className="flex items-center justify-center border-t border-slate-100">
         <Sparkline data={sparklinePoints} />
-      </div>
-    </article>
+      </CardFooter>
+    </Card>
   );
 }

@@ -105,8 +105,10 @@ export default function LocaleRootPage({ params }: { params: { locale: string } 
       <section className="mx-auto flex max-w-6xl flex-col gap-10 px-6">
         <article className="rounded-3xl border border-gray-200 bg-white/80 p-10 shadow-xl">
           <p className="text-sm uppercase tracking-[0.5em] text-gray-400">Krypto Sentiment</p>
-          <h1 className="mt-3 text-4xl font-semibold leading-tight text-gray-900">{localeCopy.longIntroTitle}</h1>
-          <p className="mt-6 text-lg text-gray-700">{localeCopy.longIntro}</p>
+          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-gray-900 md:text-4xl">
+            {localeCopy.longIntroTitle}
+          </h1>
+          <p className="mt-6 text-lg leading-relaxed text-gray-700">{localeCopy.longIntro}</p>
           <div className="mt-8 flex flex-wrap gap-3">
             {localeCopy.ctas.map((cta) => (
               <Link

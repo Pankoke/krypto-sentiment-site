@@ -116,14 +116,14 @@ export default function MethodikPage({ params }: { params: { locale: "de" | "en"
   const localeCopy = copy[locale];
 
   return (
-    <main className="min-h-screen bg-gray-50 px-6 py-16">
+    <main className="min-h-screen bg-gray-50 px-6 py-14">
       <section className="mx-auto max-w-5xl space-y-6 rounded-3xl border border-gray-200 bg-white/80 p-8 shadow-sm">
         <header className="space-y-3">
           <p className="text-xs uppercase tracking-[0.5em] text-gray-400">
             {locale === "de" ? "Methodik" : "Methodology"}
           </p>
-          <h1 className="text-4xl font-semibold text-gray-900">{localeCopy.metaTitle}</h1>
-          <p className="text-sm text-gray-600">{localeCopy.short}</p>
+          <h1 className="text-3xl font-semibold tracking-tight text-gray-900 md:text-4xl">{localeCopy.metaTitle}</h1>
+          <p className="text-base leading-relaxed text-gray-600">{localeCopy.short}</p>
         </header>
         <div className="flex flex-wrap gap-3">
           {localeCopy.ecosystemLinks.map((link) => (
@@ -141,16 +141,16 @@ export default function MethodikPage({ params }: { params: { locale: "de" | "en"
             key={section.title}
             className="space-y-3 rounded-2xl border border-gray-100 bg-gray-50/80 p-5 shadow-sm"
           >
-            <h2 className="text-xl font-semibold text-gray-900">{section.title}</h2>
+            <h2 className="text-xl font-semibold tracking-tight text-gray-900">{section.title}</h2>
             {section.paragraphs.map((paragraph) => (
-              <p key={paragraph} className="text-sm text-gray-700 leading-relaxed">
+              <p key={paragraph} className="text-base leading-relaxed text-gray-700">
                 {paragraph}
               </p>
             ))}
           </article>
         ))}
         <div className="space-y-3 rounded-2xl border border-gray-200 bg-white/90 p-6 shadow-sm">
-          <h3 className="text-xl font-semibold text-gray-900">{locale === "de" ? "CTAs" : "CTAs"}</h3>
+          <h3 className="text-xl font-semibold tracking-tight text-gray-900">{locale === "de" ? "CTAs" : "CTAs"}</h3>
           <div className="flex flex-wrap gap-3">
             {localeCopy.ctas.map((cta) => (
               <Link

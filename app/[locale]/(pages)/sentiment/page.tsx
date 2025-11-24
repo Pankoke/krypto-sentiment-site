@@ -103,6 +103,10 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
     decrease: t("change24h.decrease"),
     neutral: t("change24h.neutral"),
   };
+  const legendText =
+    locale === "de"
+      ? "Score-Legende: nahe +1 = eher bullish, um 0 = neutral/gemischt, nahe -1 = eher bearish."
+      : "Score legend: close to +1 = more bullish, around 0 = neutral/mixed, close to -1 = more bearish.";
   const methodPath = locale === "de" ? "/de/methodik" : "/en/methodology";
   const methodText =
     locale === "de"
@@ -114,10 +118,10 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
       <section className="mx-auto max-w-6xl px-4 py-10 md:py-12">
         <header className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-slate-900 md:text-3xl">
+            <h1 className="text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
               {headingTitle}
             </h1>
-            <p className="mt-2 max-w-2xl text-sm text-slate-600">{subline}</p>
+            <p className="mt-3 max-w-2xl text-base leading-relaxed text-slate-600">{subline}</p>
           </div>
           {latestReportDate && (
             <p className="text-sm text-slate-500">
@@ -145,6 +149,7 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
               tooltipText={t("scoreTooltip.text")}
               asOf={latestReportDate ?? undefined}
             />
+            <p className="text-xs text-slate-500">{legendText}</p>
             <AssetScoreStrip
               items={sentimentItems}
               locale={locale === "de" ? "de-DE" : "en-US"}

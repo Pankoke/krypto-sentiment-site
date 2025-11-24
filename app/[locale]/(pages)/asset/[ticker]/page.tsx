@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getLatestSentimentFromSnapshots, getAssetSentimentHistory } from "lib/news/snapshot";
 import { AssetSentimentSparkline } from "@/components/sentiment/AssetSentimentSparkline";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui";
 
 const BASE_URL = process.env.APP_BASE_URL ?? "https://krypto-sentiment-site.com";
 
@@ -70,68 +71,70 @@ export default async function AssetPage({ params }: PageParams) {
 
   return (
     <main className="min-h-screen bg-slate-50 py-12">
-      <section className="mx-auto max-w-5xl space-y-6 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-        <header className="space-y-2">
-          <p className="text-xs uppercase tracking-[0.3em] text-slate-500">
-            {locale === "de" ? "Krypto-Asset" : "Crypto asset"}
-          </p>
-          <h1 className="text-3xl font-semibold text-slate-900 sm:text-4xl">
-            {meta?.name} ({meta?.ticker})
-          </h1>
-          <p className="text-sm text-slate-600">{text.intro}</p>
-        </header>
+      <section className="mx-auto max-w-5xl space-y-6 px-4">
+        <Card className="space-y-6">
+          <CardHeader className="space-y-2">
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-500">
+              {locale === "de" ? "Krypto-Asset" : "Crypto asset"}
+            </p>
+            <CardTitle className="text-3xl font-semibold tracking-tight sm:text-4xl">
+              {meta?.name} ({meta?.ticker})
+            </CardTitle>
+            <p className="text-base leading-relaxed text-slate-600">{text.intro}</p>
+          </CardHeader>
 
-        <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-6 text-sm text-slate-700">
-          <h2 className="text-base font-semibold text-slate-900">
-            {locale === "de" ? "Aktuelle Marktstimmung" : "Current market sentiment"}
-          </h2>
-          {assetEntry ? (
-            <div className="mt-3 space-y-1">
-              <p className="text-lg font-semibold text-slate-900">Score: {assetEntry.score.toFixed(2)}</p>
-              <p className="text-sm text-slate-600">
-                {locale === "de" ? "Globale Marktstimmung" : "Global market sentiment"}:{" "}
-                {snapshot ? snapshot.globalScore.toFixed(2) : "-"}
-              </p>
-              <p className="text-sm text-slate-600">
-                {locale === "de" ? "Stand" : "As of"}:{" "}
-                {new Date(snapshot?.timestamp ?? Date.now()).toLocaleString(locale === "de" ? "de-DE" : "en-US")}
-              </p>
-              <p className="text-sm text-slate-600">
-                {locale === "de" ? "24h Veränderung" : "24h change"}:{" "}
-                {change24h === null ? "–" : change24h >= 0 ? `+${change24h.toFixed(2)}` : change24h.toFixed(2)}
-              </p>
-              <div className="space-y-1 pt-2">
-                <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  {locale === "de" ? "Sentiment-Historie (letzte 14 Tage)" : "Sentiment history (last 14 days)"}
-                </h3>
-                {historyPoints.length ? (
-                  <AssetSentimentSparkline points={historyPoints} />
-                ) : (
-                  <p className="text-xs text-slate-500">
-                    {locale === "de" ? "Noch keine Sentiment-Historie verfügbar." : "No sentiment history available yet."}
-                  </p>
-                )}
+          <CardContent className="space-y-4 text-sm leading-relaxed text-slate-700">
+            <h2 className="text-base font-semibold text-slate-900">
+              {locale === "de" ? "Aktuelle Marktstimmung" : "Current market sentiment"}
+            </h2>
+            {assetEntry ? (
+              <div className="space-y-2">
+                <p className="text-lg font-semibold text-slate-900">Score: {assetEntry.score.toFixed(2)}</p>
+                <p className="text-sm text-slate-600">
+                  {locale === "de" ? "Globale Marktstimmung" : "Global market sentiment"}:{" "}
+                  {snapshot ? snapshot.globalScore.toFixed(2) : "-"}
+                </p>
+                <p className="text-sm text-slate-600">
+                  {locale === "de" ? "Stand" : "As of"}:{" "}
+                  {new Date(snapshot?.timestamp ?? Date.now()).toLocaleString(locale === "de" ? "de-DE" : "en-US")}
+                </p>
+                <p className="text-sm text-slate-600">
+                  {locale === "de" ? "24h Veränderung" : "24h change"}:{" "}
+                  {change24h === null ? "–" : change24h >= 0 ? `+${change24h.toFixed(2)}` : change24h.toFixed(2)}
+                </p>
+                <div className="space-y-2 pt-2">
+                  <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    {locale === "de" ? "Sentiment-Historie (letzte 14 Tage)" : "Sentiment history (last 14 days)"}
+                  </h3>
+                  {historyPoints.length ? (
+                    <AssetSentimentSparkline points={historyPoints} />
+                  ) : (
+                    <p className="text-xs text-slate-500">
+                      {locale === "de" ? "Noch keine Sentiment-Historie verfügbar." : "No sentiment history available yet."}
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
-          ) : (
-            <p className="mt-2">{text.comingSoon}</p>
-          )}
-        </div>
+            ) : (
+              <p className="mt-2">{text.comingSoon}</p>
+            )}
+          </CardContent>
 
-        <div className="flex flex-wrap gap-3 text-sm font-medium">
-          <Link
-            href={`/${locale}/coins`}
-            className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-2 text-slate-800 hover:bg-slate-50"
-          >
-            {text.backCoins}
-          </Link>
-          <Link
-            href={`/${locale}/sentiment`}
-            className="inline-flex items-center rounded-full bg-slate-900 px-4 py-2 text-white hover:bg-slate-800"
-          >
-            {text.backSentiment}
-          </Link>
-        </div>
+          <CardFooter className="flex flex-wrap gap-3 text-sm font-medium">
+            <Link
+              href={`/${locale}/coins`}
+              className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-2 text-slate-800 hover:bg-slate-50"
+            >
+              {text.backCoins}
+            </Link>
+            <Link
+              href={`/${locale}/sentiment`}
+              className="inline-flex items-center rounded-full bg-slate-900 px-4 py-2 text-white hover:bg-slate-800"
+            >
+              {text.backSentiment}
+            </Link>
+          </CardFooter>
+        </Card>
       </section>
     </main>
   );
