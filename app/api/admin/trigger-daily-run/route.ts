@@ -1,5 +1,5 @@
 import { generateDailyReport, type DailyGenerateMode } from '../../../../lib/daily/generator';
-import { requireAdminSecret, AdminAuthError } from '../../../../lib/admin/auth';
+import { requireAdminSessionOrSecret, AdminAuthError } from '../../../../lib/admin/auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -21,7 +21,7 @@ type TriggerResponse =
 
 export async function GET(req: Request): Promise<Response> {
   try {
-    requireAdminSecret(req);
+    await requireAdminSessionOrSecret(req);
   } catch (error) {
     if (error instanceof AdminAuthError) {
       const payload: TriggerResponse = { ok: false, error: 'Unauthorized' };

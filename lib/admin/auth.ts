@@ -5,6 +5,9 @@ export class AdminAuthError extends Error {
   }
 }
 
+import { cookies } from 'next/headers';
+import { validateAdminSession } from './session';
+
 export function requireAdminSecret(request: Request): void {
   const configuredSecret = process.env.ADMIN_SECRET;
   if (!configuredSecret) {
@@ -24,4 +27,25 @@ export function canAccessAdminInCurrentEnv(): boolean {
     return Boolean(process.env.ADMIN_SECRET);
   }
   return Boolean(process.env.ADMIN_SECRET);
+}
+
+export async function requireAdminSessionOrSecret(request: Request): Promise<void> {
+  const cookieStore = cookies();
+  const sessionToken = cookieStore.get('admin_session')?.value ?? null;
+  const hasValidSession = await validateAdminSession(sessionToken);
+  if (hasValidSession) {
+    return;
+  }
+  try {
+    requireAdminSecret(request);
+    return;
+  } catch (error) {
+    throw new AdminAuthError('Admin session or secret required');
+  }
+}
+
+export async function ensureAdminPageSession(): Promise<boolean> {
+  const cookieStore = cookies();
+  const sessionToken = cookieStore.get('admin_session')?.value ?? null;
+  return validateAdminSession(sessionToken);
 }

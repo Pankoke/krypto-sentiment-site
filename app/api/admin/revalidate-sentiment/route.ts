@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
-import { requireAdminSecret, AdminAuthError } from '../../../../lib/admin/auth';
+import { requireAdminSessionOrSecret, AdminAuthError } from '../../../../lib/admin/auth';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' } as const;
 
@@ -13,7 +13,7 @@ interface RevalidateResponse {
 
 export async function POST(request: Request) {
   try {
-    requireAdminSecret(request);
+    await requireAdminSessionOrSecret(request);
   } catch (error) {
     if (error instanceof AdminAuthError) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401, headers: JSON_HEADERS });
