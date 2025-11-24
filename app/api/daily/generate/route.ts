@@ -1,29 +1,29 @@
 import { locales } from '../../../../i18n';
 import { generateDailyReport, type DailyGenerateMode } from '../../../../lib/daily/generator';
+import { requireAdminSecret, AdminAuthError } from '../../../../lib/admin/auth';
+import { limitWithWindow } from '../../../../lib/monitoring/rate-limit';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' } as const;
 
 export async function GET(req: Request): Promise<Response> {
-  const secret = process.env.DAILY_API_SECRET ?? process.env.CRON_SECRET;
-  if (!secret) {
-    return Response.json(
-      { ok: false, error: 'Daily generator secret is not configured.' },
-      { status: 500, headers: JSON_HEADERS }
-    );
+  try {
+    requireAdminSecret(req);
+  } catch (error) {
+    if (error instanceof AdminAuthError) {
+      return Response.json({ ok: false, error: 'Unauthorized' }, { status: 401, headers: JSON_HEADERS });
+    }
+    throw error;
   }
 
-  const url = new URL(req.url);
-  const key = url.searchParams.get('key');
-  if (key !== secret) {
-    return Response.json(
-      { ok: false, error: 'Unauthorized' },
-      { status: 401, headers: JSON_HEADERS }
-    );
+  const allowed = await limitWithWindow('daily-generate', 3, 3600);
+  if (!allowed) {
+    return Response.json({ ok: false, error: 'Rate limit exceeded' }, { status: 429, headers: JSON_HEADERS });
   }
 
   try {
+    const url = new URL(req.url);
     const modeParam = url.searchParams.get('mode');
     const mode: DailyGenerateMode = modeParam === 'skip' ? 'skip' : 'overwrite';
 

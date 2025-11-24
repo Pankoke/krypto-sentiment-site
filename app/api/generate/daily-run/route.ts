@@ -13,6 +13,8 @@ import { berlinDateString } from 'lib/timezone';
 import { persistDailySnapshots } from 'lib/persistence';
 import type { NormalizedSourceEntry } from '../../../../lib/types';
 import { writeLog } from 'lib/monitoring/logs';
+import { requireAdminSecret, AdminAuthError } from 'lib/admin/auth';
+import { limitWithWindow } from 'lib/monitoring/rate-limit';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' } as const;
 const LOCALES: Array<'de' | 'en'> = ['de', 'en'];
@@ -93,14 +95,26 @@ async function runReportsPart(posts: NormalizedSourceEntry[]) {
 type DailyRunStatus = 'created' | 'updated' | 'skipped' | 'failed';
 
 export async function GET(req: Request) {
-  const url = new URL(req.url);
-  const key = url.searchParams.get('key') ?? req.headers.get('x-cron-secret');
-  const secret = process.env.CRON_SECRET ?? process.env.NEWS_GENERATE_SECRET ?? null;
-  if (!secret || key !== secret) {
-    return NextResponse.json(
-      { ok: false, error: 'Unauthorized', partial: false },
-      { status: 401, headers: JSON_HEADERS }
-    );
+  try {
+    requireAdminSecret(req);
+  } catch (error) {
+    if (error instanceof AdminAuthError) {
+      return NextResponse.json(
+        { ok: false, error: 'Unauthorized', partial: false },
+        { status: 401, headers: JSON_HEADERS }
+      );
+    }
+    throw error;
+  }
+
+  const allowed = await limitWithWindow('daily-run', 3, 3600);
+  if (!allowed) {
+    await writeLog({
+      level: 'warning',
+      message: 'daily-run blocked by rate limit',
+      context: 'api/generate-daily-run',
+    });
+    return NextResponse.json({ ok: false, error: 'Rate limit exceeded' }, { status: 429, headers: JSON_HEADERS });
   }
 
   const dateBerlin = berlinDateString(new Date());
