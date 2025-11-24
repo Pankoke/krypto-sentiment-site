@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { listSnapshotMetadata, type SnapshotMetadata } from 'lib/news/snapshot';
 import SnapshotActions from 'components/admin/SnapshotActions';
+import { canAccessAdminInCurrentEnv } from '../../lib/admin/auth';
 
 const LOCALES: Array<{ code: 'de' | 'en'; label: string }> = [
   { code: 'de', label: 'Deutsch' },
@@ -42,7 +43,8 @@ function SnapshotRow({ snapshot }: SnapshotMetadataRowProps) {
 }
 
 export default async function AdminSnapshotsPage() {
-  if (process.env.NODE_ENV === 'production') {
+  const allowAdmin = canAccessAdminInCurrentEnv();
+  if (!allowAdmin && process.env.NODE_ENV === 'production') {
     notFound();
   }
   const metadata = await Promise.all(

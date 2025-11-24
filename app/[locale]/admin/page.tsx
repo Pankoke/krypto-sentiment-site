@@ -9,6 +9,7 @@ import type { LogEntry } from "lib/monitoring/logs";
 import type { SnapshotHistoryPoint, AssetSentimentPoint } from "lib/news/snapshot";
 import type { SentimentItem } from "lib/sentiment/types";
 import { allowedTickerOrder } from "lib/assets";
+import { canAccessAdminInCurrentEnv } from "lib/admin/auth";
 
 type ActionState = {
   loading: boolean;
@@ -37,6 +38,22 @@ type SentimentApiResponse = {
 };
 
 export default function AdminDashboard() {
+  const adminAllowed = canAccessAdminInCurrentEnv();
+  if (!adminAllowed && process.env.NODE_ENV === "production") {
+    return (
+      <main className="min-h-screen bg-slate-50">
+        <section className="mx-auto max-w-3xl px-4 py-12">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h1 className="text-lg font-semibold text-slate-900">Admin-Bereich gesperrt</h1>
+            <p className="mt-2 text-sm text-slate-600">
+              In dieser Umgebung ist der Admin-Bereich nur mit einem g\u00fcltigen ADMIN_SECRET verf\u00fcgbar.
+            </p>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
   const initialActions: ActionStateMap = {
     dailyRun: { loading: false, message: null, error: null },
     clearSnapshots: { loading: false, message: null, error: null },
@@ -49,12 +66,22 @@ export default function AdminDashboard() {
   const [isAssetLoading, setIsAssetLoading] = useState(false);
   const [assetError, setAssetError] = useState<string | null>(null);
 
-  const { data: logs, error: logsError, isValidating: logsLoading, mutate: refreshLogs } = useSWR<LogEntry[]>(
+  const {
+    data: logs,
+    error: logsError,
+    isLoading: logsLoading,
+    mutate: refreshLogs,
+  } = useSWR<LogEntry[]>(
     "/api/admin/logs?limit=50",
     swrFetcher
   );
-  const { data: history, error: historyError, isValidating: historyLoading, mutate: refreshHistory } =
-    useSWR<SnapshotHistoryPoint[]>("/api/admin/snapshot-history?days=30", swrFetcher);
+  const {
+    data: history,
+    error: historyError,
+    isLoading: historyLoading,
+    isValidating: historyValidating,
+    mutate: refreshHistory,
+  } = useSWR<SnapshotHistoryPoint[]>("/api/admin/snapshot-history?days=30", swrFetcher);
   const { data: sentimentResponse } = useSWR<SentimentApiResponse>("/api/sentiment", swrFetcher);
 
   const historyByDate = useMemo(() => history ?? [], [history]);
@@ -130,13 +157,18 @@ export default function AdminDashboard() {
               <h2 className="text-sm font-semibold text-slate-900">Systemstatus</h2>
               <p className="mt-1 text-xs text-slate-500">Aktueller Zustand von Reports und News-Snapshots laut Health-Check.</p>
               <div className="mt-3 space-y-2 text-xs text-slate-700">
-                {latestSnapshot ? (
+                {(historyLoading || historyValidating) && <p className="text-slate-500">Lade Snapshot-Historie...</p>}
+                {historyError && (
+                  <p className="text-rose-700">Fehler beim Laden der Snapshot-Historie. Bitte spaeter erneut versuchen.</p>
+                )}
+                {!historyLoading && !historyValidating && !historyError && latestSnapshot ? (
                   <p>
                     Assets mit Daten: <span className="font-semibold text-slate-900">{latestSnapshot.assetsWithData}</span>
                   </p>
-                ) : (
-                  <p className="text-slate-500">Keine Snapshot-Daten verfügbar.</p>
-                )}
+                ) : null}
+                {!historyLoading && !historyValidating && !historyError && !latestSnapshot ? (
+                  <p className="text-slate-500">Keine Snapshot-Daten verfuegbar.</p>
+                ) : null}
               </div>
             </section>
 
@@ -198,7 +230,7 @@ export default function AdminDashboard() {
             <p className="mt-1 text-xs text-slate-500">Letzte Backend-Ereignisse (Daily-Run, News, Fehler). Neueste Einträge oben.</p>
             <div className="mt-4 h-80 overflow-y-auto">
               {logsLoading && <p className="text-sm text-slate-500">Lade Logs...</p>}
-              {logsError && <p className="text-sm text-rose-700">Fehler: {logsError.message}</p>}
+              {logsError && <p className="text-sm text-rose-700">Fehler beim Laden der Logs.</p>}
               {!logsLoading && !logsError && (
                 <div className="divide-y divide-slate-100 text-xs">
                   {logs?.map((entry) => (
@@ -222,6 +254,7 @@ export default function AdminDashboard() {
                       {entry.context && <p className="text-[10px] text-slate-500">Context: {entry.context}</p>}
                     </div>
                   ))}
+                  {!logs?.length && <p className="py-2 text-slate-500">Noch keine Logs vorhanden.</p>}
                 </div>
               )}
             </div>
@@ -264,6 +297,13 @@ export default function AdminDashboard() {
                             <td className="px-2 py-1 font-semibold text-slate-900">{point.assetsWithData}</td>
                           </tr>
                         ))}
+                        {!historyByDate.length && (
+                          <tr>
+                            <td className="px-2 py-2 text-slate-500" colSpan={2}>
+                              Keine Historie verfuegbar.
+                            </td>
+                          </tr>
+                        )}
                       </tbody>
                     </table>
                   )}
@@ -329,3 +369,4 @@ export default function AdminDashboard() {
     </main>
   );
 }
+

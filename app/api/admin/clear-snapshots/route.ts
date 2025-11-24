@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import redis, { isIoredisClient } from 'lib/cache/redis';
+import { requireAdminSecret, AdminAuthError } from '../../../../lib/admin/auth';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' } as const;
 const SNAPSHOT_PREFIXES = ['news:', 'reports:', 'metrics:', 'daily-run-lock:', 'news:dates:'];
@@ -12,7 +13,15 @@ interface ClearSnapshotsResponse {
   message?: string;
 }
 
-export async function POST() {
+export async function POST(request: Request) {
+  try {
+    requireAdminSecret(request);
+  } catch (error) {
+    if (error instanceof AdminAuthError) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401, headers: JSON_HEADERS });
+    }
+    throw error;
+  }
   try {
     const keySet = new Set<string>();
     for (const prefix of SNAPSHOT_PREFIXES) {
