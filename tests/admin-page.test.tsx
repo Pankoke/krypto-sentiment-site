@@ -24,11 +24,21 @@ vi.mock('@/components/ui', () => ({
   TooltipProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   TooltipContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
-vi.mock('next/navigation', () => ({
-  usePathname: () => '/de/admin',
-}));
+vi.mock('next/navigation', () => {
+  return {
+    usePathname: () => '/de/admin',
+    useRouter: () => ({
+      push: vi.fn(),
+      replace: vi.fn(),
+      prefetch: vi.fn(),
+      refresh: vi.fn(),
+      back: vi.fn(),
+    }),
+  };
+});
 vi.mock('lib/admin/auth', () => ({
   canAccessAdminInCurrentEnv: () => true,
+  ensureAdminPageSession: async () => true,
 }));
 
 import AdminPage from '../app/[locale]/admin/page';
@@ -74,7 +84,8 @@ describe('Admin page', () => {
     swrData.set('/api/admin/logs?limit=50', []);
     swrData.set('/api/admin/snapshot-history?days=30', []);
     swrData.set('/api/sentiment', { items: [] });
-    render(<AdminPage params={{ locale: 'de' }} />);
+    const ui = await AdminPage({ params: { locale: 'de' } });
+    render(ui);
     expect(screen.getByText(/Maintenance/i)).toBeInTheDocument();
     expect(screen.getByText(/Daily-Run anstoßen/i)).toBeInTheDocument();
     expect(screen.getByText(/Snapshots leeren/i)).toBeInTheDocument();
@@ -87,7 +98,8 @@ describe('Admin page', () => {
     ]);
     swrData.set('/api/admin/snapshot-history?days=30', []);
     swrData.set('/api/sentiment', { items: [] });
-    render(<AdminPage params={{ locale: 'de' }} />);
+    const ui = await AdminPage({ params: { locale: 'de' } });
+    render(ui);
     expect(screen.getByText(/test log/i)).toBeInTheDocument();
   });
 
@@ -97,7 +109,8 @@ describe('Admin page', () => {
       { date: '2025-01-01', assetsWithData: 3 },
     ]);
     swrData.set('/api/sentiment', { items: [] });
-    render(<AdminPage params={{ locale: 'de' }} />);
+    const ui = await AdminPage({ params: { locale: 'de' } });
+    render(ui);
     expect(screen.getAllByText(/Snapshot-Historie/i).length).toBeGreaterThan(0);
     expect(screen.getByText('2025-01-01')).toBeInTheDocument();
   });
