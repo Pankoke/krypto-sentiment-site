@@ -142,4 +142,3 @@ export default async function AssetPage({ params }: PageParams) {
     </main>
   );
 }
-import { getLatestSentimentFromSnapshots } from "lib/news/snapshot";
