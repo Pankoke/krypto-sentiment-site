@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { listSnapshotMetadata, type SnapshotMetadata } from 'lib/news/snapshot';
 import SnapshotActions from 'components/admin/SnapshotActions';
-import { canAccessAdminInCurrentEnv } from '../../lib/admin/auth';
+import { canAccessAdminInCurrentEnv } from 'lib/admin/auth';
 
 const LOCALES: Array<{ code: 'de' | 'en'; label: string }> = [
   { code: 'de', label: 'Deutsch' },
