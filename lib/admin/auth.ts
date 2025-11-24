@@ -8,7 +8,7 @@ export class AdminAuthError extends Error {
 export function requireAdminSecret(request: Request): void {
   const configuredSecret = process.env.ADMIN_SECRET;
   if (!configuredSecret) {
-    throw new Error('ADMIN_SECRET is not configured');
+    throw new AdminAuthError('ADMIN_SECRET is not configured');
   }
   const incoming = request.headers.get('x-admin-secret');
   if (!incoming || incoming !== configuredSecret) {
