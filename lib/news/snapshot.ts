@@ -173,8 +173,6 @@ export type LatestSentimentSummary = {
   assets: Array<{
     ticker: string;
     score: number;
-    sentiment?: AggregatedReport['assets'][number]['sentiment'];
-    confidence?: number;
   }>;
 };
 
@@ -187,8 +185,6 @@ export async function getLatestSentimentFromSnapshots(locale: string): Promise<L
   const scores = latest.assets.map((asset) => ({
     ticker: asset.symbol.toUpperCase(),
     score: asset.score,
-    sentiment: asset.sentiment,
-    confidence: asset.confidence,
   }));
   const total = scores.reduce((sum, item) => sum + item.score, 0);
   const globalScore = scores.length ? total / scores.length : 0;

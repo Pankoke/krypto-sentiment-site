@@ -7,7 +7,7 @@ import { computeGlobalSentiment } from "lib/sentiment/aggregate";
 import { GlobalMarketBar } from "@/components/sentiment/GlobalMarketBar";
 import { AssetScoreStrip } from "@/components/sentiment/AssetScoreStrip";
 import { getTranslations } from "next-intl/server";
-import { getLatestSentimentFromSnapshots } from "lib/news/snapshot";
+import { getLatestSentimentFromSnapshots } from "@/lib/news/snapshot";
 
 const BASE_URL = process.env.APP_BASE_URL ?? "https://krypto-sentiment-site.com";
 
@@ -61,8 +61,8 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
     ? snapshot.assets.map((asset) => ({
         symbol: asset.ticker,
         score: Math.max(0, Math.min(1, asset.score)),
-        confidence: Math.max(0, Math.min(1, asset.confidence ?? 0)),
-        trend: asset.sentiment ?? "neutral",
+        confidence: 0.5,
+        trend: "neutral",
         bullets: [],
         generatedAt: snapshot.timestamp,
         sparkline: [],
