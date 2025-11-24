@@ -254,6 +254,22 @@ export async function getAssetHistoryFromSnapshots(
   return { ticker: normalized, points };
 }
 
+export type AssetHistoryPoint = {
+  timestamp: string;
+  score: number;
+};
+
+export async function getAssetSentimentHistory(
+  ticker: string,
+  locale: string,
+  limit = 14
+): Promise<AssetHistoryPoint[]> {
+  const history = await getAssetHistoryFromSnapshots(ticker, locale, limit);
+  return history.points
+    .slice(-Math.max(1, limit))
+    .map((point) => ({ timestamp: point.timestamp, score: point.score }));
+}
+
 export type SnapshotMetadata = {
   date: string;
   locale: string;

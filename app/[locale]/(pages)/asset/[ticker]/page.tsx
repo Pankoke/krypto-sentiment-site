@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getLatestSentimentFromSnapshots, getAssetHistoryFromSnapshots } from "lib/news/snapshot";
+import { getLatestSentimentFromSnapshots, getAssetSentimentHistory } from "lib/news/snapshot";
+import { AssetSentimentSparkline } from "@/components/sentiment/AssetSentimentSparkline";
 
 const BASE_URL = process.env.APP_BASE_URL ?? "https://krypto-sentiment-site.com";
 
@@ -60,11 +61,7 @@ export default async function AssetPage({ params }: PageParams) {
   if (snapshot && !assetEntry) {
     notFound();
   }
-  const history = await getAssetHistoryFromSnapshots(ticker, locale);
-  const historyPoints = history.points.map((point) => ({
-    timestamp: point.timestamp,
-    score: point.score,
-  }));
+  const historyPoints = await getAssetSentimentHistory(ticker, locale, 14);
   const change24h =
     historyPoints.length >= 2
       ? (historyPoints[historyPoints.length - 1]?.score ?? 0) -
@@ -105,17 +102,10 @@ export default async function AssetPage({ params }: PageParams) {
               </p>
               <div className="space-y-1 pt-2">
                 <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  {locale === "de" ? "Verlauf (letzte Tage)" : "Recent history"}
+                  {locale === "de" ? "Sentiment-Historie (letzte 14 Tage)" : "Sentiment history (last 14 days)"}
                 </h3>
                 {historyPoints.length ? (
-                  <ul className="space-y-1 text-xs text-slate-600">
-                    {historyPoints.slice(-7).map((point) => (
-                      <li key={point.timestamp} className="flex items-center justify-between">
-                        <span>{new Date(point.timestamp).toLocaleDateString(locale === "de" ? "de-DE" : "en-US")}</span>
-                        <span className="font-semibold text-slate-900">{point.score.toFixed(2)}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <AssetSentimentSparkline points={historyPoints} />
                 ) : (
                   <p className="text-xs text-slate-500">
                     {locale === "de" ? "Noch keine Sentiment-Historie verfügbar." : "No sentiment history available yet."}
