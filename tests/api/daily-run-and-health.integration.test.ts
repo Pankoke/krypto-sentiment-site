@@ -7,6 +7,7 @@ const TEST_DATA_DIR = join(process.cwd(), 'tmp-test-data');
 process.env.GENERATE_DATA_DIR = TEST_DATA_DIR;
 process.env.CRON_SECRET = 'SuperLongSecret';
 process.env.NEWS_GENERATE_SECRET = 'SuperLongSecret';
+process.env.ADMIN_SECRET = 'SuperLongSecret';
 
 vi.mock('next/cache', () => ({
   revalidateTag: vi.fn(async () => undefined),
@@ -92,7 +93,9 @@ describe('Daily run + health integration', () => {
     expect((await initialHealth.json()).status).toBe('warming_up');
 
     const dailyResponse = await dailyRunHandler(
-      new Request('http://localhost/api/generate/daily-run?key=SuperLongSecret&mode=overwrite')
+      new Request('http://localhost/api/generate/daily-run?key=SuperLongSecret&mode=overwrite', {
+        headers: { 'x-admin-secret': 'SuperLongSecret' },
+      })
     );
     const dailyJson = await dailyResponse.json();
     expect(dailyResponse.status).toBe(200);
@@ -107,13 +110,17 @@ describe('Daily run + health integration', () => {
 
   it('returns updated status on the second run', async () => {
     const firstResponse = await dailyRunHandler(
-      new Request('http://localhost/api/generate/daily-run?key=SuperLongSecret&mode=overwrite')
+      new Request('http://localhost/api/generate/daily-run?key=SuperLongSecret&mode=overwrite', {
+        headers: { 'x-admin-secret': 'SuperLongSecret' },
+      })
     );
     const firstJson = await firstResponse.json();
     expect(firstJson.runStatus).toBe('created');
 
     const secondResponse = await dailyRunHandler(
-      new Request('http://localhost/api/generate/daily-run?key=SuperLongSecret&mode=overwrite')
+      new Request('http://localhost/api/generate/daily-run?key=SuperLongSecret&mode=overwrite', {
+        headers: { 'x-admin-secret': 'SuperLongSecret' },
+      })
     );
     const secondJson = await secondResponse.json();
     expect(secondJson.runStatus).toBe('updated');

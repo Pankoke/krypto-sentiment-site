@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui';
 import { useTranslations } from 'next-intl';
 
 export type SentimentStatus = 'ok' | 'stale' | 'empty' | 'error';

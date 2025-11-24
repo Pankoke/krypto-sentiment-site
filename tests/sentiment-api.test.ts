@@ -40,11 +40,11 @@ describe('sentiment API', () => {
           locale: 'de',
         }
       );
-      await registerNewsDate('de', newerDate);
-      await setSnapshot(
-        newsSnapshotKey('de', newerDate),
-        {
-          date: newerDate,
+    await registerNewsDate('de', newerDate);
+    await setSnapshot(
+      newsSnapshotKey('de', newerDate),
+      {
+        date: newerDate,
           universe: ['ETH', 'SOL'],
           assets: [
             { symbol: 'ETH', sentiment: 'bearish', score: 0.2, confidence: 0.6, rationale: 'x', top_signals: [] },
@@ -59,8 +59,8 @@ describe('sentiment API', () => {
       const response = await sentimentGet(new Request('http://localhost/api/sentiment'));
       expect(response.status).toBe(200);
       const payload = await response.json();
-      expect(payload.items.length).toBe(2);
-      const symbols = payload.items.map((it: { symbol: string }) => it.symbol);
+      expect(payload.assets.length).toBe(2);
+      const symbols = payload.assets.map((it: { ticker: string }) => it.ticker);
       expect(symbols).toEqual(expect.arrayContaining(['ETH', 'SOL']));
       expect(symbols).not.toContain('BTC');
     });

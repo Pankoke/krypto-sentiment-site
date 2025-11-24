@@ -1,7 +1,6 @@
 "use client";
 import { useTranslations } from 'next-intl';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, Button } from '@/components/ui';
 import { ScorePill } from './ScorePill';
 import { ConfidencePill } from './ConfidencePill';
 import { TrendBadge } from './TrendBadge';

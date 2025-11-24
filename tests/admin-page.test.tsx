@@ -2,20 +2,32 @@ import React from 'react';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
-vi.mock('@/components/ui/badge', () => ({
+vi.mock('@/components/ui', () => ({
   Badge: ({ children }: { children: React.ReactNode }) => <span>{children}</span>,
-}));
-vi.mock('@/components/ui/button', () => ({
   Button: ({ children, ...rest }: { children: React.ReactNode }) => <button {...rest}>{children}</button>,
-}));
-vi.mock('@/components/ui/card', () => ({
   Card: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   CardHeader: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   CardTitle: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   CardContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  Select: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  SelectTrigger: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  SelectValue: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  SelectContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  SelectItem: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  Dialog: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  DialogContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  DialogHeader: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  DialogTitle: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  Tooltip: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  TooltipTrigger: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  TooltipProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  TooltipContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 vi.mock('next/navigation', () => ({
   usePathname: () => '/de/admin',
+}));
+vi.mock('lib/admin/auth', () => ({
+  canAccessAdminInCurrentEnv: () => true,
 }));
 
 import AdminPage from '../app/[locale]/admin/page';
@@ -35,10 +47,11 @@ const swrData: SwrDataMap = new Map();
 
 vi.mock('swr', () => ({
   __esModule: true,
-  default: (key: string) => ({
-    data: swrData.get(key) ?? null,
+  default: (key: string | null) => ({
+    data: key ? swrData.get(key) ?? null : null,
     error: undefined,
     isValidating: false,
+    isLoading: false,
     mutate: vi.fn(),
   }),
 }));

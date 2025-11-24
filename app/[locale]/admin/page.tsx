@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
 import { SentimentCard } from "@/components/sentiment/SentimentCard";
 import type { LogEntry } from "lib/monitoring/logs";
 import type { SnapshotHistoryPoint, AssetSentimentPoint } from "lib/news/snapshot";

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui';
 import { Info } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
@@ -20,4 +20,3 @@ export function InfoTooltip({ content, ...rest }: InfoTooltipProps) {
     </TooltipProvider>
   );
 }
-
