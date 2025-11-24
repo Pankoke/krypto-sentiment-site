@@ -30,7 +30,7 @@ vi.mock('@/components/ui', () => ({
   TooltipContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 vi.mock('next-intl/server', () => ({
-  getTranslations: () => async () => (key: string) => key,
+  getTranslations: () => () => (key: string) => key,
 }));
 vi.mock('next/link', () => ({
   __esModule: true,
