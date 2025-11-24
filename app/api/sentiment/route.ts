@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getLatestSentimentFromSnapshots } from '@/lib/news/snapshot';
+import { getLatestSentimentFromSnapshots } from 'lib/news/snapshot';
 
 function determineLocale(request: Request): 'de' | 'en' {
   const url = new URL(request.url);

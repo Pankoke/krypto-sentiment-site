@@ -7,7 +7,7 @@ import { computeGlobalSentiment } from "lib/sentiment/aggregate";
 import { GlobalMarketBar } from "@/components/sentiment/GlobalMarketBar";
 import { AssetScoreStrip } from "@/components/sentiment/AssetScoreStrip";
 import { getTranslations } from "next-intl/server";
-import { getLatestSentimentFromSnapshots } from "@/lib/news/snapshot";
+import { getLatestSentimentFromSnapshots } from "lib/news/snapshot";
 
 const BASE_URL = process.env.APP_BASE_URL ?? "https://krypto-sentiment-site.com";
 
