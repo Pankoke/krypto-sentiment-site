@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getLatestSentimentFromSnapshots, getAssetHistoryFromSnapshots } from "lib/news/snapshot";
-import { Sparkline } from "@/components/sentiment/Sparkline";
 
 const BASE_URL = process.env.APP_BASE_URL ?? "https://krypto-sentiment-site.com";
 
@@ -66,14 +65,14 @@ export default async function AssetPage({ params }: PageParams) {
     notFound();
   }
   const history = await getAssetHistoryFromSnapshots(ticker, locale);
-  const sparklineData = history.points.map((point) => ({
-    t: new Date(point.timestamp).getTime(),
-    c: point.score,
+  const historyPoints = history.points.map((point) => ({
+    timestamp: point.timestamp,
+    score: point.score,
   }));
   const change24h =
-    history.points.length >= 2
-      ? (history.points[history.points.length - 1]?.score ?? 0) -
-        (history.points[history.points.length - 2]?.score ?? 0)
+    historyPoints.length >= 2
+      ? (historyPoints[historyPoints.length - 1]?.score ?? 0) -
+        (historyPoints[historyPoints.length - 2]?.score ?? 0)
       : null;
 
   return (
@@ -110,9 +109,19 @@ export default async function AssetPage({ params }: PageParams) {
                 {locale === "de" ? "24h Änderung" : "24h change"}:{" "}
                 {change24h === null ? "–" : change24h >= 0 ? `+${change24h.toFixed(2)}` : change24h.toFixed(2)}
               </p>
-              <div className="pt-2">
-                {sparklineData.length ? (
-                  <Sparkline data={sparklineData} className="w-40 h-12" />
+              <div className="pt-2 space-y-1">
+                <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  {locale === "de" ? "Verlauf (letzte Tage)" : "Recent history"}
+                </h3>
+                {historyPoints.length ? (
+                  <ul className="space-y-1 text-xs text-slate-600">
+                    {historyPoints.slice(-7).map((point) => (
+                      <li key={point.timestamp} className="flex items-center justify-between">
+                        <span>{new Date(point.timestamp).toLocaleDateString(locale === "de" ? "de-DE" : "en-US")}</span>
+                        <span className="font-semibold text-slate-900">{point.score.toFixed(2)}</span>
+                      </li>
+                    ))}
+                  </ul>
                 ) : (
                   <p className="text-xs text-slate-500">
                     {locale === "de" ? "Noch keine Sentiment-Historie verfügbar." : "No sentiment history available yet."}
