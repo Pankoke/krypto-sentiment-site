@@ -5,20 +5,34 @@ const BASE_URL = process.env.APP_BASE_URL ?? "https://krypto-sentiment-site.verc
 
 const copy = {
   de: {
-    metaTitle: "Verstehen statt raten",
+    metaTitle: "Mehr über Krypto & Sentiment lernen",
     metaDescription:
-      "Hier lernst du die Grundlagen von Sentiment, KI-Auswertung, Datenqualität und Risiken. Einsteiger bekommen einen einfachen Einstieg, Fortgeschrittene vertiefen ihr Know-how.",
+      "Hier findest du kurze Erklärungen zu den wichtigsten Begriffen und Ideen hinter unserer Plattform.",
     short:
-      "Hier lernst du die Grundlagen von Sentiment, KI-Auswertung, Datenqualität und Risiken. Einsteiger bekommen einen einfachen Einstieg, Fortgeschrittene vertiefen ihr Know-how.",
+      "Kurz, klar, ohne Marketing: die wichtigsten Konzepte rund um Stimmung, Datenquellen und Score.",
     sections: [
       {
-        title: "Grundbegriffe",
+        title: "Was ist Sentiment?",
         paragraphs: [
-          "Sentiment: Die allgemeine Stimmung zum Markt oder zu einem bestimmten Coin.",
-          "Score: Eine Zahl zwischen 0 und 1, die zeigt, wie bullish oder bearish die Stimmung wirkt.",
-          "Vertrauen: Wie sicher die KI ist, dass der Score stabil ist.",
-          "Signal: Ein Ereignis oder eine Meldung, die die Stimmung messbar beeinflusst.",
-          "On-Chain-Daten: Messwerte direkt aus der Blockchain (Transaktionen, aktive Adressen, Zu-/Abflüsse)."
+          "Sentiment beschreibt, wie positiv oder negativ Marktteilnehmer über ein Thema sprechen. Wir machen diese Stimmung für einzelne Coins messbar."
+        ]
+      },
+      {
+        title: "Warum News & Social Media?",
+        paragraphs: [
+          "Starke Kursbewegungen werden oft von Narrativen begleitet – Schlagzeilen, Threads und Diskussionen. Diese Signale sammeln und strukturieren wir."
+        ]
+      },
+      {
+        title: "Rolle von On-Chain-Daten",
+        paragraphs: [
+          "On-Chain-Kennzahlen wie Aktivität oder Flows zeigen, ob die Stimmung nur Gerede ist oder sich auch on-chain widerspiegelt."
+        ]
+      },
+      {
+        title: "Was du damit machen kannst",
+        paragraphs: [
+          "Nutze Sentiment, um Trends früher zu erkennen, Übertreibungen zu sehen oder die Marktstimmung im Blick zu behalten – aber nie als alleinige Entscheidungsgrundlage."
         ]
       }
     ],
@@ -44,20 +58,34 @@ const copy = {
     ]
   },
   en: {
-    metaTitle: "Understanding before guessing",
+    metaTitle: "Learn more about crypto & sentiment",
     metaDescription:
-      "This section teaches you the basics of sentiment, AI models, data quality and risks. Beginners get a smooth introduction, advanced users gain more depth.",
+      "This page gives you short explanations of the key concepts and ideas behind our platform.",
     short:
-      "This section teaches you the basics of sentiment, AI models, data quality and risks. Beginners get a smooth introduction, advanced users gain more depth.",
+      "Concise explanations of sentiment, data sources and how the score works – no fluff.",
     sections: [
       {
-        title: "Key terms",
+        title: "What is sentiment?",
         paragraphs: [
-          "Sentiment: Overall mood around the market or a specific coin.",
-          "Score: Number between 0 and 1 showing how bullish or bearish the mood looks.",
-          "Confidence: How stable the model considers this score.",
-          "Signal: An event or headline that significantly influences sentiment.",
-          "On-chain data: Metrics directly from the blockchain (transactions, active addresses, flows)."
+          "Sentiment describes how positive or negative market participants talk about a topic. We turn that into a measurable signal for individual coins."
+        ]
+      },
+      {
+        title: "Why news & social data?",
+        paragraphs: [
+          "Strong price moves often come with narratives – headlines, threads and discussions. We collect and structure these signals."
+        ]
+      },
+      {
+        title: "On-chain signals",
+        paragraphs: [
+          "On-chain metrics like activity or flows help us see whether sentiment is just talk – or also visible on-chain."
+        ]
+      },
+      {
+        title: "How to use this",
+        paragraphs: [
+          "Use sentiment to spot trends earlier, see extremes in market mood and stay aware of the bigger picture – but never rely on it as your only signal."
         ]
       }
     ],

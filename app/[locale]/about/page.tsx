@@ -7,24 +7,24 @@ const copy = {
   de: {
     metaTitle: "Über uns",
     metaDescription:
-      "Wir möchten Sentiment-Analysen verständlich machen – ohne Hype, ohne Versprechen, ohne Finanzberatung.",
+      "Wir machen Marktstimmung verständlich: täglich, datenbasiert, ohne Hype und ohne Finanzberatung.",
     short:
-      "Wir möchten Sentiment-Analysen verständlich machen – ohne Hype, ohne Versprechen, ohne Finanzberatung. Unsere Seite bietet einen unabhängigen, datenbasierten Blick auf die Stimmung im Kryptomarkt.",
+      "Wir zeigen dir, wie der Kryptomarkt fühlt – klar, kompakt und ohne große Worte. Unser Ziel: Sentiment transparent machen, damit du schneller verstehst, was wirklich passiert.",
     sections: [
       {
         title: "Warum wir das tun",
         paragraphs: [
-          "Wir möchten Sentiment-Analysen verständlich machen – ohne Hype, ohne Versprechen, ohne Finanzberatung.",
-          "Unsere Seite bietet einen unabhängigen, datenbasierten Blick auf die Stimmung im Kryptomarkt."
+          "Wir wollen Sentiment greifbar machen, nicht mystisch. Keine Preisversprechen, keine Trading-Tipps – nur klare Stimmungssignale.",
+          "Ein Blick reicht: Du siehst, ob der Markt eher optimistisch, neutral oder vorsichtig ist – und warum."
         ]
       },
       {
-        title: "Wofür die Bereiche stehen",
+        title: "Wie die Bereiche zusammenhängen",
         paragraphs: [
-          "Die Startseite zeigt die Gesamtstimmung.",
-          "News & Signale erklären, welche Ereignisse die Stimmung bewegen.",
-          "Daten & Charts visualisieren Trends.",
-          "In der Methodik erfährst du, wie alles im Hintergrund funktioniert."
+          "Startseite/Sentiment: der schnelle Überblick.",
+          "News & Signale: was die Stimmung bewegt.",
+          "Daten & Charts: Trends und Verläufe.",
+          "Methodik: wie der Score entsteht – transparent beschrieben."
         ]
       }
     ],
@@ -48,24 +48,24 @@ const copy = {
   en: {
     metaTitle: "About us",
     metaDescription:
-      "We want to make sentiment analysis transparent and easy to understand — without hype, promises or financial advice.",
+      "We make market mood easy to read: daily, data-driven, no hype, no financial advice.",
     short:
-      "We want to make sentiment analysis transparent and easy to understand — without hype, promises or financial advice. Our goal is to provide an independent, data-driven view of crypto market mood.",
+      "We show how the crypto market feels – concise, transparent, no fluff. Our goal: give you a clear view of sentiment so you can focus on decisions, not noise.",
     sections: [
       {
         title: "Why we built this",
         paragraphs: [
-          "We want to make sentiment analysis transparent and easy to understand — without hype, promises or financial advice.",
-          "Our goal is to provide an independent, data-driven view of crypto market mood."
+          "We want sentiment to be readable, not mysterious. No price calls, no trading tips – just clear signals.",
+          "One glance should tell you if the market feels optimistic, neutral or cautious – and why."
         ]
       },
       {
         title: "How the sections fit together",
         paragraphs: [
-          "The homepage shows the overall market mood.",
-          "News & Signals highlights the events that move sentiment.",
-          "Data & Charts visualizes trends.",
-          "The methodology section explains how everything works behind the scenes."
+          "Homepage/Sentiment: quick overview.",
+          "News & Signals: the drivers behind the mood.",
+          "Data & Charts: trends and patterns.",
+          "Methodology: how the score is built – transparent by design."
         ]
       }
     ],

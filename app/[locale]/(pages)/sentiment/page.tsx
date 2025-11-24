@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import type { SentimentItem } from "lib/sentiment/types";
 import type { AssetSentimentPoint } from "lib/news/snapshot";
@@ -102,6 +103,11 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
     decrease: t("change24h.decrease"),
     neutral: t("change24h.neutral"),
   };
+  const methodPath = locale === "de" ? "/de/methodik" : "/en/methodology";
+  const methodText =
+    locale === "de"
+      ? "Wie wir diesen Score berechnen, erfährst du in unserer Methodik."
+      : "Learn how we calculate this score in our methodology section.";
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -121,6 +127,13 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
           )}
         </header>
 
+        <div className="mb-6 rounded-xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-slate-700">
+          {methodText}{" "}
+          <Link href={methodPath} className="font-semibold text-indigo-700 hover:text-indigo-900 underline">
+            {locale === "de" ? "Zur Methodik" : "View methodology"}
+          </Link>
+        </div>
+
         {sentimentItems.length > 0 ? (
           <div className="mb-6 space-y-4">
             <GlobalMarketBar
@@ -139,7 +152,12 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
             />
             <div className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-700 shadow-sm">
               <h3 className="text-base font-semibold text-slate-900">{t("scoreExplanation.heading")}</h3>
-              <p className="mt-1 leading-relaxed">{t("scoreExplanation.text")}</p>
+              <p className="mt-1 leading-relaxed">
+                {t("scoreExplanation.text")}{" "}
+                <Link href={`/${locale}/methodik`} className="text-indigo-700 hover:text-indigo-900 underline">
+                  {locale === "de" ? "Mehr zur Methodik" : "How the score works"}
+                </Link>
+              </p>
             </div>
           </div>
         ) : null}
