@@ -14,16 +14,14 @@ const ASSET_META: Record<string, { name: string; ticker: string }> = {
 
 const copy = {
   de: {
-    intro:
-      "Hier zeigen wir dir bald die tagesaktuelle Marktstimmung, Historie und relevante News für diesen Coin.",
+    intro: "Hier zeigen wir dir bald die tagesaktuelle Marktstimmung, Historie und relevante News für diesen Coin.",
     comingSoon: "Coming soon: Live-Sentiment, Trends und News für diesen Coin.",
     backCoins: "Zur Coins-Übersicht",
     backSentiment: "Zur Sentiment-Übersicht",
     metaDescription: "Profil und Marktstimmung für {name} ({ticker}).",
   },
   en: {
-    intro:
-      "Soon you’ll see the daily market sentiment, history and relevant news for this coin.",
+    intro: "Soon you'll see the daily market sentiment, history and relevant news for this coin.",
     comingSoon: "Coming soon: Live sentiment, trends and news for this coin.",
     backCoins: "Back to coins",
     backSentiment: "Back to sentiment overview",
@@ -41,9 +39,7 @@ export function generateMetadata({ params }: PageParams): Metadata {
   }
   const canonical = `${BASE_URL}/${params.locale}/asset/${ticker}`;
   const text = copy[params.locale === "en" ? "en" : "de"];
-  const description = text.metaDescription
-    .replace("{name}", meta.name)
-    .replace("{ticker}", meta.ticker);
+  const description = text.metaDescription.replace("{name}", meta.name).replace("{ticker}", meta.ticker);
   return {
     title: `${meta.name} (${meta.ticker})`,
     description,
@@ -83,7 +79,7 @@ export default async function AssetPage({ params }: PageParams) {
             {locale === "de" ? "Krypto-Asset" : "Crypto asset"}
           </p>
           <h1 className="text-3xl font-semibold text-slate-900 sm:text-4xl">
-            {meta.name} ({meta.ticker})
+            {meta?.name} ({meta?.ticker})
           </h1>
           <p className="text-sm text-slate-600">{text.intro}</p>
         </header>
@@ -94,9 +90,7 @@ export default async function AssetPage({ params }: PageParams) {
           </h2>
           {assetEntry ? (
             <div className="mt-3 space-y-1">
-              <p className="text-lg font-semibold text-slate-900">
-                Score: {assetEntry.score.toFixed(2)}
-              </p>
+              <p className="text-lg font-semibold text-slate-900">Score: {assetEntry.score.toFixed(2)}</p>
               <p className="text-sm text-slate-600">
                 {locale === "de" ? "Globale Marktstimmung" : "Global market sentiment"}:{" "}
                 {snapshot ? snapshot.globalScore.toFixed(2) : "-"}
@@ -106,10 +100,10 @@ export default async function AssetPage({ params }: PageParams) {
                 {new Date(snapshot?.timestamp ?? Date.now()).toLocaleString(locale === "de" ? "de-DE" : "en-US")}
               </p>
               <p className="text-sm text-slate-600">
-                {locale === "de" ? "24h Änderung" : "24h change"}:{" "}
+                {locale === "de" ? "24h Veränderung" : "24h change"}:{" "}
                 {change24h === null ? "–" : change24h >= 0 ? `+${change24h.toFixed(2)}` : change24h.toFixed(2)}
               </p>
-              <div className="pt-2 space-y-1">
+              <div className="space-y-1 pt-2">
                 <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                   {locale === "de" ? "Verlauf (letzte Tage)" : "Recent history"}
                 </h3>

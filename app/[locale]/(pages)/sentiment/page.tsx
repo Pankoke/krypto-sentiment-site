@@ -47,7 +47,7 @@ export const generateMetadata = ({ params }: { params: { locale: "de" | "en" } }
   return {
     title,
     description,
-    alternates: { canonical }
+    alternates: { canonical },
   };
 };
 
@@ -61,8 +61,8 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
     ? snapshot.assets.map((asset) => ({
         symbol: asset.ticker,
         score: Math.max(0, Math.min(1, asset.score)),
-        confidence: Math.max(0, Math.min(1, asset.confidence)),
-        trend: asset.sentiment,
+        confidence: Math.max(0, Math.min(1, asset.confidence ?? 0)),
+        trend: asset.sentiment ?? "neutral",
         bullets: [],
         generatedAt: snapshot.timestamp,
         sparkline: [],
@@ -86,7 +86,7 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
       : parsed.toLocaleDateString(locale === "de" ? "de-DE" : "en-US", {
           day: "2-digit",
           month: "2-digit",
-          year: "numeric"
+          year: "numeric",
         });
   })();
 
@@ -129,7 +129,7 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
 
         <div className="mb-6 rounded-xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-slate-700">
           {methodText}{" "}
-          <Link href={methodPath} className="font-semibold text-indigo-700 hover:text-indigo-900 underline">
+          <Link href={methodPath} className="font-semibold text-indigo-700 underline hover:text-indigo-900">
             {locale === "de" ? "Zur Methodik" : "View methodology"}
           </Link>
         </div>
@@ -154,7 +154,7 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
               <h3 className="text-base font-semibold text-slate-900">{t("scoreExplanation.heading")}</h3>
               <p className="mt-1 leading-relaxed">
                 {t("scoreExplanation.text")}{" "}
-                <Link href={`/${locale}/methodik`} className="text-indigo-700 hover:text-indigo-900 underline">
+                <Link href={methodPath} className="text-indigo-700 underline hover:text-indigo-900">
                   {locale === "de" ? "Mehr zur Methodik" : "How the score works"}
                 </Link>
               </p>
@@ -168,7 +168,7 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
         {sentimentItems.length === 0 ? (
           <div className="rounded-xl border border-dashed border-slate-300 bg-white px-4 py-10 text-center text-sm text-slate-500">
             {locale === "de"
-              ? "Keine Sentiment-Daten vorhanden. Aktuell liegen keine Sentiment-Daten vor. Versuche es später erneut oder prüfe den Admin-Bereich."
+              ? "Keine Sentiment-Daten vorhanden. Versuche es später erneut oder prüfe den Admin-Bereich."
               : "No sentiment data available right now. Try again later or check the admin area."}
           </div>
         ) : (
@@ -186,4 +186,3 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
     </main>
   );
 }
-

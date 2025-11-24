@@ -166,13 +166,19 @@ export async function latestNewsSnapshot(locale: string): Promise<NewsSnapshot |
   return snapshots[0] ?? null;
 }
 
-export type LatestSentimentSnapshot = {
-  globalScore: number;
-  assets: Array<{ ticker: string; score: number; sentiment: AggregatedReport['assets'][number]['sentiment']; confidence: number }>;
+export type LatestSentimentSummary = {
   timestamp: string;
+  locale: string;
+  globalScore: number;
+  assets: Array<{
+    ticker: string;
+    score: number;
+    sentiment?: AggregatedReport['assets'][number]['sentiment'];
+    confidence?: number;
+  }>;
 };
 
-export async function getLatestSentimentFromSnapshots(locale: string): Promise<LatestSentimentSnapshot | null> {
+export async function getLatestSentimentFromSnapshots(locale: string): Promise<LatestSentimentSummary | null> {
   const snapshots = await listNewsSnapshots(locale);
   const latest = snapshots[0];
   if (!latest || !latest.assets.length) {
@@ -187,6 +193,7 @@ export async function getLatestSentimentFromSnapshots(locale: string): Promise<L
   const total = scores.reduce((sum, item) => sum + item.score, 0);
   const globalScore = scores.length ? total / scores.length : 0;
   return {
+    locale,
     globalScore,
     assets: scores,
     timestamp: latest.generatedAt ?? new Date().toISOString(),
