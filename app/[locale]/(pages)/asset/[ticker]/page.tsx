@@ -72,7 +72,8 @@ export default async function AssetPage({ params }: PageParams) {
   }));
   const change24h =
     history.points.length >= 2
-      ? history.points[history.points.length - 1].score - history.points[history.points.length - 2].score
+      ? (history.points[history.points.length - 1]?.score ?? 0) -
+        (history.points[history.points.length - 2]?.score ?? 0)
       : null;
 
   return (
