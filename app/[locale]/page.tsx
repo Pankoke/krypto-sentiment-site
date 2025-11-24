@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 
 const BASE_URL = process.env.APP_BASE_URL ?? 'https://krypto-sentiment-site.com';
 
@@ -97,8 +98,14 @@ export const generateMetadata = ({ params }: { params: { locale: string } }): Me
   };
 };
 
-export default function LocaleRootPage({ params }: { params: { locale: string } }) {
+export default async function LocaleRootPage({ params }: { params: { locale: string } }) {
   const localeCopy = getLocaleCopy(params.locale);
+  const tCta = await getTranslations('cta');
+  const ctaKeys = ['cta.viewSentiment', 'cta.viewMethodology', 'cta.learnBasics', 'cta.viewTrends'] as const;
+  const ctas = ctaKeys.map((key, index) => ({
+    href: localeCopy.ctas[index]?.href ?? '#',
+    label: tCta(key),
+  }));
 
   return (
     <main className="min-h-screen bg-gray-50 py-16">
@@ -110,7 +117,7 @@ export default function LocaleRootPage({ params }: { params: { locale: string } 
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-gray-700">{localeCopy.longIntro}</p>
           <div className="mt-8 flex flex-wrap gap-3">
-            {localeCopy.ctas.map((cta) => (
+            {ctas.map((cta) => (
               <Link
                 key={cta.label}
                 href={cta.href}

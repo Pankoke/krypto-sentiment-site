@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { allowedAssets } from "lib/assets";
+import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "Coins & Marktstimmung",
@@ -24,10 +25,11 @@ const copy = {
 
 type CoinsPageProps = { params: { locale: "de" | "en" } };
 
-export default function CoinsPage({ params }: CoinsPageProps) {
+export default async function CoinsPage({ params }: CoinsPageProps) {
   const locale = params.locale === "en" ? "en" : "de";
   const text = copy[locale];
   const assets = allowedAssets.filter((asset) => asset.enabled);
+  const tCta = await getTranslations("cta");
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
@@ -61,7 +63,7 @@ export default function CoinsPage({ params }: CoinsPageProps) {
               href={`/${locale}/asset/${asset.ticker.toLowerCase()}`}
               className="mt-3 inline-flex items-center text-sm font-medium text-indigo-700 hover:text-indigo-900"
             >
-              {text.cta}
+              {tCta("viewProfile")}
             </Link>
           </article>
         ))}

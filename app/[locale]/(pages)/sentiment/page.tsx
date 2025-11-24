@@ -56,6 +56,7 @@ type SentimentPageProps = { params: { locale: "de" | "en" } };
 export default async function SentimentPage({ params }: SentimentPageProps) {
   const { locale } = params;
   const t = await getTranslations("sentiment");
+  const tCta = await getTranslations("cta");
   const snapshot = await getLatestSentimentFromSnapshots(locale);
   const sentimentItems: SentimentItem[] = snapshot
     ? snapshot.assets.map((asset) => ({
@@ -134,7 +135,7 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
         <div className="mb-6 rounded-xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-slate-700">
           {methodText}{" "}
           <Link href={methodPath} className="font-semibold text-indigo-700 underline hover:text-indigo-900">
-            {locale === "de" ? "Zur Methodik" : "View methodology"}
+            {tCta("viewMethodology")}
           </Link>
         </div>
 
@@ -160,7 +161,7 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
               <p className="mt-1 leading-relaxed">
                 {t("scoreExplanation.text")}{" "}
                 <Link href={methodPath} className="text-indigo-700 underline hover:text-indigo-900">
-                  {locale === "de" ? "Mehr zur Methodik" : "How the score works"}
+                  {tCta("viewMethodology")}
                 </Link>
               </p>
             </div>

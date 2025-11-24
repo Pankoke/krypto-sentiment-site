@@ -178,5 +178,14 @@
     "empty": "No news snapshot yet – waiting for the daily run.",
     "stale": "News older than 24 hours (as of {date}).",
     "error": "Error loading news: {error}"
+  },
+  "cta": {
+    "viewSentiment": "View today’s market sentiment",
+    "viewNews": "Read today’s news",
+    "viewMethodology": "View methodology",
+    "learnMore": "Learn more",
+    "learnBasics": "Learn the basics",
+    "viewTrends": "Explore sentiment trends",
+    "viewProfile": "View profile"
   }
 }

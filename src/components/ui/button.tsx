@@ -9,9 +9,19 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
   return (
     <button
       ref={ref}
-      className={`inline-flex items-center justify-center rounded-md bg-black px-3 py-1.5 text-white text-sm hover:bg-gray-800 disabled:opacity-60 ${className}`}
+      className={[
+        'inline-flex items-center justify-center rounded-full',
+        'bg-slate-900 text-white text-sm font-semibold',
+        'px-5 py-2.5',
+        'shadow-sm transition',
+        'hover:bg-slate-800 hover:shadow-md',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2',
+        'disabled:opacity-60 disabled:cursor-not-allowed',
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
       {...props}
     />
   );
 });
-

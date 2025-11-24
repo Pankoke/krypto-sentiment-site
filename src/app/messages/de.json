@@ -184,6 +184,15 @@
     "empty": "Noch keine News vorhanden – der tägliche Snapshot wurde noch nicht erstellt.",
     "stale": "News älter als 24 Stunden (Stand {date}).",
     "error": "Fehler beim Laden der News: {error}"
+  },
+  "cta": {
+    "viewSentiment": "Heutige Marktstimmung ansehen",
+    "viewNews": "Heutige News lesen",
+    "viewMethodology": "Zur Methodik",
+    "learnMore": "Mehr erfahren",
+    "learnBasics": "Grundlagen lernen",
+    "viewTrends": "Sentiment-Trends entdecken",
+    "viewProfile": "Zum Profil"
   }
 }
 
