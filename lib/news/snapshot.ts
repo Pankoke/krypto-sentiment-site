@@ -166,6 +166,33 @@ export async function latestNewsSnapshot(locale: string): Promise<NewsSnapshot |
   return snapshots[0] ?? null;
 }
 
+export type LatestSentimentSnapshot = {
+  globalScore: number;
+  assets: Array<{ ticker: string; score: number; sentiment: AggregatedReport['assets'][number]['sentiment']; confidence: number }>;
+  timestamp: string;
+};
+
+export async function getLatestSentimentFromSnapshots(locale: string): Promise<LatestSentimentSnapshot | null> {
+  const snapshots = await listNewsSnapshots(locale);
+  const latest = snapshots[0];
+  if (!latest || !latest.assets.length) {
+    return null;
+  }
+  const scores = latest.assets.map((asset) => ({
+    ticker: asset.symbol.toUpperCase(),
+    score: asset.score,
+    sentiment: asset.sentiment,
+    confidence: asset.confidence,
+  }));
+  const total = scores.reduce((sum, item) => sum + item.score, 0);
+  const globalScore = scores.length ? total / scores.length : 0;
+  return {
+    globalScore,
+    assets: scores,
+    timestamp: latest.generatedAt ?? new Date().toISOString(),
+  };
+}
+
 export async function readNewsSnapshot(date: string, locale: string): Promise<NewsSnapshot | null> {
   return getSnapshot<NewsSnapshot>(newsSnapshotKey(locale, date));
 }

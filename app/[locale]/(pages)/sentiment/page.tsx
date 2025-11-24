@@ -6,21 +6,9 @@ import { computeGlobalSentiment } from "lib/sentiment/aggregate";
 import { GlobalMarketBar } from "@/components/sentiment/GlobalMarketBar";
 import { AssetScoreStrip } from "@/components/sentiment/AssetScoreStrip";
 import { getTranslations } from "next-intl/server";
+import { getLatestSentimentFromSnapshots } from "lib/news/snapshot";
 
 const BASE_URL = process.env.APP_BASE_URL ?? "https://krypto-sentiment-site.com";
-
-async function loadSentimentItems(): Promise<SentimentItem[]> {
-  try {
-    const res = await fetch("/api/sentiment", { next: { revalidate: 300 } });
-    if (!res.ok) {
-      return [];
-    }
-    const data = (await res.json()) as { items?: SentimentItem[] };
-    return Array.isArray(data.items) ? data.items : [];
-  } catch {
-    return [];
-  }
-}
 
 async function loadHistoryMap(symbols: string[], days = 30): Promise<Map<string, AssetSentimentPoint[]>> {
   if (!symbols.length) {
@@ -67,7 +55,18 @@ type SentimentPageProps = { params: { locale: "de" | "en" } };
 export default async function SentimentPage({ params }: SentimentPageProps) {
   const { locale } = params;
   const t = await getTranslations("sentiment");
-  const sentimentItems = await loadSentimentItems();
+  const snapshot = await getLatestSentimentFromSnapshots(locale);
+  const sentimentItems: SentimentItem[] = snapshot
+    ? snapshot.assets.map((asset) => ({
+        symbol: asset.ticker,
+        score: Math.max(0, Math.min(1, asset.score)),
+        confidence: Math.max(0, Math.min(1, asset.confidence)),
+        trend: asset.sentiment,
+        bullets: [],
+        generatedAt: snapshot.timestamp,
+        sparkline: [],
+      }))
+    : [];
   const historyMap = await loadHistoryMap(sentimentItems.map((item) => item.symbol));
 
   const headingTitle =
@@ -78,7 +77,7 @@ export default async function SentimentPage({ params }: SentimentPageProps) {
       : "Daily market mood for selected cryptocurrencies. Scores are based on news, social media, and on-chain signals.";
 
   const latestReportDate = (() => {
-    const candidate = sentimentItems[0]?.generatedAt;
+    const candidate = snapshot?.timestamp;
     if (!candidate) return null;
     const parsed = new Date(candidate);
     return Number.isNaN(parsed.getTime())

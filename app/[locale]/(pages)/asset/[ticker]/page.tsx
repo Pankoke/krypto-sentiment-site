@@ -50,7 +50,7 @@ export function generateMetadata({ params }: PageParams): Metadata {
   };
 }
 
-export default function AssetPage({ params }: PageParams) {
+export default async function AssetPage({ params }: PageParams) {
   const locale = params.locale === "en" ? "en" : "de";
   const ticker = params.ticker.toLowerCase();
   const meta = ASSET_META[ticker];
@@ -58,6 +58,11 @@ export default function AssetPage({ params }: PageParams) {
     notFound();
   }
   const text = copy[locale];
+  const snapshot = await getLatestSentimentFromSnapshots(locale);
+  const assetEntry = snapshot?.assets.find((entry) => entry.ticker.toLowerCase() === ticker);
+  if (snapshot && !assetEntry) {
+    notFound();
+  }
 
   return (
     <main className="min-h-screen bg-slate-50 py-12">
@@ -76,7 +81,23 @@ export default function AssetPage({ params }: PageParams) {
           <h2 className="text-base font-semibold text-slate-900">
             {locale === "de" ? "Aktuelle Marktstimmung" : "Current market sentiment"}
           </h2>
-          <p className="mt-2">{text.comingSoon}</p>
+          {assetEntry ? (
+            <div className="mt-3 space-y-1">
+              <p className="text-lg font-semibold text-slate-900">
+                Score: {assetEntry.score.toFixed(2)}
+              </p>
+              <p className="text-sm text-slate-600">
+                {locale === "de" ? "Globale Marktstimmung" : "Global market sentiment"}:{" "}
+                {snapshot ? snapshot.globalScore.toFixed(2) : "-"}
+              </p>
+              <p className="text-sm text-slate-600">
+                {locale === "de" ? "Stand" : "As of"}:{" "}
+                {new Date(snapshot?.timestamp ?? Date.now()).toLocaleString(locale === "de" ? "de-DE" : "en-US")}
+              </p>
+            </div>
+          ) : (
+            <p className="mt-2">{text.comingSoon}</p>
+          )}
         </div>
 
         <div className="flex flex-wrap gap-3 text-sm font-medium">
@@ -97,3 +118,4 @@ export default function AssetPage({ params }: PageParams) {
     </main>
   );
 }
+import { getLatestSentimentFromSnapshots } from "lib/news/snapshot";

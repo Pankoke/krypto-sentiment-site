@@ -1,69 +1,60 @@
-import { beforeEach, afterEach, afterAll, describe, expect, it, vi } from 'vitest';
-import { join } from 'node:path';
-import { rm, mkdir, writeFile } from 'node:fs/promises';
+import { beforeEach, afterAll, describe, expect, it } from 'vitest';
 
 import { GET as sentimentGet } from '../app/api/sentiment/route';
 import { GET as sentimentHistoryBulkGet } from '../app/api/sentiment/history/bulk/route';
 import type { AssetSentimentPoint } from '../lib/news/snapshot';
-import type { DailyCryptoSentiment } from '../lib/types';
 import { clearNewsDates, registerNewsDate, setSnapshot, newsSnapshotKey, closeRedis } from '../lib/cache/redis';
-
-const TEST_ROOT = join(process.cwd(), 'tmp-test-data', 'sentiment-api');
-const REPORT_DIR = join(TEST_ROOT, 'data', 'reports');
-let cwdSpy: ReturnType<typeof vi.spyOn> | null = null;
-
-async function writeReport(date: string, assets: DailyCryptoSentiment['assets'], generatedAt?: string) {
-  const report: DailyCryptoSentiment = {
-    date,
-    universe: assets.map((a) => a.symbol),
-    assets,
-    macro_summary: 'macro',
-    method_note: 'note',
-    generatedAt: generatedAt ?? new Date().toISOString(),
-  };
-  await mkdir(REPORT_DIR, { recursive: true });
-  await writeFile(join(REPORT_DIR, `${date}.json`), JSON.stringify(report, null, 2), 'utf8');
-}
 
 describe('sentiment API', () => {
   beforeEach(async () => {
-    if (cwdSpy) {
-      cwdSpy.mockRestore();
-    }
-    cwdSpy = vi.spyOn(process, 'cwd').mockReturnValue(TEST_ROOT);
-    process.env.GENERATE_DATA_DIR = TEST_ROOT;
-    await rm(TEST_ROOT, { recursive: true, force: true });
-    vi.resetModules();
-  });
-
-  afterEach(() => {
-    if (cwdSpy) {
-      cwdSpy.mockRestore();
-      cwdSpy = null;
-    }
+    await clearNewsDates('de');
+    await clearNewsDates('en');
   });
 
   afterAll(async () => {
-    await rm(TEST_ROOT, { recursive: true, force: true });
+    await clearNewsDates('de');
+    await clearNewsDates('en');
+    await closeRedis();
   });
 
   describe('GET /api/sentiment', () => {
-    it('liefert 404, wenn kein Rohreport vorhanden ist', async () => {
-      await rm(REPORT_DIR, { recursive: true, force: true });
+    it('liefert 404, wenn kein Snapshot vorhanden ist', async () => {
       const response = await sentimentGet(new Request('http://localhost/api/sentiment'));
       expect(response.status).toBe(404);
       const payload = await response.json();
-      expect(payload.error).toMatch(/No raw report found/i);
+      expect(payload.error).toMatch(/No sentiment snapshot available/i);
     });
 
-    it('liefert Daten aus dem neuesten Rohreport', async () => {
-      await writeReport('2025-01-01', [
-        { symbol: 'BTC', sentiment: 'bullish', score: 0.8, confidence: 0.9, rationale: 'r', top_signals: [] },
-      ]);
-      await writeReport('2025-01-02', [
-        { symbol: 'ETH', sentiment: 'bearish', score: -0.2, confidence: 0.6, rationale: 'x', top_signals: [] },
-        { symbol: 'SOL', sentiment: 'neutral', score: 0, confidence: 0.5, rationale: 'y', top_signals: [] },
-      ]);
+    it('liefert Daten aus dem neuesten Snapshot (Redis)', async () => {
+      const olderDate = '2025-01-01';
+      const newerDate = '2025-01-02';
+      await registerNewsDate('de', olderDate);
+      await setSnapshot(
+        newsSnapshotKey('de', olderDate),
+        {
+          date: olderDate,
+          universe: ['BTC'],
+          assets: [{ symbol: 'BTC', sentiment: 'bullish', score: 0.8, confidence: 0.9, rationale: 'r', top_signals: [] }],
+          method_note: 'old',
+          generatedAt: new Date().toISOString(),
+          locale: 'de',
+        }
+      );
+      await registerNewsDate('de', newerDate);
+      await setSnapshot(
+        newsSnapshotKey('de', newerDate),
+        {
+          date: newerDate,
+          universe: ['ETH', 'SOL'],
+          assets: [
+            { symbol: 'ETH', sentiment: 'bearish', score: 0.2, confidence: 0.6, rationale: 'x', top_signals: [] },
+            { symbol: 'SOL', sentiment: 'neutral', score: 0.5, confidence: 0.5, rationale: 'y', top_signals: [] },
+          ],
+          method_note: 'new',
+          generatedAt: new Date().toISOString(),
+          locale: 'de',
+        }
+      );
 
       const response = await sentimentGet(new Request('http://localhost/api/sentiment'));
       expect(response.status).toBe(200);
@@ -79,10 +70,6 @@ describe('sentiment API', () => {
     beforeEach(async () => {
       await clearNewsDates('de');
       await clearNewsDates('en');
-    });
-
-    afterAll(async () => {
-      await closeRedis();
     });
 
     it('liefert 400 ohne assets-Query', async () => {
@@ -109,20 +96,6 @@ describe('sentiment API', () => {
           locale: 'de',
         }
       );
-      const snapshot = {
-        date,
-        locale: 'de',
-        macro_summary: 'macro',
-        assets: [
-          { asset: 'BTC', score01: 60, subscores: {}, weights: {}, totalScore: 0, confidence: 80, confidenceDetails: {}, label: 'neutral', reasons: [], asOf: '', history: [] },
-          { asset: 'ETH', score01: 55, subscores: {}, weights: {}, totalScore: 0, confidence: 70, confidenceDetails: {}, label: 'neutral', reasons: [], asOf: '', history: [] },
-        ],
-        complete: true,
-        generatedAt: new Date().toISOString(),
-        version: '1.0',
-      };
-      await mkdir(REPORT_DIR, { recursive: true });
-      await writeFile(join(REPORT_DIR, `${date}.de.json`), JSON.stringify(snapshot, null, 2), 'utf8');
 
       const res = await sentimentHistoryBulkGet(
         new Request('http://localhost/api/sentiment/history/bulk?assets=BTC,ETH&days=7')

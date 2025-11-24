@@ -1,107 +1,47 @@
-import { readdir, readFile } from 'fs/promises';
-import { join } from 'path';
-import type { SentimentResponse, SentimentItem, SentimentTrend, SentimentBullet } from 'lib/sentiment/types';
-import { isDailyCryptoSentiment, type AssetSentiment, type TopSignal } from '../../../lib/types';
-import { filterAssetsByWhitelist, sortAssetsByWhitelistOrder } from '../../../lib/assets';
+import { NextResponse } from 'next/server';
+import { getLatestSentimentFromSnapshots } from 'lib/news/snapshot';
+import type { SentimentItem, SentimentResponse, SentimentTrend } from 'lib/sentiment/types';
+import { filterAssetsByWhitelist, sortAssetsByWhitelistOrder } from 'lib/assets';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' } as const;
-
-async function loadLatestFile(): Promise<string | null> {
-  const dir = join(process.cwd(), 'data', 'reports');
-  const pattern = /^\d{4}-\d{2}-\d{2}\.json$/;
-  try {
-    const files = await readdir(dir);
-    const rawReports = files.filter((file) => pattern.test(file));
-    if (!rawReports.length) {
-      return null;
-    }
-    rawReports.sort((a, b) => b.localeCompare(a));
-    const latest = rawReports[0];
-    return latest ? join(dir, latest) : null;
-  } catch {
-    return null;
-  }
-}
-
-function normalizeScore(score: number): number {
-  // map from [-1,1] -> [0,1]
-  const s = (score + 1) / 2;
-  return Math.max(0, Math.min(1, s));
-}
 
 function toTrend(sentiment: string): SentimentTrend {
   if (sentiment === 'bullish' || sentiment === 'neutral' || sentiment === 'bearish') return sentiment;
   return 'neutral';
 }
 
-function synthSparkline(seed: number): Array<{ t: number; c: number }> {
-  const now = Date.now();
-  const points: Array<{ t: number; c: number }> = [];
-  let price = 100 + Math.floor(seed * 50);
-  for (let i = 23; i >= 0; i--) {
-    const t = now - i * 60 * 60 * 1000;
-    const drift = (seed - 0.5) * 0.6;
-    const noise = (Math.sin((i + seed) * 1.7) + Math.cos((i + seed) * 0.9)) * 0.5;
-    price = Math.max(1, price + drift + noise);
-    points.push({ t, c: Math.round(price * 100) / 100 });
-  }
-  return points;
+function determineLocale(request: Request): 'de' | 'en' {
+  const url = new URL(request.url);
+  const queryLocale = url.searchParams.get('locale');
+  if (queryLocale === 'en') return 'en';
+  return 'de';
 }
 
-export async function GET(req: Request): Promise<Response> {
-  // Accept optional window param like 24h, 48h, etc. Currently used only for metadata.
-  const url = new URL(req.url);
-  const windowParam = url.searchParams.get('window') ?? '24h';
-  const match = /^([0-9]+)h$/.exec(windowParam);
-  const dataWindowHours = match ? Number(match[1]) : 24;
-
-  const latestPath = await loadLatestFile();
-  if (!latestPath) {
-    const message = 'No raw report found';
-    return Response.json({ error: message }, { status: 404, headers: JSON_HEADERS });
+export async function GET(request: Request): Promise<Response> {
+  const locale = determineLocale(request);
+  const latest = await getLatestSentimentFromSnapshots(locale);
+  if (!latest) {
+    return NextResponse.json({ error: 'No sentiment snapshot available' }, { status: 404, headers: JSON_HEADERS });
   }
 
-  const raw = await readFile(latestPath, 'utf8');
-  const json = JSON.parse(raw) as unknown;
-  if (!isDailyCryptoSentiment(json)) {
-    return Response.json({ error: 'invalid stored report' }, { status: 500, headers: JSON_HEADERS });
-  }
+  const items: SentimentItem[] = latest.assets.map((asset) => ({
+    symbol: asset.ticker,
+    score: Math.max(0, Math.min(1, asset.score)),
+    confidence: Math.max(0, Math.min(1, asset.confidence ?? 0)),
+    trend: toTrend(asset.sentiment),
+    bullets: [],
+    generatedAt: latest.timestamp,
+    sparkline: [],
+  }));
 
-  const dateISO = json.date as string;
-  const lastUpdatedISO = new Date().toISOString();
-
-  const rawItems: SentimentItem[] = (json.assets as ReadonlyArray<AssetSentiment>).map((a, idx) => {
-    const trend = toTrend(a.sentiment);
-    const score01 = normalizeScore(a.score);
-    const rawSignals: ReadonlyArray<TopSignal> = Array.isArray(a.top_signals) ? a.top_signals : [];
-    const bullets: SentimentBullet[] = rawSignals.slice(0, 6).map((s) => ({
-      group: s.source,
-      text: s.evidence,
-    }));
-    const generatedAt = new Date().toISOString();
-    const sparkline = synthSparkline(score01 + idx * 0.03);
-    return {
-      symbol: a.symbol,
-      score: score01,
-      confidence: Math.max(0, Math.min(1, a.confidence)),
-      trend,
-      bullets,
-      generatedAt,
-      sparkline,
-    };
-  });
-
-  const items = sortAssetsByWhitelistOrder(filterAssetsByWhitelist(rawItems));
-  const sourcesCount = items.reduce((acc, it) => acc + it.bullets.length, 0);
-
-  const resp: SentimentResponse = {
-    dateISO,
-    lastUpdatedISO,
-    nextRefreshETASeconds: 60 * 30, // placeholder 30 min
-    items,
-    dataWindowHours,
-    sourcesCount,
+  const ordered = sortAssetsByWhitelistOrder(filterAssetsByWhitelist(items));
+  const response: SentimentResponse = {
+    dateISO: latest.timestamp,
+    lastUpdatedISO: latest.timestamp,
+    items: ordered,
+    dataWindowHours: 24,
+    sourcesCount: 0,
   };
 
-  return Response.json(resp, { headers: JSON_HEADERS });
+  return NextResponse.json(response, { headers: JSON_HEADERS });
 }
