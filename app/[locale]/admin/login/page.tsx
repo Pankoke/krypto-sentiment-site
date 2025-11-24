@@ -2,14 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { Metadata } from "next";
 import { Button } from "@/components/ui";
 
 type LoginPageProps = { params: { locale: "de" | "en" } };
-
-export const metadata: Metadata = {
-  title: "Admin Login",
-};
 
 export default function AdminLoginPage({ params }: LoginPageProps) {
   const { locale } = params;
