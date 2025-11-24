@@ -17,7 +17,7 @@ const ASSET_META: Record<string, { name: string; ticker: string }> = {
 const copy = {
   de: {
     intro: "Hier zeigen wir dir bald die tagesaktuelle Marktstimmung, Historie und relevante News für diesen Coin.",
-    comingSoon: "Coming soon: Live-Sentiment, Trends und News für diesen Coin.",
+    comingSoon: "Bald verfügbar: Live-Sentiment, Trends und News für diesen Coin.",
     backCoins: "Zur Coins-Übersicht",
     backSentiment: "Zur Sentiment-Übersicht",
     metaDescription: "Profil und Marktstimmung für {name} ({ticker}).",
