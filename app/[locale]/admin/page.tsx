@@ -39,20 +39,7 @@ type SentimentApiResponse = {
 
 export default function AdminDashboard() {
   const adminAllowed = canAccessAdminInCurrentEnv();
-  if (!adminAllowed && process.env.NODE_ENV === "production") {
-    return (
-      <main className="min-h-screen bg-slate-50">
-        <section className="mx-auto max-w-3xl px-4 py-12">
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h1 className="text-lg font-semibold text-slate-900">Admin-Bereich gesperrt</h1>
-            <p className="mt-2 text-sm text-slate-600">
-              In dieser Umgebung ist der Admin-Bereich nur mit einem g\u00fcltigen ADMIN_SECRET verf\u00fcgbar.
-            </p>
-          </div>
-        </section>
-      </main>
-    );
-  }
+  const isProd = process.env.NODE_ENV === "production";
 
   const initialActions: ActionStateMap = {
     dailyRun: { loading: false, message: null, error: null },
@@ -71,18 +58,18 @@ export default function AdminDashboard() {
     error: logsError,
     isLoading: logsLoading,
     mutate: refreshLogs,
-  } = useSWR<LogEntry[]>(
-    "/api/admin/logs?limit=50",
-    swrFetcher
-  );
+  } = useSWR<LogEntry[]>(adminAllowed ? "/api/admin/logs?limit=50" : null, swrFetcher);
   const {
     data: history,
     error: historyError,
     isLoading: historyLoading,
     isValidating: historyValidating,
     mutate: refreshHistory,
-  } = useSWR<SnapshotHistoryPoint[]>("/api/admin/snapshot-history?days=30", swrFetcher);
-  const { data: sentimentResponse } = useSWR<SentimentApiResponse>("/api/sentiment", swrFetcher);
+  } = useSWR<SnapshotHistoryPoint[]>(adminAllowed ? "/api/admin/snapshot-history?days=30" : null, swrFetcher);
+  const { data: sentimentResponse } = useSWR<SentimentApiResponse>(
+    adminAllowed ? "/api/sentiment" : null,
+    swrFetcher
+  );
 
   const historyByDate = useMemo(() => history ?? [], [history]);
   const latestSnapshot = historyByDate[0];
@@ -113,6 +100,9 @@ export default function AdminDashboard() {
   }
 
   useEffect(() => {
+    if (!adminAllowed) {
+      return;
+    }
     const controller = new AbortController();
     async function loadAssetHistory() {
       setIsAssetLoading(true);
@@ -129,9 +119,9 @@ export default function AdminDashboard() {
         setIsAssetLoading(false);
       }
     }
-    loadAssetHistory();
+    void loadAssetHistory();
     return () => controller.abort();
-  }, [asset]);
+  }, [asset, adminAllowed]);
 
   const primaryButtonClass =
     "inline-flex items-center justify-center rounded-full bg-slate-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60";
@@ -139,6 +129,21 @@ export default function AdminDashboard() {
     "inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-800 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60";
 
   const badgeClass = "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ring-1";
+
+  if (!adminAllowed && isProd) {
+    return (
+      <main className="min-h-screen bg-slate-50">
+        <section className="mx-auto max-w-3xl px-4 py-12">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h1 className="text-lg font-semibold text-slate-900">Admin-Bereich gesperrt</h1>
+            <p className="mt-2 text-sm text-slate-600">
+              In dieser Umgebung ist der Admin-Bereich nur mit einem gueltigen ADMIN_SECRET verfuegbar.
+            </p>
+          </div>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-slate-50">
