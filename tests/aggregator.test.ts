@@ -11,13 +11,13 @@ vi.mock('../lib/sources', () => ({
 }));
 
 vi.mock('../lib/openai', () => ({
-  openai: {
+  getOpenAIClient: () => ({
     chat: {
       completions: {
         create: (...args: any[]) => mockCreate(...args),
       },
     },
-  },
+  }),
 }));
 
 import { aggregateNews } from '../lib/news/aggregator';

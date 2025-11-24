@@ -2,6 +2,7 @@ import type { NormalizedSourceEntry } from '../types';
 import { fetchAllSources, getSourceWarnings } from '../sources';
 import { getAllowedTickerOrder, isTickerAllowed } from '../assets';
 import { berlinDateString } from '../timezone';
+import { writeLog } from '../monitoring/logs';
 
 const DEFAULT_UNIVERSE = getAllowedTickerOrder();
 const TOP_SIGNALS_COUNT = 5;
@@ -27,6 +28,17 @@ type OpenAIClient = {
 };
 
 let cachedOpenAI: OpenAIClient | null | undefined;
+async function logOpenAIWarning(message: string, context?: unknown): Promise<void> {
+  try {
+    await writeLog({
+      level: 'warn',
+      message,
+      context: typeof context === 'string' ? context : JSON.stringify(context),
+    });
+  } catch {
+    console.warn(message, context);
+  }
+}
 
 type Signal = { source: string; evidence: string; score?: number };
 
@@ -68,13 +80,18 @@ async function getOpenAIClient(): Promise<OpenAIClient | null> {
   }
   try {
     const mod = await import('../openai');
-    cachedOpenAI = mod.getOpenAIClient() as unknown as OpenAIClient;
+    try {
+      cachedOpenAI = mod.getOpenAIClient() as unknown as OpenAIClient;
+    } catch (innerError) {
+      cachedOpenAI = null;
+      const context = innerError instanceof Error ? innerError.message : innerError;
+      await logOpenAIWarning('OpenAI client not available', context);
+    }
     return cachedOpenAI;
   } catch (error) {
     cachedOpenAI = null;
-    if (error instanceof Error) {
-      console.warn('OpenAI client not available:', error.message);
-    }
+    const context = error instanceof Error ? error.message : error;
+    await logOpenAIWarning('OpenAI client not available', context);
     return null;
   }
 }
@@ -202,7 +219,8 @@ async function summarizeRationale(symbol: string, signals: Signal[]): Promise<{ 
     const rationaleText = parsed?.rationale ?? content ?? fallback;
     return { rationale: String(rationaleText), usedFallback: false, parsed };
   } catch (error) {
-    console.warn('OpenAI-Zusammenfassung fehlgeschlagen:', error instanceof Error ? error.message : error);
+    const context = error instanceof Error ? error.message : error;
+    void logOpenAIWarning('OpenAI-Zusammenfassung fehlgeschlagen', context);
     return { rationale: fallback, usedFallback: true };
   }
 }
