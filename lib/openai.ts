@@ -1,8 +1,14 @@
 import OpenAI from 'openai';
 
-const apiKey = process.env.OPENAI_API_KEY;
-if (!apiKey) {
-  throw new Error('OPENAI_API_KEY ist nicht gesetzt (.env.local)');
-}
+let cachedClient: OpenAI | null = null;
 
-export const openai = new OpenAI({ apiKey });
+export function getOpenAIClient(): OpenAI {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error('OpenAI is disabled: no OPENAI_API_KEY configured');
+  }
+  if (!cachedClient) {
+    cachedClient = new OpenAI({ apiKey });
+  }
+  return cachedClient;
+}

@@ -68,7 +68,7 @@ async function getOpenAIClient(): Promise<OpenAIClient | null> {
   }
   try {
     const mod = await import('../openai');
-    cachedOpenAI = mod.openai as OpenAIClient;
+    cachedOpenAI = mod.getOpenAIClient() as unknown as OpenAIClient;
     return cachedOpenAI;
   } catch (error) {
     cachedOpenAI = null;
