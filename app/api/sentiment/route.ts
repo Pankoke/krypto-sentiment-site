@@ -28,7 +28,7 @@ export async function GET(request: Request): Promise<Response> {
     symbol: asset.ticker,
     score: Math.max(0, Math.min(1, asset.score)),
     confidence: Math.max(0, Math.min(1, asset.confidence ?? 0)),
-    trend: toTrend(asset.sentiment),
+    trend: toTrend(asset.sentiment ?? 'neutral'),
     bullets: [],
     generatedAt: latest.timestamp,
     sparkline: [],
